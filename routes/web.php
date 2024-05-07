@@ -38,4 +38,5 @@ Route::middleware([User::class])->name('user.')->prefix('user')->group(function 
 
 });
 
+
 });
