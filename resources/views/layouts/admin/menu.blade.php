@@ -19,28 +19,13 @@
           </p>
         </a>
       </li>
-      <li class="nav-item has-treeview">
-        <a href="#" class="nav-link">
+      <li class="nav-item">
+        <a href="{{route('admin.user.index')}}" class="nav-link">
           <i class="nav-icon fas fa-users"></i>
           <p>
             Kelola Akun
-            <i class="fas fa-angle-left right"></i>
           </p>
         </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="pages/layout/top-nav.html" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Kelola Data Akun</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="pages/layout/boxed.html" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Tambah Akun</p>
-            </a>
-          </li>
-        </ul>
       </li>
       <li class="nav-item">
         <a href="{{route('admin.produk.index')}}" class="nav-link">
@@ -82,12 +67,16 @@
         </ul>
       </li>
       <li class="nav-item">
-        <a href="pages/widgets.html" class="nav-link">
+        <form id="logout-form" action="{{ route('logout') }}" method="POST" hidden>
+          @csrf
+      </form>
+      <a href="#" class="nav-link text-white @yield('')"
+          onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
           <i class="nav-icon fas fa-sign-out-alt"></i>
           <p>
-            Logout
+              Logout
           </p>
-        </a>
+      </a>
       </li>
     </ul>
   </nav>

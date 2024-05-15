@@ -6,6 +6,7 @@ use App\Http\Middleware\Admin;
 use App\Http\Middleware\User;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -30,11 +31,17 @@ Route::middleware([Admin::class])->name('admin.')->prefix('admin')->group(functi
     // KELOLA PRODUK
     Route::get('/produk', [ProductController::class, 'index'])->name('produk.index');
     Route::post('/produk/{id}', [ProductController::class, 'update'])->name('produk.update');
+
+    // Kelola User
+    Route::get('/user', [UserController::class, 'index'])->name('user.index');
+    Route::post('/user', [UserController::class, 'store'])->name('user.store');
+    Route::post('/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('/user/{id}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
 });
 
 // USER
 Route::middleware([User::class])->name('user.')->prefix('user')->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 });
 
