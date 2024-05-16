@@ -15,7 +15,7 @@
         </div>
         <div class="modal-body">
           <!-- Form for editing -->
-          <form id="editForm" action="{{route('admin.produk.update', $product->id)}}" method="POST" enctype="multipart/form-data">
+          <form id="editForm" action="{{route('admin.product.update', $product->id)}}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('POST')
             <div class="form-group">

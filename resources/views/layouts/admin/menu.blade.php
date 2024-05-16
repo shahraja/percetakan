@@ -28,7 +28,7 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="{{route('admin.produk.index')}}" class="nav-link">
+        <a href="{{route('admin.product.index')}}" class="nav-link">
           <i class="nav-icon fas fa-tachometer-alt"></i>
           <p>
             Kelola Katalog
@@ -36,35 +36,20 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="" class="nav-link">
+        <a href="{{route('admin.payment.index')}}" class="nav-link">
           <i class="nav-icon fas fa-money-bill"></i>
           <p>
             Kelola Pembayaran
           </p>
         </a>
       </li>
-      <li class="nav-item has-treeview">
-        <a href="#" class="nav-link">
+      <li class="nav-item">
+        <a href="{{route('admin.cart.index')}}" class="nav-link">
           <i class="nav-icon fas fa-cart-shopping"></i>
           <p>
             Kelola Pesanan
-            <i class="fas fa-angle-left right"></i>
           </p>
         </a>
-        <ul class="nav nav-treeview">
-          <li class="nav-item">
-            <a href="pages/layout/top-nav.html" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Kelola Data Pesanan</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="pages/layout/boxed.html" class="nav-link">
-              <i class="far fa-circle nav-icon"></i>
-              <p>Kelola Status</p>
-            </a>
-          </li>
-        </ul>
       </li>
       <li class="nav-item">
         <form id="logout-form" action="{{ route('logout') }}" method="POST" hidden>
