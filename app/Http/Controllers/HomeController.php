@@ -39,6 +39,24 @@ class HomeController extends Controller
         return view('client.cart', compact('products'));
     }
 
+    public function cart2() 
+    {
+        $products = Product::all();
+        return view('client.cart2', compact('products'));
+    }
+
+    public function checkout() 
+    {
+        $products = Product::all();
+        return view('client.checkout', compact('products'));
+    }
+
+    public function paymnet() 
+    {
+        $products = Product::all();
+        return view('client.payment', compact('products'));
+    }
+    
     public function profile()
     {
         $products = Product::all();

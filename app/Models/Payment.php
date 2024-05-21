@@ -10,5 +10,5 @@ class Payment extends Model
     use HasFactory;
 
     protected $table = 'payment';
-    protected $fillable = ['token_user', 'tgl_transaksi', 'nama', 'produk', 'waktu', 'gambar'];
+    protected $fillable = ['token_user', 'tgl_transaksi', 'nama', 'produk', 'waktu', 'gambar', 'status'];
 }

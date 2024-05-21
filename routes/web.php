@@ -19,6 +19,9 @@ Route::get('/tentang', [HomeController::class, 'about'])->name('about');
 Route::get('/produk/{id}', [HomeController::class, 'detail_product'])->name('detail_product');
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
 Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
+Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
+Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
+Route::get('/pembayaran', [HomeController::class, 'paymnet'])->name('paymnet');
 Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 
 Auth::routes();
@@ -45,9 +48,10 @@ Route::middleware([Admin::class])->name('admin.')->prefix('admin')->group(functi
     //KELOLA PESANAN
     Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
     Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
-
+    
     //KELOLA PEMBAYARAN
     Route::get('/pembayaran', [PaymentController::class, 'index'])->name('payment.index');
+    Route::put('/pembayaran/{id}', [PaymentController::class, 'update'])->name('payment.update');
 });
 
 // USER

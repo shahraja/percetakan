@@ -21,6 +21,7 @@ class PaymentSeeder extends Seeder
                 'produk' => 'banner',
                 'waktu' => '19.00',
                 'gambar' => 'logo-1.png',
+                'status' => 'Menunggu Konfirmasi',
             ],
             [
                 'token_user' => 'kibas',
@@ -29,6 +30,7 @@ class PaymentSeeder extends Seeder
                 'produk' => 'banner',
                 'waktu' => '19.10',
                 'gambar' => 'logo-2.png',
+                'status' => 'Menunggu Konfirmasi',
             ],
             ];
             Payment::query()->insert($payment);

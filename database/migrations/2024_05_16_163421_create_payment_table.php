@@ -17,8 +17,9 @@ return new class extends Migration
             $table->date('tgl_transaksi');
             $table->string('nama');
             $table->string('produk');
-            $table->time('waktu');
+            $table->string('waktu');
             $table->string('gambar');
+            $table->string('status');
             $table->timestamps();
         });
     }

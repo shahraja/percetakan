@@ -1,6 +1,6 @@
 <!-- Button to trigger modal -->
 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createModal">
-    <i class="fa fa-plus"></i>
+    <i class="fa fa-plus"></i> Tambah Data Akun
   </button>
   
   <!-- Modal -->

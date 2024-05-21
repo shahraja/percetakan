@@ -13,4 +13,20 @@ class PaymentController extends Controller
         $payments = Payment::all();
         return view('admin.payment.index', compact('payments'));
     }
+
+    public function update(Request $request, string $id)
+    {
+        $request->validate([
+            'status' => 'required|max:255',
+        ]);
+
+        $payment = Payment::findOrFail($id);
+        $payment->update([
+            'status' => $request->status,
+        ]);
+
+        if (auth()->user()->role == 'admin') {
+            return back()->with('alert', 'Berhasil Edit User!');
+        }
+    }
 }
