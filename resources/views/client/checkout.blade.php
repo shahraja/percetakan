@@ -4,10 +4,16 @@
 
 @section('content')
     <div class="container mb-5">
-        <h2 class="my-3"><i class="fa fa-arrow-left pe-2"></i>Pesanan Saya</h2>
+        <h2 class="my-5"><span class="btn btn-success bg-utama"><i class="fa fa-arrow-left pe-2"></i></span> Keranjang Saya</h2>
         <form action="">
+            <label>
+                <input type="radio" name="option" value="1" onclick="toggleCard()"> Delivery
+            </label>
+            <label class="ms-5">
+                <input type="radio" name="option" value="2" onclick="toggleCard()"> Pick Up
+            </label>
             <div class="row my-2">
-                <div class="border rounded p-3 me-5 shadow">
+                <div class="border rounded p-3 me-5 shadow card">
                     <div class="row">
                         <div>
                             <div class="row py-3">
@@ -38,10 +44,10 @@
                             <div class="row py-3">
                                 <di class="col-md-4">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <img src="{{asset('assets/img/undangan.jpg')}}" class="img img-fluid rounded" style="object-fit: cover max-width: 90px; max-height:90px;" width="500" alt="">
+                                        <div class="col-md-7">
+                                            <img src="{{asset('assets/img/undangan.jpg')}}" class="img img-fluid rounded" style="object-fit: cover max-width: 120px; max-height:120px;" width="500" alt="">
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-5">
                                             <p class="ms-2">banner</p>
                                         </div>
                                     </div>
@@ -67,17 +73,33 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 p-0">
-                <div class="border rounded p-3 mt-2 shadow w-100 justify-content-end">
-                    <p class="my-1">Subtotal     :    Rp.500.000</p>
-                    <p>Ongkos Kirim :    Rp.500.000</p>
-                    <hr>
-                    <p>Total:       Rp.500.000</p>
-                    <div class="text-center my-3">
-                        <button type="submit" class="btn btn-success bg-utama col-md-8">CheckOut</button>
+            <div class="row d-flex justify-content-end mt-5">
+                <div class="col-md-4 p-0">
+                    <div class="border rounded p-3 mt-2 shadow w-100 justify-content-end">
+                        <p class="my-1">Subtotal     :    Rp.500.000</p>
+                        <p>Ongkos Kirim :    Rp.500.000</p>
+                        <hr>
+                        <p>Total:       Rp.500.000</p>
+                        <div class="text-center my-3">
+                            <button type="submit" class="btn btn-success bg-utama col-md-8">CheckOut</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </form>
     </div>
+
+<script>
+    function toggleCard() {
+        const card = document.querySelector('.card');
+        const radioButtons = document.querySelectorAll('input[name="option"]');
+        
+        if (radioButtons[1].checked) {
+            card.style.display = 'none';
+        } else {
+            card.style.display = 'block';
+        }
+    }
+</script>
+    
 @endsection

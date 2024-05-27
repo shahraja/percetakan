@@ -32,7 +32,35 @@
           <a class="nav-link mx-5" href="{{route('contact')}}">Kontak</a>
         </li>
       </ul>
-        <a href="{{route('login')}}" class="btn btn-success bg-utama">login</a>
+      @guest
+          <a href="{{ route('login') }}" class="btn btn-success bg-utama">Login</a>
+      @else
+        <div class="btn-group">
+            <a href="#" class="btn btn-success bg-utama dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" href="{{ route('profile') }}">Profile</a>
+                <a class="dropdown-item" href="{{ route('cart2') }}">Pesanan Saya</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="{{ route('logout') }}" 
+                  onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                    Logout
+                </a>
+                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        </div>
+      @endguest
     </div>
   </div>
 </nav>
+
+<!-- Bootstrap CSS -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

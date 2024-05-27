@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container mb-3">
-        <h2 class="my-3"><i class="fa fa-arrow-left pe-2"></i>Pembayaran</h2>
+        <h2 class="my-5"><span class="btn btn-success bg-utama"><i class="fa fa-arrow-left pe-2"></i></span> Keranjang Saya</h2>
         <form action="">
             <div class="row my-2">
                 <div class="border rounded p-3 me-5 shadow">
@@ -29,7 +29,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6 float-right">
+                        <div class="col-md-6 text-center">
                             <p class="fw-bold" style="text-align: right;">RP700.000</p>
                         </div>
                     </div>
