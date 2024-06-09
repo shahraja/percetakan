@@ -35,6 +35,7 @@
       @guest
           <a href="{{ route('login') }}" class="btn btn-success bg-utama">Login</a>
       @else
+        <a href="{{route('cart2')}}" class="btn btn-success bg-utama me-4"><i class="fa-solid fa-cart-shopping"></i></a>
         <div class="btn-group">
             <a href="#" class="btn btn-success bg-utama dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <i class="fa fa-user"></i>
