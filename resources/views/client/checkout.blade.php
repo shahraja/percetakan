@@ -76,12 +76,12 @@
             <div class="row d-flex justify-content-end mt-5">
                 <div class="col-md-4 p-0">
                     <div class="border rounded p-3 mt-2 shadow w-100 justify-content-end">
-                        <p class="my-1">Subtotal     :    Rp.500.000</p>
-                        <p>Ongkos Kirim :    Rp.500.000</p>
+                        <p class="summary-item">Subtotal: <span class="float-end">Rp<span id="subtotal">650.000</span></span></p>
+                        <p class="summary-item">Ongkos Kirim: <span class="float-end">Rp<span id="shipping">50.000</span></span></p>
                         <hr>
-                        <p>Total:       Rp.500.000</p>
+                        <p class="summary-total">Total Pembayaran: <span class="float-end">Rp<span id="total-payment">700.000</span></span></p>
                         <div class="text-center my-3">
-                            <button type="submit" class="btn btn-success bg-utama col-md-8">CheckOut</button>
+                            <button type="submit" class="btn btn-success bg-utama col-md-8">Bayar</button>
                         </div>
                     </div>
                 </div>
@@ -100,6 +100,17 @@
             card.style.display = 'block';
         }
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const subtotal = '650.000';
+        const shipping = '50.000';
+        const totalPayment = '700.000';
+
+        document.getElementById('subtotal').textContent = subtotal;
+        document.getElementById('shipping').textContent = shipping;
+        document.getElementById('total-payment').textContent = totalPayment;
+    });
+
 </script>
     
 @endsection

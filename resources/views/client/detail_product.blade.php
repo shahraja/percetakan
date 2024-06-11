@@ -85,14 +85,22 @@
             const input1 = document.getElementById('jc');
             const input2 = document.getElementById('jc-hasil');
             const ukuran = document.getElementById('ukuran');
+            const kertas = document.getElementById('kertas');
             const hp = document.getElementById('hp');
 
             input1.addEventListener('input', () => {
                 input2.innerHTML = input1.value;
             });
+            // ukuran.addEventListener('input', () => {
+            //     hp.innerHTML = ukuranData[ukuran.value].hp;
+            // })
             ukuran.addEventListener('input', () => {
-                hp.innerHTML = ukuranData[ukuran.value].hp;
-            })
+                populateKertasOptions();
+                updateHargaPerBuah();
+            });
+            kertas.addEventListener('input', () => {
+                updateHargaPerBuah();
+            });
         });
 
 
@@ -101,37 +109,92 @@
                 width: 30.5,
                 height: 46,
                 hp: 3200,
-                plano: [61, 92]
+                plano: [61, 92],
+                prices: {
+                    '120': 2000,
+                    '150': 2300,
+                    '190': 2950,
+                    '210': 3200,
+                    '230': 3500,
+                }
             },
             plano2: {
                 width: 32.5,
                 height: 45,
                 hp: 3400,
-                plano: [65, 90]
+                plano: [65, 90],
+                prices: {
+                    '120': 2100,
+                    '150': 2450,
+                    '190': 3050,
+                    '210': 3400,
+                    '230': 3600,
+                    '260': 4050,
+                    '310': 4800,
+                }
             },
             plano3: {
                 width: 32.5,
                 height: 50,
                 hp: 3700,
-                plano: [65, 100]
+                plano: [65, 100],
+                prices: {
+                    '120': 2250,
+                    '150': 2700,
+                    '190': 3400,
+                    '210': 3700,
+                    '230': 4000,
+                    '260': 4500,
+                    '310': 5200,
+                }
             },
             plano4: {
                 width: 39.5,
                 height: 54.5,
                 hp: 4800,
-                plano: [79, 109]
+                plano: [79, 109],
+                prices: {
+                    '120': 2900,
+                    '150': 3500,
+                    '190': 4400,
+                    '210': 4800,
+                    '230': 5200,
+                    '260': 5800,
+                    '310': 7000,
+                    '400': 8800,
+                }
             },
             plano5: {
                 width: 36,
                 height: 39,
                 hp: 4800,
-                plano: [79, 109]
+                plano: [79, 109],
+                prices: {
+                    '120': 2900,
+                    '150': 3500,
+                    '190': 4400,
+                    '210': 4800,
+                    '230': 5200,
+                    '260': 5800,
+                    '310': 7000,
+                    '400': 8800,
+                }
             },
             plano6: {
                 width: 35,
                 height: 44,
                 hp: 4800,
-                plano: [79, 109]
+                plano: [79, 109],
+                prices: {
+                    '120': 2900,
+                    '150': 3500,
+                    '190': 4400,
+                    '210': 4800,
+                    '230': 5200,
+                    '260': 5800,
+                    '310': 7000,
+                    '400': 8800,
+                }
             }
         };
 
@@ -213,9 +276,22 @@
             populateKertasOptions(restrictedValues);
         }
 
+        function updateHargaPerBuah() {
+            const selectedUkuran = document.getElementById('ukuran').value;
+            const selectedKertas = document.getElementById('kertas').value;
+            const hp = document.getElementById('hp');
+
+            if (selectedUkuran && selectedKertas) {
+                hp.innerHTML = ukuranData[selectedUkuran].prices[selectedKertas];
+            } else {
+                hp.innerHTML = '';
+            }
+        }
+
         function calculatePrice() {
             const jc = parseFloat(document.getElementById('jc').value);
             const selectedUkuran = document.getElementById('ukuran').value;
+            const selectedKertas = document.getElementById('kertas').value;
             const laminasi = document.getElementById('laminasi').value;
 
             if (!selectedUkuran || isNaN(jc)) {
@@ -226,9 +302,10 @@
             const {
                 width,
                 height,
-                hp,
+                prices,
                 plano
             } = ukuranData[selectedUkuran];
+            const hp = prices[selectedKertas];
 
             const jumlahPagePerPlano = Math.floor(plano[0] / width) * Math.floor(plano[1] / height);
             const jumlahPlano = Math.ceil(jc / jumlahPagePerPlano);
@@ -239,7 +316,7 @@
 
             harga += hargaLaminasi;
 
-            document.getElementById('result').innerText = 'Rp ' + formatCurrency(harga.toFixed(2));
+            document.getElementById('result').innerText = 'Rp ' + formatCurrency(harga.toFixed(0));
 
             function formatCurrency(amount) {
                 return parseFloat(amount).toLocaleString('id-ID');
