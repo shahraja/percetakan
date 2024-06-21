@@ -18,7 +18,7 @@ class KalenderController extends Controller
                 'harga_plano' => 'required', 
                 'jumlah' => 'required', 
                 'gramasi' => 'required', 
-                'status' => 'required', 
+                // 'status' => 'required', 
                 'isi' => 'required', 
                 'jilid' => 'required', 
                 'laminasi' => 'required', 
@@ -36,7 +36,7 @@ class KalenderController extends Controller
             'harga_plano' => $request->harga_plano,
             'jumlah' => $request->jumlah,
             'gramasi' => $request->gramasi,
-            'status' => $request->status,
+            'status' => "Menunggu Konfirmasi",
             'isi' => $request->isi,
             'jilid' => $request->jilid,
             'laminasi' => $request->laminasi,
@@ -44,5 +44,6 @@ class KalenderController extends Controller
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
+        return back()->with('alert', 'Berhasil Tambah Kalender!');
     }
 }

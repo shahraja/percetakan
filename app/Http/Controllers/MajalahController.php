@@ -41,5 +41,6 @@ class MajalahController extends Controller
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
         ]);
+        return back()->with('alert', 'Berhasil Tambah Majalah!');
     }
 }

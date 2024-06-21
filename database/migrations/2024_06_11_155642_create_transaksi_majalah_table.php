@@ -16,17 +16,17 @@ return new class extends Migration
             $table->string('nama_produk');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->constrained('transaksi_kalender');
-            $table->string('alamat');
-            $table->integer('total_harga');
-            $table->integer('harga_plano');
-            $table->integer('jumlah');
-            $table->string('gramasi');
+            $table->string('alamat')->nullable();
+            $table->integer('total_harga')->nullable();
+            $table->integer('harga_plano')->nullable();
+            $table->integer('jumlah')->nullable();
+            $table->string('gramasi')->nullable();
             $table->enum('status',['Ditolak','Diproses','Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai',])->default('Menunggu Pembayaran');
-            $table->string('laminasi');
-            $table->string('uk_asli');
-            $table->string('uk_width');
-            $table->string('uk_height');
-            $table->integer('halaman');
+            $table->string('laminasi')->nullable();
+            $table->string('uk_asli')->nullable();
+            $table->string('uk_width')->nullable();
+            $table->string('uk_height')->nullable();
+            $table->integer('halaman')->nullable();
             $table->timestamps();
         });
     }

@@ -44,5 +44,6 @@ class BukuController extends Controller
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
+        return back()->with('alert', 'Berhasil Tambah Buku!');
     }
 }

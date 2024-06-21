@@ -9,8 +9,11 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
-use App\Models\Payment;
-use Database\Seeders\CartSeeder;
+use App\Http\Controllers\BrosurController;
+use App\Http\Controllers\BukuController;
+use App\Http\Controllers\KalenderController;
+use App\Http\Controllers\MajalahController;
+use App\Http\Controllers\UndanganController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -57,6 +60,12 @@ Route::middleware([Admin::class])->name('admin.')->prefix('admin')->group(functi
 // USER
 Route::middleware([User::class])->name('user.')->prefix('user')->group(function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+Route::post('/brosur', [BrosurController::class, 'store'])->name('brosur.store');
+Route::post('/buku', [BukuController::class, 'store'])->name('buku.store');
+Route::post('/kalender', [KalenderController::class, 'store'])->name('kalender.store');
+Route::post('/majalah', [MajalahController::class, 'store'])->name('majalah.store');
+Route::post('/undangan', [UndanganController::class, 'store'])->name('undangan.store');
 
 });
 
