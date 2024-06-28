@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BrosurController;
 use App\Http\Controllers\BukuController;
+use App\Http\Controllers\ClientPaymentController;
 use App\Http\Controllers\KalenderController;
 use App\Http\Controllers\MajalahController;
 use App\Http\Controllers\UndanganController;
@@ -24,7 +25,9 @@ Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
 Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
 Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
 Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
-Route::get('/pembayaran', [HomeController::class, 'paymnet'])->name('paymnet');
+// Route::get('/pembayaran', [HomeController::class, 'paymnet'])->name('paymnet');
+Route::get('/pembayaran/{nama_produk}-{nomor_pesanan}', [ClientPaymentController::class, 'create'])->name('payment');
+Route::put('/pembayaran/{nama_produk}-{nomor_pesanan}', [ClientPaymentController::class, 'update'])->name('payment.update');
 Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 
 Auth::routes();

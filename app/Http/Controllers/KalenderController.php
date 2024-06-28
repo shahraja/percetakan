@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Kalender;
+use App\Models\Product;
 
 class KalenderController extends Controller
 {
@@ -92,7 +93,9 @@ class KalenderController extends Controller
                 'laminasi' => $hargaLaminasi,
             ]);
 
-            Kalender::create([
+            $products = Product::all();
+
+            $kalender = Kalender::create([
                 'transaksi_id' => $transaksi->id,
                 'lembar' => $request->lembar,
                 'jilid' => $request->jilid,
@@ -109,7 +112,7 @@ class KalenderController extends Controller
                 // 'status' => "Menunggu Konfirmasi",
                 // 'laminasi' => $request->laminasi,
             ]);
-            return back()->with('alert', 'Berhasil Tambah Kalender!');
+            return view('client.checkout', compact('transaksi', 'kalender', 'products'));
         }
     }
 

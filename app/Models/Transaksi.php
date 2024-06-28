@@ -22,4 +22,14 @@ class Transaksi extends Model
         'laminasi',
         'gambar', 
         'status'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function Kalender()
+    {
+        return $this->belongsTo(Kalender::class, 'transaksi_id', 'id');
+    }
 }

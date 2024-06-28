@@ -48,25 +48,25 @@
                                             <img src="{{asset('assets/img/undangan.jpg')}}" class="img img-fluid rounded" style="object-fit: cover max-width: 120px; max-height:120px;" width="500" alt="">
                                         </div>
                                         <div class="col-md-5">
-                                            <p class="ms-2">banner</p>
+                                            <p class="ms-2">{{$transaksi->nama_produk}}</p>
                                         </div>
                                     </div>
                                 </di>
                                 <div class="col-md-2 mb-1">
                                     <p>Variasi</p>
-                                    <p>variasi: 1 Sisi, Artpaper 100gr, glossy 1 sisi, tanpa lipat</p>
+                                    <p>{{$transaksi->gramasi.', '. $kalender->lembar. ', '. $kalender->jilid}}</p>
                                 </div>
                                 <div class="col-md-2 mb-1">
                                     <p>Harga Satuan</p>
-                                    <p>Rp650</p>
+                                    <p>{{$transaksi->harga_plano}}</p>
                                 </div>
                                 <div class="col-md-2 mb-1">
                                     <p>Jumlah</p>
-                                    <p>1000</p>
+                                    <p>{{$transaksi->jml_total}}</p>
                                 </div>
                                 <div class="col-md-2 mb-1">
                                     <p>Subtotal Produk</p>
-                                    <p>Rp650.000</p>
+                                    <p>Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -76,12 +76,12 @@
             <div class="row d-flex justify-content-end mt-5">
                 <div class="col-md-4 p-0">
                     <div class="border rounded p-3 mt-2 shadow w-100 justify-content-end">
-                        <p class="summary-item">Subtotal: <span class="float-end">Rp<span id="subtotal">650.000</span></span></p>
+                        <p class="summary-item">Subtotal: <span class="float-end">Rp <span id="subtotal">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span></p>
                         <p class="summary-item">Ongkos Kirim: <span class="float-end">Rp<span id="shipping">50.000</span></span></p>
                         <hr>
                         <p class="summary-total">Total Pembayaran: <span class="float-end">Rp<span id="total-payment">700.000</span></span></p>
                         <div class="text-center my-3">
-                            <button type="submit" class="btn btn-success bg-utama col-md-8">Bayar</button>
+                                <a href="{{ route('payment', [$transaksi->nama_produk, $transaksi->nomor_pesanan])}}" class="btn btn-success bg-utama col-md-8">Bayar</a>
                         </div>
                     </div>
                 </div>
@@ -89,7 +89,7 @@
         </form>
     </div>
 
-<script>
+{{-- <script>
     function toggleCard() {
         const card = document.querySelector('.card');
         const radioButtons = document.querySelectorAll('input[name="option"]');
@@ -111,6 +111,6 @@
         document.getElementById('total-payment').textContent = totalPayment;
     });
 
-</script>
+</script> --}}
     
 @endsection

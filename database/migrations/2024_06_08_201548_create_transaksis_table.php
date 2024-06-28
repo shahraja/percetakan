@@ -25,6 +25,7 @@ return new class extends Migration
             $table->string('gramasi')->nullable();
             $table->string('laminasi')->nullable();
             $table->string('gambar')->nullable();
+            $table->boolean('metode_pengambilan')->default(false);
             $table->enum('status',['Ditolak','Diproses','Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai',])->default('Menunggu Pembayaran');
             $table->timestamps();
         });
