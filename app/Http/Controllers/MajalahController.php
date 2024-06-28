@@ -11,23 +11,26 @@ class MajalahController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_produk' => 'required',
-            // 'total_harga' => 'required',
-            // 'harga_plano' => 'required',
-            'jumlah' => 'required',
-            'gramasi' => 'required',
             'halaman' => 'required',
-            'laminasi' => 'required',
             'uk_asli' => 'required',
             'uk_width' => 'required',
             'uk_height' => 'required',
+            'finishing' => 'required',
+            // 'nama_produk' => 'required',
+            // 'total_harga' => 'required',
+            // 'harga_plano' => 'required',
+            // 'jumlah' => 'required',
+            // 'gramasi' => 'required',
+            // 'laminasi' => 'required',
         ]);
-
+        
         // Ambil data dari request
+        // dd($request->all());
         $nama_produk = $request->nama_produk;
         $user_id = $request->user_id;
         $alamat = $request->alamat;
         $gramasi = $request->gramasi;
+        $finishing = $request->finishing;
         $total_harga = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
         $harga_plano = $this->calculateUkuranData($request->ukuran, 'prices', $gramasi);
         $jumlah = $request->jumlah;
@@ -53,19 +56,20 @@ class MajalahController extends Controller
         // Simpan ke database
         Majalah::create([
             'transaksi_id' => $transaksi->id,
-            'nama_produk' => $nama_produk,
-            'user_id' => $user_id,
-            'alamat' => $alamat,
-            'total_harga' => $total_harga,
-            'harga_plano' => $harga_plano,
-            'jumlah' => $jumlah,
-            'gramasi' => $gramasi,
-            'status' => $status,
             'halaman' => $halaman,
-            'laminasi' => $laminasi,
             'uk_asli' => $uk_asli,
             'uk_width' => $uk_width,
             'uk_height' => $uk_height,
+            'finishing' => $finishing,
+            // 'nama_produk' => $nama_produk,
+            // 'user_id' => $user_id,
+            // 'alamat' => $alamat,
+            // 'total_harga' => $total_harga,
+            // 'harga_plano' => $harga_plano,
+            // 'jumlah' => $jumlah,
+            // 'gramasi' => $gramasi,
+            // 'status' => $status,
+            // 'laminasi' => $laminasi,
         ]);
 
         return back()->with('alert', 'Berhasil Tambah Majalah!');

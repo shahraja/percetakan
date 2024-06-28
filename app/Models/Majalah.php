@@ -11,6 +11,7 @@ class Majalah extends Model
     protected $fillable = [
         'transaksi_id',
         'halaman', 
+        'finishing',
         'uk_asli', 
         'uk_width', 
         'uk_height'];

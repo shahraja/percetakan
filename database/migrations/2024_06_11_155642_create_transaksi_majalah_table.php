@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('uk_width')->nullable();
             $table->string('uk_height')->nullable();
             $table->integer('halaman')->nullable();
+            $table->string('finishing')->nullable();
             $table->timestamps();
         });
     }

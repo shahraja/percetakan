@@ -10,7 +10,7 @@ class Kalender extends Model
     protected $table = 'transaksi_kalender';
     protected $fillable = [
         'transaksi_id',
-        'isi', 
+        'lembar', 
         'jilid', 
         'uk_asli', 
         'uk_width', 

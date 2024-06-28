@@ -10,35 +10,38 @@ class BukuController extends Controller
 {
     public function store(Request $request)
     {
-        dd($request->all());
-        $request->validate([
-            'nama_produk' => 'required',
-            // 'total_harga' => 'required',
-            // 'harga_plano' => 'required',
-            'jumlah' => 'required',
-            'gramasi' => 'required',
-            'halaman' => 'required',
-            'laminasi' => 'required',
-            'uk_asli' => 'required',
-            'uk_width' => 'required',
-            'uk_height' => 'required',
-        ]);
+        $request->validate(
+            [
+                'halaman' => 'required',
+                'uk_asli' => 'required',
+                'uk_width' => 'required',
+                'uk_height' => 'required',
+                'finishing' => 'required',
+                // 'nama_produk' => 'required',
+                // 'total_harga' => 'required',
+                // 'harga_plano' => 'required',
+                // 'jumlah' => 'required',
+                // 'gramasi' => 'required',
+                // 'laminasi' => 'required',
+            ]
+        );
 
-        // Ambil data dari request
+         // Ambil data dari request
+        // dd($request->all());
         $nama_produk = $request->nama_produk;
         $user_id = $request->user_id;
         $alamat = $request->alamat;
-        $total_harga = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
-        $harga_plano = $request->harga_plano;
-        $jumlah = $request->jumlah;
         $gramasi = $request->gramasi;
+        $finishing = $request->finishing;
+        $total_harga = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
+        $harga_plano = $this->calculateUkuranData($request->ukuran, 'prices', $gramasi);
+        $jumlah = $request->jumlah;
         $status = $request->status;
         $halaman = $request->halaman;
         $laminasi = $request->laminasi;
         $uk_asli = $request->uk_asli;
         $uk_width = $request->uk_width;
         $uk_height = $request->uk_height;
-
         
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
@@ -52,38 +55,19 @@ class BukuController extends Controller
             'laminasi' => $laminasi,
         ]);
 
-        // Simpan ke database
         Buku::create([
             'transaksi_id' => $transaksi->id,
-            'nama_produk' => $nama_produk,
-            'user_id' => $user_id,
-            'alamat' => $alamat,
-            'total_harga' => $total_harga,
-            'harga_plano' => $harga_plano,
-            'jumlah' => $jumlah,
-            'gramasi' => $gramasi,
-            'status' => $status,
             'halaman' => $halaman,
-            'laminasi' => $laminasi,
             'uk_asli' => $uk_asli,
             'uk_width' => $uk_width,
             'uk_height' => $uk_height,
+            'finishing' => $finishing,
         ]);
-
         return back()->with('alert', 'Berhasil Tambah Buku!');
     }
 
-    private function calculateTotalPrice(Request $request)
+    private function calculateUkuranData($ukuran, $param, $kertas)
     {
-        // Ambil data dari request
-        $halaman = $request->halaman;
-        $jumlah = $request->jumlah;
-        $ukuran = $request->ukuran;
-        $kertas = $request->kertas;
-        $laminasi = $request->laminasi;
-        $finishing = $request->finishing;
-
-        // Ambil data ukuran dan kertas dari frontend
         $ukuranData = [
             'A4' => [
                 'width' => 21,
@@ -103,12 +87,34 @@ class BukuController extends Controller
             ],
         ];
 
-        // Hitung harga kertas berdasarkan pilihan
-        $hargaKertas = $ukuranData[$ukuran]['prices'][$kertas];
+        if($kertas == null){
+            return $ukuranData[$ukuran][$param];
+        }
+        return intval($ukuranData[$ukuran][$param][$kertas]);
+    }
 
+    private function calculateTotalPrice(Request $request)
+    {
+        // Ambil data dari request
+        $halaman = $request->halaman;
+        $jumlah = $request->jumlah;
+        $ukuran = $request->ukuran;
+        $kertas = $request->gramasi;
+        $laminasi = $request->laminasi;
+        $finishing = $request->finishing;
+
+        // Hitung harga kertas berdasarkan pilihan
+        $hargaKertas = $this->calculateUkuranData($ukuran, 'prices', $kertas);
         // Hitung harga total berdasarkan logika perhitungan yang ada
         // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
-        $hargaTotal = $this->calculatePriceLogic($halaman, $jumlah, $ukuranData[$ukuran]['width'], $ukuranData[$ukuran]['height'], $hargaKertas, $laminasi, $finishing);
+        $hargaTotal = $this->calculatePriceLogic(
+            $halaman, 
+            $jumlah, 
+            $this->calculateUkuranData($ukuran, 'width', null), 
+            $this->calculateUkuranData($ukuran, 'height', null), 
+            $hargaKertas, 
+            $laminasi, 
+            $finishing);
 
         return $hargaTotal;
     }
@@ -165,4 +171,5 @@ class BukuController extends Controller
                 return 0;
         }
     }
+
 }
