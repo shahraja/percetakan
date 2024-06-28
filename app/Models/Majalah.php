@@ -8,5 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Majalah extends Model
 {
     protected $table = 'transaksi_majalah';
-    protected $fillable = ['transaksi_id', 'nama_produk', 'halaman', 'uk_asli', 'uk_width', 'uk_height'];
+    protected $fillable = [
+        'transaksi_id',
+        'halaman', 
+        'uk_asli', 
+        'uk_width', 
+        'uk_height'];
 }

@@ -16,15 +16,15 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')
                 ->constrained('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nomor_pesanan');
-            $table->string('nama_produk');
-            $table->string('alamat');
-            $table->string('total_harga');
-            $table->string('harga_plano');
-            $table->string('jml_total');
-            $table->string('gramasi');
-            $table->string('laminasi');
-            $table->string('gambar');
+            $table->string('nomor_pesanan')->nullable();
+            $table->string('nama_produk')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('total_harga')->nullable();
+            $table->string('harga_plano')->nullable();
+            $table->string('jml_total')->nullable();
+            $table->string('gramasi')->nullable();
+            $table->string('laminasi')->nullable();
+            $table->string('gambar')->nullable();
             $table->enum('status',['Ditolak','Diproses','Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai',])->default('Menunggu Pembayaran');
             $table->timestamps();
         });

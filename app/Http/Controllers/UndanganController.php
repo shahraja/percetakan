@@ -145,7 +145,6 @@ class UndanganController extends Controller
             'total_harga' => $totalHarga,
             'gramasi' => $gramasi,
             'laminasi' => $laminasi,
-            'status' => 'Menunggu Konfirmasi',
         ]);
 
         Undangan::create([

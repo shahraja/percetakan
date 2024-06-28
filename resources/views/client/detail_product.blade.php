@@ -31,7 +31,7 @@
             <div class="col border rounded shadow p-4 mx-2">
                 <div class="form-group row pe-2">
                     <label class="form-label col-md-3" for="jc">Jumlah</label>
-                    <input class="form-control col-md-9" name="jumlah" id="jc" type="text" required>
+                    <input class="form-control col-md-9" name="jumlah" id="jc" type="number" required>
                 </div>
                 <div class="form-group row pe-2">
                     <label class="form-label col-md-3" for="ukuran">Ukuran</label>

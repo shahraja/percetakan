@@ -8,5 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Kalender extends Model
 {
     protected $table = 'transaksi_kalender';
-    protected $fillable = ['transaksi_id',  'nama_produk', 'isi', 'jilid', 'uk_asli', 'uk_width', 'uk_height'];
+    protected $fillable = [
+        'transaksi_id',
+        'isi', 
+        'jilid', 
+        'uk_asli', 
+        'uk_width', 
+        'uk_height'];
 }

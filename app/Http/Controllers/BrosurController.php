@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Brosur;
 
@@ -136,21 +137,24 @@ class BrosurController extends Controller
 
         $totalHarga = $harga + $hargaLaminasi;
 
-        Brosur::create([
-            'nama_produk' => $request->nama_produk,
+        $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
+            'nomor_pesanan' => random_int(100000, 999999),
+            'nama_produk' => 'Brosur',
             'alamat' => auth()->user()->alamat,
-            'total_harga' => $totalHarga,
             'harga_plano' => $hp,
-            'jumlah' => $jumlahCetak,
+            'jml_total' => $jumlahCetak,
+            'total_harga' => $totalHarga,
             'gramasi' => $gramasi,
             'laminasi' => $laminasi,
-            'status' => 'Menunggu Konfirmasi',
-            'laminasi' => $request->laminasi,
+        ]);
+        $brosur = Brosur::create([
+            'transaksi_id' => $transaksi->id,
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
+        // dd($brosur);
         return back()->with('alert', 'Berhasil Tambah Brosur!');
     }
 

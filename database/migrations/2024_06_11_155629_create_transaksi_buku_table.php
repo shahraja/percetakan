@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('transaksi_id')->nullable();
             $table->foreign('transaksi_id')->references('id')->on('transaksi')
                 ->constrained('transaksi')->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nama_produk');
             $table->string('uk_asli')->nullable();
             $table->string('uk_width')->nullable();
             $table->string('uk_height')->nullable();
