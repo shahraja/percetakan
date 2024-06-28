@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Majalah;
 
@@ -11,13 +12,10 @@ class MajalahController extends Controller
     {
         $request->validate([
             'nama_produk' => 'required',
-            'user_id' => 'required',
-            'alamat' => 'required|max:255',
-            'total_harga' => 'required',
-            'harga_plano' => 'required',
+            // 'total_harga' => 'required',
+            // 'harga_plano' => 'required',
             'jumlah' => 'required',
             'gramasi' => 'required',
-            'status' => 'required',
             'halaman' => 'required',
             'laminasi' => 'required',
             'uk_asli' => 'required',
@@ -29,19 +27,32 @@ class MajalahController extends Controller
         $nama_produk = $request->nama_produk;
         $user_id = $request->user_id;
         $alamat = $request->alamat;
-        $total_harga = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
-        $harga_plano = $request->harga_plano;
-        $jumlah = $request->jumlah;
         $gramasi = $request->gramasi;
+        $total_harga = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
+        $harga_plano = $this->calculateUkuranData($request->ukuran, 'prices', $gramasi);
+        $jumlah = $request->jumlah;
         $status = $request->status;
         $halaman = $request->halaman;
         $laminasi = $request->laminasi;
         $uk_asli = $request->uk_asli;
         $uk_width = $request->uk_width;
         $uk_height = $request->uk_height;
+        
+        $transaksi = Transaksi::create([
+            'user_id' => auth()->user()->id,
+            'nomor_pesanan' => random_int(100000, 999999),
+            'nama_produk' => 'Brosur',
+            'alamat' => auth()->user()->alamat,
+            'harga_plano' => $harga_plano,
+            'jml_total' => $jumlah,
+            'total_harga' => $total_harga,
+            'gramasi' => $gramasi,
+            'laminasi' => $laminasi,
+        ]);
 
         // Simpan ke database
         Majalah::create([
+            'transaksi_id' => $transaksi->id,
             'nama_produk' => $nama_produk,
             'user_id' => $user_id,
             'alamat' => $alamat,
@@ -60,17 +71,8 @@ class MajalahController extends Controller
         return back()->with('alert', 'Berhasil Tambah Majalah!');
     }
 
-    private function calculateTotalPrice(Request $request)
+    private function calculateUkuranData($ukuran, $param, $kertas)
     {
-        // Ambil data dari request
-        $halaman = $request->halaman;
-        $jumlah = $request->jumlah;
-        $ukuran = $request->ukuran;
-        $kertas = $request->kertas;
-        $laminasi = $request->laminasi;
-        $finishing = $request->finishing;
-
-        // Ambil data ukuran dan kertas dari frontend
         $ukuranData = [
             'A4' => [
                 'width' => 21,
@@ -90,12 +92,34 @@ class MajalahController extends Controller
             ],
         ];
 
-        // Hitung harga kertas berdasarkan pilihan
-        $hargaKertas = $ukuranData[$ukuran]['prices'][$kertas];
+        if($kertas == null){
+            return $ukuranData[$ukuran][$param];
+        }
+        return intval($ukuranData[$ukuran][$param][$kertas]);
+    }
 
+    private function calculateTotalPrice(Request $request)
+    {
+        // Ambil data dari request
+        $halaman = $request->halaman;
+        $jumlah = $request->jumlah;
+        $ukuran = $request->ukuran;
+        $kertas = $request->gramasi;
+        $laminasi = $request->laminasi;
+        $finishing = $request->finishing;
+
+        // Hitung harga kertas berdasarkan pilihan
+        $hargaKertas = $this->calculateUkuranData($ukuran, 'prices', $kertas);
         // Hitung harga total berdasarkan logika perhitungan yang ada
         // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
-        $hargaTotal = $this->calculatePriceLogic($halaman, $jumlah, $ukuranData[$ukuran]['width'], $ukuranData[$ukuran]['height'], $hargaKertas, $laminasi, $finishing);
+        $hargaTotal = $this->calculatePriceLogic(
+            $halaman, 
+            $jumlah, 
+            $this->calculateUkuranData($ukuran, 'width', null), 
+            $this->calculateUkuranData($ukuran, 'height', null), 
+            $hargaKertas, 
+            $laminasi, 
+            $finishing);
 
         return $hargaTotal;
     }

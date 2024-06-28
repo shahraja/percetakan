@@ -108,7 +108,7 @@ function updateHargaPerBuah() {
 
 function calculatePrice() {
     const jc = parseFloat(document.getElementById('jc').value);
-    const halaman = parseFloat(document.getElementById('lembar').value);
+    const halaman = parseFloat(document.getElementById('halaman').value);
     const selectedUkuran = document.getElementById('ukuran').value;
     const selectedKertas = document.getElementById('kertas').value;
     const laminasi = document.getElementById('laminasi').value;

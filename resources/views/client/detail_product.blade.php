@@ -49,7 +49,7 @@
                 @if ($product->judul == 'Kalender')
                     <div class="form-group row pe-2">
                         <label class="form-label col-md-3" for="lembar">Jumlah Lembar</label>
-                        <input class="form-control col-md-9" name="lembar" id="lembar" type="text" required>
+                        <input class="form-control col-md-9" name="lembar" id="lembar" type="number" required>
                     </div>
                     <div class="form-group row pe-2">
                         <label class="form-label col-md-3" for="jilid">Jilid</label>
@@ -64,8 +64,8 @@
                 @if ($product->judul == 'Buku' || $product->judul == 'Majalah')
                     <!-- Input untuk jumlah lembar per buku -->
                     <div class="form-group row pe-2">
-                        <label class="form-label col-md-3" for="lembar">Jumlah Lembar</label>
-                        <input class="form-control col-md-9" name="lembar" id="lembar" type="text" required>
+                        <label class="form-label col-md-3" for="halaman">Jumlah Lembar</label>
+                        <input class="form-control col-md-9" name="halaman" id="halaman" type="number" required>
                     </div>
                     <!-- Select untuk laminasi cover -->
                     {{-- <div class="form-group row pe-2">
@@ -146,7 +146,6 @@
     @elseif($product->judul == 'Brosur')
         <script src="{{ asset('/assets/js/brosur.js') }}"></script>
     @endif
-
 
 
 @endsection
