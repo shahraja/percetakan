@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Undangan;
 
@@ -134,16 +135,21 @@ class UndanganController extends Controller
 
         $totalHarga = $harga + $hargaLaminasi;
 
-        Undangan::create([
-            'nama_produk' => $request->nama_produk,
+        $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
+            'nomor_pesanan' => random_int(100000, 999999),
+            'nama_produk' => 'Undangan',
             'alamat' => auth()->user()->alamat,
-            'total_harga' => $totalHarga,
             'harga_plano' => $hp,
-            'jumlah' => $jumlahCetak,
+            'jml_total' => $jumlahCetak,
+            'total_harga' => $totalHarga,
             'gramasi' => $gramasi,
             'laminasi' => $laminasi,
-            'status' => 'Menunggu Pembayaran',
+            'status' => 'Menunggu Konfirmasi',
+        ]);
+
+        Undangan::create([
+            'transaksi_id' => $transaksi->id,
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height

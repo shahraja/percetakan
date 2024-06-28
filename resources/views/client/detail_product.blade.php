@@ -135,8 +135,6 @@
     </div>
 
 
-
-
     @if ($product->judul == 'Undangan')
         <script src="{{ asset('/assets/js/undang.js') }}"></script>
     @elseif($product->judul == 'Majalah')
@@ -148,5 +146,7 @@
     @elseif($product->judul == 'Brosur')
         <script src="{{ asset('/assets/js/brosur.js') }}"></script>
     @endif
+
+
 
 @endsection

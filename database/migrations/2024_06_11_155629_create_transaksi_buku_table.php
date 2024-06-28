@@ -13,16 +13,10 @@ return new class extends Migration
     {
         Schema::create('transaksi_buku', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('transaksi_id')->nullable();
+            $table->foreign('transaksi_id')->references('id')->on('transaksi')
+                ->constrained('transaksi')->onDelete('cascade')->onUpdate('cascade');
             $table->string('nama_produk');
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users')->constrained('transaksi_kalender');
-            $table->string('alamat')->nullable();
-            $table->integer('total_harga')->nullable();
-            $table->integer('harga_plano')->nullable();
-            $table->integer('jumlah')->nullable();
-            $table->string('gramasi')->nullable();
-            $table->enum('status',['Ditolak','Diproses','Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai',])->default('Menunggu Pembayaran');
-            $table->string('laminasi')->nullable();
             $table->string('uk_asli')->nullable();
             $table->string('uk_width')->nullable();
             $table->string('uk_height')->nullable();
