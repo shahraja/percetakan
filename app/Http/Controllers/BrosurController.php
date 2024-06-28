@@ -148,13 +148,12 @@ class BrosurController extends Controller
             'gramasi' => $gramasi,
             'laminasi' => $laminasi,
         ]);
-        $brosur = Brosur::create([
+        Brosur::create([
             'transaksi_id' => $transaksi->id,
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
-        // dd($brosur);
         return back()->with('alert', 'Berhasil Tambah Brosur!');
     }
 
