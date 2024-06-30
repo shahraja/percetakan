@@ -152,13 +152,13 @@ class BrosurController extends Controller
 
         $products = Product::all();
 
-        Brosur::create([
+        $brosur =Brosur::create([
             'transaksi_id' => $transaksi->id,
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
-        return view('client.checkout', compact('transaksi', 'kalender', 'products'));
+        return view('client.checkout', compact('transaksi', 'brosur', 'products'));
     }
 
     private function calculateJSC($width, $height, $jc)

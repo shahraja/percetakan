@@ -57,7 +57,7 @@ class MajalahController extends Controller
         $products = Product::all();
 
         // Simpan ke database
-        Majalah::create([
+        $majalah = Majalah::create([
             'transaksi_id' => $transaksi->id,
             'halaman' => $halaman,
             'uk_asli' => $uk_asli,
@@ -74,7 +74,7 @@ class MajalahController extends Controller
             // 'status' => $status,
             // 'laminasi' => $laminasi,
         ]);
-        return view('client.checkout', compact('transaksi', 'kalender', 'products'));
+        return view('client.checkout', compact('transaksi', 'majalah', 'products'));
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)

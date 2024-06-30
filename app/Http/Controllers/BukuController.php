@@ -58,7 +58,7 @@ class BukuController extends Controller
 
         $products = Product::all();
 
-        Buku::create([
+        $buku =Buku::create([
             'transaksi_id' => $transaksi->id,
             'halaman' => $halaman,
             'uk_asli' => $uk_asli,
@@ -66,7 +66,7 @@ class BukuController extends Controller
             'uk_height' => $uk_height,
             'finishing' => $finishing,
         ]);
-        return view('client.checkout', compact('transaksi', 'kalender', 'products'));
+        return view('client.checkout', compact('transaksi', 'buku', 'products'));
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)
