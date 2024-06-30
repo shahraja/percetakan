@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Buku;
+use App\Models\Product;
 
 class BukuController extends Controller
 {
@@ -55,6 +56,8 @@ class BukuController extends Controller
             'laminasi' => $laminasi,
         ]);
 
+        $products = Product::all();
+
         Buku::create([
             'transaksi_id' => $transaksi->id,
             'halaman' => $halaman,
@@ -63,7 +66,7 @@ class BukuController extends Controller
             'uk_height' => $uk_height,
             'finishing' => $finishing,
         ]);
-        return back()->with('alert', 'Berhasil Tambah Buku!');
+        return view('client.checkout', compact('transaksi', 'kalender', 'products'));
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)

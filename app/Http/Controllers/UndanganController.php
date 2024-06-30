@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Undangan;
@@ -147,14 +148,15 @@ class UndanganController extends Controller
             'laminasi' => $laminasi,
         ]);
 
+        $products = Product::all();
+
         Undangan::create([
             'transaksi_id' => $transaksi->id,
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
-
-        return back()->with('alert', 'Berhasil Tambah Undangan!');
+        return view('client.checkout', compact('transaksi', 'kalender', 'products'));
     }
 
     private function calculateJSC($width, $height, $jc)

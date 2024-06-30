@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Majalah;
+use App\Models\Product;
 
 class MajalahController extends Controller
 {
@@ -53,6 +54,8 @@ class MajalahController extends Controller
             'laminasi' => $laminasi,
         ]);
 
+        $products = Product::all();
+
         // Simpan ke database
         Majalah::create([
             'transaksi_id' => $transaksi->id,
@@ -71,8 +74,7 @@ class MajalahController extends Controller
             // 'status' => $status,
             // 'laminasi' => $laminasi,
         ]);
-
-        return back()->with('alert', 'Berhasil Tambah Majalah!');
+        return view('client.checkout', compact('transaksi', 'kalender', 'products'));
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)

@@ -32,4 +32,24 @@ class Transaksi extends Model
     {
         return $this->belongsTo(Kalender::class, 'transaksi_id', 'id');
     }
+
+    public function Undangan()
+    {
+        return $this->belongsTo(Undangan::class, 'transaksi_id', 'id');
+    }
+
+    public function Brosur()
+    {
+        return $this->belongsTo(Brosur::class, 'transaksi_id', 'id');
+    }
+
+    public function Buku()
+    {
+        return $this->belongsTo(Buku::class, 'transaksi_id', 'id');
+    }
+    
+    public function Majalah()
+    {
+        return $this->belongsTo(Majalah::class, 'transaksi_id', 'id');
+    }
 }

@@ -10,9 +10,15 @@ class Buku extends Model
     protected $table = 'transaksi_buku';
     protected $fillable = [
         'transaksi_id',
-        'halaman', 
-        'finishing', 
-        'uk_asli', 
-        'uk_width', 
-        'uk_height'];
+        'halaman',
+        'finishing',
+        'uk_asli',
+        'uk_width',
+        'uk_height'
+    ];
+
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class, 'transaksi_id', 'id');
+    }
 }

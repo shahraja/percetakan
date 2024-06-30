@@ -9,8 +9,14 @@ class Brosur extends Model
 {
     protected $table = 'transaksi_brosur';
     protected $fillable = [
-        'transaksi_id', 
-        'uk_asli', 
-        'uk_width', 
-        'uk_height'];
+        'transaksi_id',
+        'uk_asli',
+        'uk_width',
+        'uk_height'
+    ];
+
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class, 'transaksi_id', 'id');
+    }
 }

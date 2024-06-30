@@ -80,7 +80,6 @@ class KalenderController extends Controller
             
             $totalHarga = $harga + $hargaLaminasi + $hargaJilid;
             
-            // dd($hp, $jc, $totalHarga, $ukuran, $hargaLaminasi);
             $transaksi = Transaksi::create([
                 'user_id' => auth()->user()->id,
                 'nomor_pesanan' => rand(100, 1000),

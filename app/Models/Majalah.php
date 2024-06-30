@@ -10,9 +10,15 @@ class Majalah extends Model
     protected $table = 'transaksi_majalah';
     protected $fillable = [
         'transaksi_id',
-        'halaman', 
+        'halaman',
         'finishing',
-        'uk_asli', 
-        'uk_width', 
-        'uk_height'];
+        'uk_asli',
+        'uk_width',
+        'uk_height'
+    ];
+
+    public function transaksi()
+    {
+        return $this->belongsTo(Transaksi::class, 'transaksi_id', 'id');
+    }
 }
