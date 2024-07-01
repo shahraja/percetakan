@@ -32,7 +32,7 @@ class MajalahController extends Controller
         $alamat = $request->alamat;
         $gramasi = $request->gramasi;
         $finishing = $request->finishing;
-        $total_harga = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
+        $hargaTotal = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
         $harga_plano = $this->calculateUkuranData($request->ukuran, 'prices', $gramasi);
         $jumlah = $request->jumlah;
         $status = $request->status;
@@ -49,7 +49,7 @@ class MajalahController extends Controller
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $harga_plano,
             'jml_total' => $jumlah,
-            'total_harga' => $total_harga,
+            'total_harga' => $hargaTotal,
             'gramasi' => $gramasi,
             'laminasi' => $laminasi,
         ]);

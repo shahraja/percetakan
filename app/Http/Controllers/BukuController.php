@@ -58,7 +58,7 @@ class BukuController extends Controller
 
         $products = Product::all();
 
-        $buku =Buku::create([
+        $buku = Buku::create([
             'transaksi_id' => $transaksi->id,
             'halaman' => $halaman,
             'uk_asli' => $uk_asli,

@@ -152,7 +152,7 @@ class BrosurController extends Controller
 
         $products = Product::all();
 
-        $brosur =Brosur::create([
+        $brosur = Brosur::create([
             'transaksi_id' => $transaksi->id,
             'uk_asli' => $request->uk_asli,
             'uk_width' => $request->uk_width,
