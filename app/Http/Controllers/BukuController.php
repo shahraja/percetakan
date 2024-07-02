@@ -27,7 +27,9 @@ class BukuController extends Controller
             ]
         );
 
-         // Ambil data dari request
+        // dd($request->all());
+
+        // Ambil data dari request
         // dd($request->all());
         $nama_produk = $request->nama_produk;
         $user_id = $request->user_id;
@@ -43,11 +45,11 @@ class BukuController extends Controller
         $uk_asli = $request->uk_asli;
         $uk_width = $request->uk_width;
         $uk_height = $request->uk_height;
-        
+
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),
-            'nama_produk' => 'Brosur',
+            'nama_produk' => 'Buku',
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $harga_plano,
             'jml_total' => $jumlah,
@@ -90,7 +92,7 @@ class BukuController extends Controller
             ],
         ];
 
-        if($kertas == null){
+        if ($kertas == null) {
             return $ukuranData[$ukuran][$param];
         }
         return intval($ukuranData[$ukuran][$param][$kertas]);
@@ -111,37 +113,39 @@ class BukuController extends Controller
         // Hitung harga total berdasarkan logika perhitungan yang ada
         // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
         $hargaTotal = $this->calculatePriceLogic(
-            $halaman, 
-            $jumlah, 
-            $this->calculateUkuranData($ukuran, 'width', null), 
-            $this->calculateUkuranData($ukuran, 'height', null), 
-            $hargaKertas, 
-            $laminasi, 
-            $finishing);
+            $halaman,
+            $jumlah,
+            $this->calculateUkuranData($ukuran, 'width', null),
+            $this->calculateUkuranData($ukuran, 'height', null),
+            $ukuran,
+            $hargaKertas,
+            $laminasi,
+            $finishing
+        );
 
         return $hargaTotal;
     }
 
-    private function calculatePriceLogic($halaman, $jumlah, $width, $height, $hargaKertas, $laminasi, $finishing)
+    private function calculatePriceLogic($halaman, $jumlah, $width, $height, $ukuran, $hargaKertas, $laminasi, $finishing)
     {
-        // Implementasi logika perhitungan harga berdasarkan rumus yang telah Anda buat di frontend
-        // Misalnya, Anda bisa menggunakan fungsi calculateJSC dan calculateLaminasiCost dari frontend
-        $jsc = $this->calculateJSC($width, $height, $jumlah);
-        $hargaLaminasi = $this->calculateLaminasiCost($width, $height, $jumlah, $laminasi);
+        $keteren = ceil($halaman / 8);
+        $jumlahPagePerPlano = ceil($jumlah / 2);
+        $jumlahPlano = $jumlahPagePerPlano * $keteren;
 
-        // Contoh tambahan logika untuk finishing
-        $hargaFinishing = 0;
+        $jsc = $this->calculateJSC($width, $height, $jumlah);
+        $harga = ($jumlahPlano * $hargaKertas) + ($jsc * 2);
+        $hargaLaminasi = $this->calculateLaminasiCost($width, $height, $jumlah, $laminasi);
+        $harga += $hargaLaminasi;
+
         if ($finishing === 'steples') {
-            $hargaFinishing = $jumlah * 1000;
+            $harga += $jumlah * 1000;
         } elseif ($finishing === 'binding') {
-            $hargaFinishing = $jumlah * 2000;
+            $harga += $jumlah * 2000;
         }
 
-        // Hitung harga total
-        $hargaTotal = ($jumlah * $hargaKertas) + $jsc + $hargaLaminasi + $hargaFinishing;
-
-        return $hargaTotal;
+        return $harga;
     }
+
 
     private function calculateJSC($width, $height, $jc)
     {
@@ -174,5 +178,4 @@ class BukuController extends Controller
                 return 0;
         }
     }
-
 }

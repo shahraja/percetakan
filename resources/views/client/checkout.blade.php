@@ -8,26 +8,27 @@
         </h2>
         <form action="">
             <label>
-                <input type="radio" name="option" value="1" onclick="toggleCard()"> Delivery
+                <input type="radio" name="option" value="1" checked onclick="toggleCard()"> Delivery
             </label>
             <label class="ms-5">
                 <input type="radio" name="option" value="2" onclick="toggleCard()"> Pick Up
             </label>
             <div class="row my-2">
-                <div class="border rounded p-3 me-5 shadow card">
+                <div id="deliveryCard" class="border rounded p-3 me-5 shadow card">
                     <div class="row">
                         <div>
                             <div class="row py-3">
                                 <div class="col-md-3">
                                     <div class="container">
-                                        <p class="my-1">Rose Sumiyanti</p>
+                                        <p class="my-1"><b>Rose Sumiyanti</b></p>
                                         <p>0897888999</p>
                                     </div>
                                 </div>
                                 <div class="col-md-9 mb-1">
-                                    <p class="my-1">Alamat Pengiriman</p>
-                                    <p>Jalan kampung durian runtuh, RT 123 RW 405 rumah hijau opah ( didepan banyak tanaman
-                                        rose) SUKABUMI, KOTA BANDAR LAMPUNG, LAMPUNG, ID 35122</p>
+                                    <p class="my-1"><b>Alamat Pengiriman</b></p>
+                                    <p>Jalan kampung durian runtuh, RT 123 RW 405 rumah hijau opah ( didepan banyak
+                                            tanaman
+                                            rose) SUKABUMI, KOTA BANDAR LAMPUNG, LAMPUNG, ID 35122</p>
                                 </div>
                             </div>
                         </div>
@@ -44,18 +45,18 @@
                     <div class="row">
                         <div class="col-md-12">
                             <div class="row py-3">
-                                <di class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="row">
                                         <div class="col-md-7">
                                             <img src="{{ asset('assets/img/undangan.jpg') }}" class="img img-fluid rounded"
-                                                style="object-fit: cover max-width: 120px; max-height:120px;" width="500"
+                                                style="object-fit: cover; max-width: 120px; max-height:120px;"
                                                 alt="">
                                         </div>
                                         <div class="col-md-5">
                                             <p class="ms-2">{{ $transaksi->nama_produk }}</p>
                                         </div>
                                     </div>
-                                </di>
+                                </div>
                                 <div class="col-md-2 mb-1">
                                     <p>Variasi</p>
                                     <p>
@@ -137,8 +138,8 @@
                         <p class="summary-item">Subtotal: <span class="float-end">Rp <span
                                     id="subtotal">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span>
                         </p>
-                        <p class="summary-item">Ongkos Kirim: <span class="float-end">Rp<span
-                                    id="shipping">50.000</span></span></p>
+                        <p class="summary-item" id="shippingCost" style="display: none;">Ongkos Kirim: <span
+                                class="float-end">Rp<span id="shipping">50.000</span></span></p>
                         <hr>
                         <p class="summary-total">Total Pembayaran: <span class="float-end">Rp<span
                                     id="total-payment">700.000</span></span></p>
@@ -159,17 +160,38 @@
             p.innerHTML = p.innerHTML.trim().replace(/,\s*$/, '');
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Parse the numbers, removing any dots used for thousands separators
+        function calculateTotal() {
             var subtotal = parseInt(document.getElementById('subtotal').innerText.replace(/\./g, ''));
-            var shipping = parseInt(document.getElementById('shipping').innerText.replace(/\./g, ''));
+            var shippingElement = document.getElementById('shipping');
+            var shipping = shippingElement ? parseInt(shippingElement.innerText.replace(/\./g, '')) : 0;
+            var deliveryOption = document.querySelector('input[name="option"]:checked').value;
 
-            // Calculate the total payment
+            if (deliveryOption == 2) {
+                shipping = 0; // Set shipping cost to 0 if "Pick Up" is selected
+            }
+
             var totalPayment = subtotal + shipping;
-
-            // Format the total payment with dots as thousands separators
             document.getElementById('total-payment').innerText = totalPayment.toLocaleString('id-ID');
-        });
-    </script>
+        }
 
+        function toggleCard() {
+            const deliveryCard = document.getElementById('deliveryCard');
+            const deliveryOption = document.querySelector('input[name="option"]:checked').value;
+            const shippingCost = document.getElementById('shippingCost');
+
+            if (deliveryOption == 1) {
+                deliveryCard.style.display = 'block';
+                shippingCost.style.display = 'block';
+            } else {
+                deliveryCard.style.display = 'none';
+                shippingCost.style.display = 'none';
+            }
+            calculateTotal();
+        };
+
+        // Call toggleCard function when the page loads
+        window.onload = function() {
+            toggleCard();
+        };
+    </script>
 @endsection

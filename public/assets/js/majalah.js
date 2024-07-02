@@ -129,8 +129,8 @@ function calculatePrice() {
     const hargaKertas = prices[selectedKertas];
 
     const keteren = Math.ceil(halaman / 8);
-    const jumlahPagePerPlano = Math.floor(plano[0] / width) * Math.floor(plano[1] / height);
-    const jumlahPlano = Math.ceil(jc / jumlahPagePerPlano) * keteren;
+    const jumlahPagePerPlano = Math.ceil(jc / 2); // Modified calculation
+    const jumlahPlano =  jumlahPagePerPlano * keteren;
 
     let jsc = calculateJSC(width, height, jc);
     let harga = (jumlahPlano * hargaKertas) + jsc * 2;

@@ -119,37 +119,39 @@ class MajalahController extends Controller
         // Hitung harga total berdasarkan logika perhitungan yang ada
         // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
         $hargaTotal = $this->calculatePriceLogic(
-            $halaman, 
-            $jumlah, 
-            $this->calculateUkuranData($ukuran, 'width', null), 
-            $this->calculateUkuranData($ukuran, 'height', null), 
-            $hargaKertas, 
-            $laminasi, 
-            $finishing);
+            $halaman,
+            $jumlah,
+            $this->calculateUkuranData($ukuran, 'width', null),
+            $this->calculateUkuranData($ukuran, 'height', null),
+            $ukuran,
+            $hargaKertas,
+            $laminasi,
+            $finishing
+        );
 
         return $hargaTotal;
     }
 
-    private function calculatePriceLogic($halaman, $jumlah, $width, $height, $hargaKertas, $laminasi, $finishing)
-    {
-        // Implementasi logika perhitungan harga berdasarkan rumus yang telah Anda buat di frontend
-        // Misalnya, Anda bisa menggunakan fungsi calculateJSC dan calculateLaminasiCost dari frontend
-        $jsc = $this->calculateJSC($width, $height, $jumlah);
-        $hargaLaminasi = $this->calculateLaminasiCost($width, $height, $jumlah, $laminasi);
+    private function calculatePriceLogic($halaman, $jumlah, $width, $height, $ukuran, $hargaKertas, $laminasi, $finishing)
+{
+    $keteren = ceil($halaman / 8);
+    $jumlahPagePerPlano = ceil($jumlah / 2);
+    $jumlahPlano = $jumlahPagePerPlano * $keteren;
 
-        // Contoh tambahan logika untuk finishing
-        $hargaFinishing = 0;
-        if ($finishing === 'steples') {
-            $hargaFinishing = $jumlah * 1000;
-        } elseif ($finishing === 'binding') {
-            $hargaFinishing = $jumlah * 2000;
-        }
+    $jsc = $this->calculateJSC($width, $height, $jumlah);
+    $harga = ($jumlahPlano * $hargaKertas) + ($jsc * 2);
+    $hargaLaminasi = $this->calculateLaminasiCost($width, $height, $jumlah, $laminasi);
+    $harga += $hargaLaminasi;
 
-        // Hitung harga total
-        $hargaTotal = ($jumlah * $hargaKertas) + $jsc + $hargaLaminasi + $hargaFinishing;
-
-        return $hargaTotal;
+    if ($finishing === 'steples') {
+        $harga += $jumlah * 1000;
+    } elseif ($finishing === 'binding') {
+        $harga += $jumlah * 2000;
     }
+
+    return $harga;
+}
+
 
     private function calculateJSC($width, $height, $jc)
     {
