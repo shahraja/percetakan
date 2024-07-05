@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('no_pesanan');
             $table->string('nama');
             $table->string('alamat');
-            $table->string('nama_produk');
+            $table->string('produk_id');
             $table->string('sisi');
             $table->string('ukuran');
             $table->integer('jumlah_total');

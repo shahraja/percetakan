@@ -123,7 +123,7 @@
                         <input type="hidden" name="uk_asli" id="uk_asli">
                         <input type="hidden" name="uk_width" id="uk_width">
                         <input type="hidden" name="uk_height" id="uk_height">
-                        <input type="hidden" name="nama_produk" id="nama_produk" value="{{ $product->judul }}">
+                        <input type="hidden" name="produk_id" id="produk_id" value="{{ $product->judul }}">
                         <tr>
                             <button class="btn btn-primary bg-utama col-md-6" type="submit">Check Out</button>
                         </tr>

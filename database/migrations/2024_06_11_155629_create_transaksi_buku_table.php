@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('transaksi_buku', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('transaksi_id')->nullable();
+            // $table->foreignId('transaksi_id')->references('id')->on('transaksi')->onDelete('cascade')->onUpdate('cascade');
+            $table->unsignedBigInteger('transaksi_id');
             $table->foreign('transaksi_id')->references('id')->on('transaksi')
                 ->constrained('transaksi')->onDelete('cascade')->onUpdate('cascade');
             $table->string('uk_asli')->nullable();

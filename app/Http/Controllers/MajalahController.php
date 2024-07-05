@@ -17,7 +17,7 @@ class MajalahController extends Controller
             'uk_width' => 'required',
             'uk_height' => 'required',
             'finishing' => 'required',
-            // 'nama_produk' => 'required',
+            // 'produk_id' => 'required',
             // 'total_harga' => 'required',
             // 'harga_plano' => 'required',
             // 'jumlah' => 'required',
@@ -27,7 +27,7 @@ class MajalahController extends Controller
         
         // Ambil data dari request
         // dd($request->all());
-        $nama_produk = $request->nama_produk;
+        $produk_id = $request->produk_id;
         $user_id = $request->user_id;
         $alamat = $request->alamat;
         $gramasi = $request->gramasi;
@@ -45,7 +45,7 @@ class MajalahController extends Controller
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),
-            'nama_produk' => 'Brosur',
+            'produk_id' => 4,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $harga_plano,
             'jml_total' => $jumlah,
@@ -64,7 +64,7 @@ class MajalahController extends Controller
             'uk_width' => $uk_width,
             'uk_height' => $uk_height,
             'finishing' => $finishing,
-            // 'nama_produk' => $nama_produk,
+            // 'produk_id' => $produk_id,
             // 'user_id' => $user_id,
             // 'alamat' => $alamat,
             // 'total_harga' => $total_harga,

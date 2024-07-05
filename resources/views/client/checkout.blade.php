@@ -8,10 +8,10 @@
         </h2>
         <form action="">
             <label>
-                <input type="radio" name="option" value="1" checked onclick="toggleCard()"> Delivery
+                <input type="radio" name="metode_pengambilan" value="0" checked onclick="toggleCard()"> Delivery
             </label>
             <label class="ms-5">
-                <input type="radio" name="option" value="2" onclick="toggleCard()"> Pick Up
+                <input type="radio" name="metode_pengambilan" value="1" onclick="toggleCard()"> Pick Up
             </label>
             <div class="row my-2">
                 <div id="deliveryCard" class="border rounded p-3 me-5 shadow card">
@@ -53,7 +53,7 @@
                                                 alt="">
                                         </div>
                                         <div class="col-md-5">
-                                            <p class="ms-2">{{ $transaksi->nama_produk }}</p>
+                                            <p class="ms-2">{{ $transaksi->produk->judul }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -144,7 +144,7 @@
                         <p class="summary-total">Total Pembayaran: <span class="float-end">Rp<span
                                     id="total-payment">700.000</span></span></p>
                         <div class="text-center my-3">
-                            <a href="{{ route('payment', [$transaksi->nama_produk, $transaksi->nomor_pesanan]) }}"
+                            <a id="paymentLink" href="{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, '0']) }}"
                                 class="btn btn-success bg-utama col-md-8">Bayar</a>
                         </div>
                     </div>
@@ -154,7 +154,6 @@
     </div>
 
     <script>
-        // Remove trailing comma
         document.addEventListener('DOMContentLoaded', function() {
             var p = document.querySelector('.col-md-2.mb-1 p:nth-child(2)');
             p.innerHTML = p.innerHTML.trim().replace(/,\s*$/, '');
@@ -164,9 +163,9 @@
             var subtotal = parseInt(document.getElementById('subtotal').innerText.replace(/\./g, ''));
             var shippingElement = document.getElementById('shipping');
             var shipping = shippingElement ? parseInt(shippingElement.innerText.replace(/\./g, '')) : 0;
-            var deliveryOption = document.querySelector('input[name="option"]:checked').value;
+            var deliveryOption = document.querySelector('input[name="metode_pengambilan"]:checked').value;
 
-            if (deliveryOption == 2) {
+            if (deliveryOption == 1) {
                 shipping = 0; // Set shipping cost to 0 if "Pick Up" is selected
             }
 
@@ -176,20 +175,24 @@
 
         function toggleCard() {
             const deliveryCard = document.getElementById('deliveryCard');
-            const deliveryOption = document.querySelector('input[name="option"]:checked').value;
+            const deliveryOption = document.querySelector('input[name="metode_pengambilan"]:checked').value;
             const shippingCost = document.getElementById('shippingCost');
+            const paymentLink = document.getElementById('paymentLink');
 
-            if (deliveryOption == 1) {
+            if (deliveryOption == 0) {
                 deliveryCard.style.display = 'block';
                 shippingCost.style.display = 'block';
             } else {
                 deliveryCard.style.display = 'none';
                 shippingCost.style.display = 'none';
             }
-            calculateTotal();
-        };
 
-        // Call toggleCard function when the page loads
+            // Update the payment link href
+            paymentLink.href = `{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, 'ids']) }}`.replace('ids', deliveryOption);
+
+            calculateTotal();
+        }
+
         window.onload = function() {
             toggleCard();
         };

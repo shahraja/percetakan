@@ -13,7 +13,7 @@ class BrosurController extends Controller
     {
         $request->validate(
             [
-                // 'nama_produk' => 'required', 
+                // 'produk_id' => 'required', 
                 // 'user_id' => 'required', 
                 // 'alamat' => 'required|max:255', 
                 // 'total_harga' => 'required', 
@@ -141,7 +141,7 @@ class BrosurController extends Controller
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),
-            'nama_produk' => 'Brosur',
+            'produk_id' => 1,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $hp,
             'jml_total' => $jumlahCetak,

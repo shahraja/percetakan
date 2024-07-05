@@ -18,7 +18,7 @@ class BukuController extends Controller
                 'uk_width' => 'required',
                 'uk_height' => 'required',
                 'finishing' => 'required',
-                // 'nama_produk' => 'required',
+                // 'produk_id' => 'required',
                 // 'total_harga' => 'required',
                 // 'harga_plano' => 'required',
                 // 'jumlah' => 'required',
@@ -31,7 +31,7 @@ class BukuController extends Controller
 
         // Ambil data dari request
         // dd($request->all());
-        $nama_produk = $request->nama_produk;
+        $produk_id = $request->produk_id;
         $user_id = $request->user_id;
         $alamat = $request->alamat;
         $gramasi = $request->gramasi;
@@ -49,7 +49,7 @@ class BukuController extends Controller
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),
-            'nama_produk' => 'Buku',
+            'produk_id' => 2,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $harga_plano,
             'jml_total' => $jumlah,

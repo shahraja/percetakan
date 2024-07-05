@@ -22,17 +22,17 @@ Route::get('/beranda', [HomeController::class, 'index'])->name('beranda');
 Route::get('/tentang', [HomeController::class, 'about'])->name('about');
 Route::get('/produk/{id}', [HomeController::class, 'detail_product'])->name('detail_product');
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
-Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
-Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
-Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
 // Route::get('/pembayaran', [HomeController::class, 'paymnet'])->name('paymnet');
-Route::get('/pembayaran/{nama_produk}-{nomor_pesanan}', [ClientPaymentController::class, 'create'])->name('payment');
-Route::put('/pembayaran/{nama_produk}-{nomor_pesanan}', [ClientPaymentController::class, 'update'])->name('payment.update');
-Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
 
 Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
+    Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
+    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
+    Route::get('/pembayaran/{produk_id}-{nomor_pesanan}', [ClientPaymentController::class, 'create'])->name('payment');
+    Route::put('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'update'])->name('payment.update');
+    Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
 
 // DASHBOARD
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');

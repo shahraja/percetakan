@@ -13,43 +13,49 @@ class Transaksi extends Model
     protected $fillable = [
         'user_id', 
         'nomor_pesanan', 
-        'nama_produk', 
+        'produk_id', 
         'alamat', 
         'harga_plano', 
         'jml_total', 
         'total_harga',
         'gramasi', 
         'laminasi',
-        'gambar', 
+        'gambar',
+        'metode_pengambilan',
         'status'];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function Kalender()
-    {
-        return $this->belongsTo(Kalender::class, 'transaksi_id', 'id');
-    }
-
-    public function Undangan()
-    {
-        return $this->belongsTo(Undangan::class, 'transaksi_id', 'id');
-    }
-
-    public function Brosur()
-    {
-        return $this->belongsTo(Brosur::class, 'transaksi_id', 'id');
-    }
-
-    public function Buku()
-    {
-        return $this->belongsTo(Buku::class, 'transaksi_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
     
-    public function Majalah()
+    public function produk()
     {
-        return $this->belongsTo(Majalah::class, 'transaksi_id', 'id');
+        return $this->belongsTo(Product::class, 'produk_id', 'id');
+    }
+
+    public function kalender()
+    {
+        return $this->hasOne(Kalender::class, 'transaksi_id', 'id');
+    }
+
+    public function undangan()
+    {
+        return $this->hasOne(Undangan::class, 'transaksi_id', 'id');
+    }
+
+    public function brosur()
+    {
+        return $this->hasOne(Brosur::class, 'transaksi_id', 'id');
+    }
+
+    public function buku()
+    {
+        return $this->hasOne(Buku::class, 'transaksi_id', 'id');
+    }
+    
+    public function majalah()
+    {
+        return $this->hasOne(Majalah::class, 'transaksi_id', 'id');
     }
 }

@@ -11,4 +11,9 @@ class Product extends Model
     
     protected $table = 'product';
     protected $fillable = ['judul', 'kertas', 'gambar', 'deskripsi', 'harga', 'sisi', 'ukuran'];
+
+    public function transaksi()
+    {
+        return $this->hasMany(Transaksi::class, 'product_id', 'id');
+    }
 }

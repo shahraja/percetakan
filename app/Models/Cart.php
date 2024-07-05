@@ -10,5 +10,5 @@ class Cart extends Model
     use HasFactory;
 
     protected $table = 'cart';
-    protected $fillable = ['no_pesanan', 'nama', 'alamat', 'nama_produk', 'sisi', 'ukuran', 'jumlah_total', 'lipat', 'harga', 'laminasi', 'status'];
+    protected $fillable = ['no_pesanan', 'nama', 'alamat', 'produk_id', 'sisi', 'ukuran', 'jumlah_total', 'lipat', 'harga', 'laminasi', 'status'];
 }

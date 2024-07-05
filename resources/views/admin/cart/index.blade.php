@@ -6,113 +6,204 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">DataTable with minimal features & hover style</h3>
-              </div>
-              <!-- /.card-header -->
-              <div class="card-body">
-                <div class="table-responsive">
-                    <table id="example1" class="table table-bordered table-hover">
-                      <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>No Pesanan</th>
-                        <th>Nama</th>
-                        <th>Alamat</th>
-                        <th>Nama Produk</th>
-                        <th>Sisi</th>
-                        <th>Ukuran</th>
-                        <th>Jumlah Total</th>
-                        <th>Lipat</th>
-                        <th>Harga</th>
-                        <th>Laminasi</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                        @foreach ($carts as $cart)
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">DataTable with minimal features & hover style</h3>
+                    </div>
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="example1" class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>No Pesanan</th>
+                                        <th>Status</th>
+                                        <th>Total Harga</th>
+                                        <th>User</th>
+                                        <th>Nama Produk</th>
+                                        <th>Alamat</th>
+                                        <th>Harga Plano</th>
+                                        <th>Jumlah Total Cetak</th>
+                                        <th>Gramasi</th>
+                                        <th>Laminasi</th>
+                                        <th>Gambar</th>
+                                        <th>Metode Pengambilan</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($transaksi as $item)
+                                        <tr>
+                                            <td>{{ $loop->iteration + $transaksi->perpage() * ($transaksi->currentpage() - 1) }}
+                                            </td>
+                                            <td>{{ $item->nomor_pesanan }}</td>
+                                            <td>{{ $item->status }}</td>
+                                            <td>{{ $item->total_harga }}</td>
+                                            <td>{{ $item->user->name }}</td>
+                                            <td>{{ $item->produk->judul }}</td>
+                                            <td>{{ $item->alamat }}</td>
+                                            <td>{{ $item->harga_plano }}</td>
+                                            <td>{{ $item->jml_total }}</td>
+                                            <td>{{ $item->gramasi }}</td>
+                                            <td>{{ $item->laminasi }}</td>
+                                            <td>
+                                                <img src="{{ asset('payment/' . $item->gambar) }}" alt="">
+                                            </td>
+                                            <td>
+                                                {{-- @if ($item->metode_pengambilan) --}}
+                                                    <span class="badge bg-success">
+                                                        @isset($item->Buku->halaman)
+                                                        {{$item->Buku}}
+                                                        @endisset
+                                                    </span>
+                                                {{-- @else
+                                                    <span class="badge bg-warning">Delivery</span>
+                                                @endif --}}
+                                            </td>
+                                            <td>
+                                              @include('admin.cart.edit')
+
+                                                <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                    {{-- @foreach ($bukus as $buku)
                         <tr>
                           <td>{{$loop->iteration}}</td>
-                          <td>{{$cart->no_pesanan}}</td>
-                          <td>{{$cart->nama}}</td>
-                          <td>{{$cart->alamat}}</td>
-                          <td>{{$cart->nama_produk}}</td>
-                          <td>{{$cart->sisi}}</td>
-                          <td>{{$cart->ukuran}}</td>
-                          <td>{{$cart->jumlah_total}}</td>
-                          <td>{{$cart->lipat}}</td>
-                          <td>{{$cart->harga}}</td>
-                          <td>{{$cart->laminasi}}</td>
-                          <td>
-                            @if ($cart->status == 'Dibatalkan')
-                             <span class="badge badge-danger">{{$cart->status}}</span> 
-                            @elseif ($cart->status == 'Diproses')
-                             <span class="badge badge-primary">{{$cart->status}}</span> 
-                            @elseif ($cart->status == 'Selesai')
-                             <span class="badge badge-success">{{$cart->status}}</span> 
-                            @elseif ($cart->status == 'Menunggu Konfirmasi')
-                             <span class="badge badge-warning">{{$cart->status}}</span> 
-                            @endif
-                          </td>
-                          <td>
-                            <div>
-                              <form action="{{route('admin.cart.update', $cart->id)}}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="status" value="Diproses">
-                                <button class="btn btn-primary my-2" type="submit">Verifikasi</button>
-                              </form>
-                            </div>
-                            <div>
-                              <form action="{{route('admin.cart.update', $cart->id)}}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="status" value="Dibatalkan">
-                                <button class="btn btn-danger my-2" type="submit">Batalkan</button>
-                              </form>
-                            </div>
-                            <div>
-                              <form action="{{route('admin.cart.update', $cart->id)}}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <input type="hidden" name="status" value="Selesai">
-                                <button class="btn btn-success my-2" type="submit">Pesanan Selesai</button>
-                              </form>
-                            </div>
-                          </td>
+                          <td>{{$buku->transaksi->nomor_pesanan}}</td>
+                          <td>{{$buku->transaksi->user->name}}</td>
+                          <td>{{$buku->transaksi->produk->judul}}</td>
+                          <td>{{$buku->transaksi->alamat}}</td>
+                          <td>{{$buku->transaksi->harga_plano}}</td>
+                          <td>{{$buku->transaksi->jml_total}}</td>
+                          <td>{{$buku->transaksi->total_harga}}</td>
+                          <td>{{$buku->halaman}}</td>
+                          <td>{{$buku->transaksi->gramasi}}</td>
+                          <td>{{$buku->transaksi->laminasi}}</td>
+                          <td>{{$buku->transaksi->gambar}}</td>
+                          <td>{{$buku->transaksi->status}}</td>
+                          <td>{{$buku->finishing}}</td>
+                          <td>{{$buku->uk_asli}}</td>
+                          <td>{{$buku->uk_width}}</td>
+                          <td>{{$buku->uk_height}}</td>
                         </tr>
                         @endforeach
-                      </tbody>
-                      <tfoot>
-                      <tr>
-                        <th>No</th>
-                        <th>No Pesanan</th>
-                        <th>Nama</th>
-                        <th>Alamat</th>
-                        <th>Nama Produk</th>
-                        <th>Sisi</th>
-                        <th>Ukuran</th>
-                        <th>Jumlah Total</th>
-                        <th>Lipat</th>
-                        <th>Harga</th>
-                        <th>Laminasi</th>
-                        <th>Status</th>
-                        <th>Aksi</th>
-                      </tr>
-                      </tfoot>
-                    </table>
+                        @foreach ($brosurs as $brosur)
+                        <tr>
+                          <td>{{$loop->iteration}}</td>
+                          <td>{{$brosur->transaksi->nomor_pesanan}}</td>
+                          <td>{{$buku->transaksi->user->name}}</td>
+                          <td>{{$brosur->transaksi->produk->judul}}</td>
+                          <td>{{$brosur->transaksi->alamat}}</td>
+                          <td>{{$brosur->transaksi->harga_plano}}</td>
+                          <td>{{$brosur->transaksi->jml_total}}</td>
+                          <td>{{$brosur->transaksi->gramasi}}</td>
+                          <td>{{$brosur->transaksi->total_harga}}</td>
+                          <td>{{$brosur->transaksi->laminasi}}</td>
+                          <td>{{$brosur->transaksi->gambar}}</td>
+                          <td>{{$brosur->transaksi->status}}</td>
+                          <td>{{$brosur->uk_asli}}</td>
+                          <td>{{$brosur->uk_width}}</td>
+                          <td>{{$brosur->uk_height}}</td>
+                        </tr>
+                        @endforeach
+                        @foreach ($kalenders as $kalender)
+                        <tr>
+                          <td>{{$loop->iteration}}</td>
+                          <td>{{$kalender->transaksi->nomor_pesanan}}</td>
+                          <td>{{$buku->transaksi->user->name}}</td>
+                          <td>{{$kalender->transaksi->produk->judul}}</td>
+                          <td>{{$kalender->transaksi->alamat}}</td>
+                          <td>{{$kalender->transaksi->harga_plano}}</td>
+                          <td>{{$kalender->transaksi->jml_total}}</td>
+                          <td>{{$kalender->transaksi->total_harga}}</td>
+                          <td>{{$kalender->transaksi->gramasi}}</td>
+                          <td>{{$kalender->transaksi->laminasi}}</td>
+                          <td>{{$kalender->transaksi->gambar}}</td>
+                          <td>{{$kalender->transaksi->status}}</td>
+                          <td>{{$kalender->lembar}}</td>
+                          <td>{{$kalender->jilid}}</td>
+                          <td>{{$kalender->uk_asli}}</td>
+                          <td>{{$kalender->uk_width}}</td>
+                          <td>{{$kalender->uk_height}}</td>
+                        </tr>
+                        @endforeach
+                        @foreach ($majalahs as $majalah)
+                        <tr>
+                          <td>{{$loop->iteration}}</td>
+                          <td>{{$majalah->transaksi->nomor_pesanan}}</td>
+                          <td>{{$buku->transaksi->user->name}}</td>
+                          <td>{{$majalah->transaksi->produk->judul}}</td>
+                          <td>{{$majalah->transaksi->alamat}}</td>
+                          <td>{{$majalah->transaksi->harga_plano}}</td>
+                          <td>{{$majalah->transaksi->jml_total}}</td>
+                          <td>{{$majalah->transaksi->total_harga}}</td>
+                          <td>{{$majalah->transaksi->gramasi}}</td>
+                          <td>{{$majalah->transaksi->laminasi}}</td>
+                          <td>{{$majalah->transaksi->gambar}}</td>
+                          <td>{{$majalah->transaksi->status}}</td>
+                          <td>{{$majalah->halaman}}</td>
+                          <td>{{$majalah->finishing}}</td>
+                          <td>{{$majalah->uk_asli}}</td>
+                          <td>{{$majalah->uk_width}}</td>
+                          <td>{{$majalah->uk_height}}</td>
+                        </tr>
+                        @endforeach
+                        @foreach ($undangans as $undangan)
+                        <tr>
+                          <td>{{$loop->iteration}}</td>
+                          <td>{{$undangan->transaksi->nomor_pesanan}}</td>
+                          <td>{{$buku->transaksi->user->name}}</td>
+                          <td>{{$undangan->transaksi->produk->judul}}</td>
+                          <td>{{$undangan->transaksi->alamat}}</td>
+                          <td>{{$undangan->transaksi->harga_plano}}</td>
+                          <td>{{$undangan->transaksi->jml_total}}</td>
+                          <td>{{$undangan->transaksi->total_harga}}</td>
+                          <td>{{$undangan->transaksi->gramasi}}</td>
+                          <td>{{$undangan->transaksi->laminasi}}</td>
+                          <td>{{$undangan->transaksi->gambar}}</td>
+                          <td>{{$undangan->transaksi->status}}</td>
+                          <td>{{$undangan->uk_asli}}</td>
+                          <td>{{$undangan->uk_width}}</td>
+                          <td>{{$undangan->uk_height}}</td>
+                        </tr>
+                        @endforeach --}}
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <<th>No</th>
+                                            <th>No Pesanan</th>
+                                            <th>Status</th>
+                                            <th>Total Harga</th>
+                                            <th>User</th>
+                                            <th>Nama Produk</th>
+                                            <th>Alamat</th>
+                                            <th>Harga Plano</th>
+                                            <th>Jumlah Total Cetak</th>
+                                            <th>Gramasi</th>
+                                            <th>Laminasi</th>
+                                            <th>Gambar</th>
+                                            <th>Metode Pengambilan</th>
+                                            <th>Aksi</th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                            @if ($transaksi->hasPages())
+                                <div class="pagination-wrapper">
+                                    {{ $transaksi->links() }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <!-- /.card-body -->
                 </div>
-              </div>
-              <!-- /.card-body -->
+                <!-- /.card -->
             </div>
-            <!-- /.card -->
-          </div>
-          <!-- /.col -->
+            <!-- /.col -->
         </div>
         <!-- /.row -->
-      </section>
-      <!-- /.content -->
+    </section>
+    <!-- /.content -->
 @endsection

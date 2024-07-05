@@ -5,9 +5,10 @@
 @section('content')
     <div class="container mb-3">
         <h2 class="my-5"><span class="btn btn-success bg-utama"><i class="fa fa-arrow-left pe-2"></i></span> Keranjang Saya</h2>
-        <form action="{{route('payment.update',[$transaksi->nama_produk, $transaksi->nomor_pesanan])}}" method="POST" enctype="multipart/form-data">
+        <form action="{{route('payment.update',[$transaksi->produk_id, $transaksi->nomor_pesanan, $transaksi->metode_pengambilan])}}" method="POST" enctype="multipart/form-data">
             @method('PUT')
             @csrf
+            {{-- @dd($transaksi->nomor_pesanan) --}}
             <div class="row my-2">
                 <div class="border rounded p-3 me-5 shadow">
                     <div class="row">

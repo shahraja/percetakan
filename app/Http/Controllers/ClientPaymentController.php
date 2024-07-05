@@ -21,12 +21,12 @@ class ClientPaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(string $nama_produk, string $nomor_pesanan)
+    public function create(string $produk_id, string $nomor_pesanan)
     {
-        $transaksi = Transaksi::with($nama_produk)
+        $transaksi = Transaksi::with('produk')
         ->where('nomor_pesanan', $nomor_pesanan)
-        ->first();
-        // dd($transaksi);
+        ->where('produk_id', $produk_id)->first();
+        // dd($nomor_pesanan);
         $products = Product::all();
         return view('client.payment', compact('transaksi', 
         'products'));
@@ -59,7 +59,7 @@ class ClientPaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $nama_produk, string $nomor_pesanan)
+    public function update(Request $request, string $produk_id, string $nomor_pesanan, string $metode_pengambilan)
     {
         DB::beginTransaction();
         try{
@@ -73,13 +73,16 @@ class ClientPaymentController extends Controller
             $gambar = uniqid().'_'.$request->file('gambar')->getClientOriginalName();
             $request->file('gambar')->move('payment', $gambar);
             $transaksi->update([
+                'metode_pengambilan' => $metode_pengambilan,
                 'status' => 'Diproses',
                 'gambar' => $gambar,
             ]);
+            // dd($nomor_pesanan);
+
 
             DB::commit();
             return redirect()->route('home');
-            // dd($request->all(), $nama_produk, $nomor_pesanan);
+            // dd($request->all(), $produk_id, $nomor_pesanan);
         }catch(\Exception $e){
             DB::rollBack();
             dd($e);

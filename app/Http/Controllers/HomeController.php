@@ -2,8 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brosur;
+use App\Models\Buku;
+use App\Models\Kalender;
+use App\Models\Majalah;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Transaksi;
+use App\Models\Undangan;
 
 class HomeController extends Controller
 {
@@ -42,7 +48,12 @@ class HomeController extends Controller
     public function cart2() 
     {
         $products = Product::all();
-        return view('client.cart2', compact('products'));
+        $brosurs = Brosur::all();
+        $bukus = Buku::all();
+        $kalenders = Kalender::all();
+        $majalahs = Majalah::all();
+        $undangans = Undangan::all();
+        return view('client.cart2', compact( 'products', 'brosurs', 'bukus', 'kalenders', 'majalahs', 'undangans'));
     }
 
     public function checkout() 

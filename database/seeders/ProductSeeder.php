@@ -16,24 +16,6 @@ class ProductSeeder extends Seeder
     {
         $product = [
             [
-                'judul' => 'Banner',
-                'kertas' => 'A4',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 45000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
-                'judul' => 'Spanduk',
-                'kertas' => 'A5',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 5000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
                 'judul' => 'Buku',
                 'kertas' => 'A5',
                 'gambar' => 'undangan.jpg',
@@ -61,15 +43,6 @@ class ProductSeeder extends Seeder
                 'ukuran' => '100 x 100'
             ],
             [
-                'judul' => 'Kardus',
-                'kertas' => 'A10',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 55000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
                 'judul' => 'Undangan',
                 'kertas' => 'A8',
                 'gambar' => 'undangan.jpg',
@@ -84,42 +57,6 @@ class ProductSeeder extends Seeder
                 'gambar' => 'undangan.jpg',
                 'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
                 'harga' => 10000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
-                'judul' => 'packing',
-                'kertas' => 'A5',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 57000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
-                'judul' => 'Spanduk 2',
-                'kertas' => 'A2',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 55000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
-                'judul' => 'Spanduk 5',
-                'kertas' => 'A5',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 9000,
-                'sisi' => '2 sisi',
-                'ukuran' => '100 x 100'
-            ],
-            [
-                'judul' => 'Spanduk 10',
-                'kertas' => 'A10',
-                'gambar' => 'undangan.jpg',
-                'deskripsi' => 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempora laboriosam provident repellendus, optio libero ab esse nisi eaque? Sunt blanditiis soluta quaerat non mollitia! Vel ex nisi id in ut.',
-                'harga' => 5500,
                 'sisi' => '2 sisi',
                 'ukuran' => '100 x 100'
             ],

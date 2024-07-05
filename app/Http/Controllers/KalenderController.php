@@ -13,7 +13,7 @@ class KalenderController extends Controller
     {
         $request->validate(
             [
-                'nama_produk' => 'required',
+                'produk_id' => 'required',
                 // 'user_id' => 'required',
                 // 'alamat' => 'required|max:255',
                 'jumlah' => 'required|numeric',
@@ -83,13 +83,13 @@ class KalenderController extends Controller
             $transaksi = Transaksi::create([
                 'user_id' => auth()->user()->id,
                 'nomor_pesanan' => rand(100, 1000),
-                'nama_produk' => 'Kalender',
+                'produk_id' => 3,
                 'alamat' => auth()->user()->alamat,
                 'harga_plano' => $hp,
                 'jml_total' => $jc,
                 'total_harga' => $totalHarga,
                 'gramasi' => $selectedKertas,
-                'laminasi' => $hargaLaminasi,
+                'laminasi' => $request->laminasi,
             ]);
 
             $products = Product::all();
@@ -101,7 +101,7 @@ class KalenderController extends Controller
                 'uk_asli' => $request->uk_asli,
                 'uk_width' => $ukWidth,
                 'uk_height' => $ukHeight
-                // 'nama_produk' => $request->nama_produk,
+                // 'produk_id' => $request->produk_id,
                 // 'user_id' => $request->user_id,
                 // 'alamat' => $request->alamat,
                 // 'total_harga' => $totalHarga,

@@ -15,10 +15,12 @@ class CartSeeder extends Seeder
     {
         $cart = [
             [
+                'user_id' => '1',
+                'produk_id' => '1',
                 'no_pesanan' => '123mamak',
                 'nama' => 'raja',
                 'alamat' => 'jalan tirtayasa',
-                'nama_produk' => 'Banner A4',
+                'produk_id' => 'Banner A4',
                 'sisi' => '2 Sisi',
                 'ukuran' => '100 x 100',
                 'jumlah_total' => '420000',
@@ -28,10 +30,12 @@ class CartSeeder extends Seeder
                 'status' => 'Menunggu Konfirmasi',
             ],
             [
+                'user_id' => '1',
+                'produk_id' => '1',
                 'no_pesanan' => '456bapak',
                 'nama' => 'juju',
                 'alamat' => 'jalan titus bonay',
-                'nama_produk' => 'Banner A5',
+                'produk_id' => 'Banner A5',
                 'sisi' => '4',
                 'ukuran' => '200 x 200',
                 'jumlah_total' => '500000',
