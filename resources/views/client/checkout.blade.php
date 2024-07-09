@@ -24,15 +24,13 @@
                             <div class="row py-3">
                                 <div class="col-md-3">
                                     <div class="container">
-                                        <p class="my-1"><b>Rose Sumiyanti</b></p>
-                                        <p>0897888999</p>
+                                        <p class="my-1"><b>{{$transaksi->user->name}}</b></p>
+                                        <p>{{$transaksi->user->no_telp}}</p>
                                     </div>
                                 </div>
                                 <div class="col-md-9 mb-1">
                                     <p class="my-1"><b>Alamat Pengiriman</b></p>
-                                    <p>Jalan kampung durian runtuh, RT 123 RW 405 rumah hijau opah ( didepan banyak
-                                            tanaman
-                                            rose) SUKABUMI, KOTA BANDAR LAMPUNG, LAMPUNG, ID 35122</p>
+                                    <p>{{$transaksi->user->alamat}}</p>
                                 </div>
                             </div>
                         </div>

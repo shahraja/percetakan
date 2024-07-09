@@ -22,7 +22,12 @@ class CartController extends Controller
 
     public function edit()
     {
-        $brosurs = Brosur::all();
+        // $brosurs = Brosur::all();
+        // $bukus = Buku::all();
+        // $kalenders = Kalender::all();
+        // $majalahs = Majalah::all();
+        // $undangans = Undangan::all();
+        // return view('admin.cart.edit', compact('brosurs', 'bukus', 'kalenders', 'majalahs', 'undangans'));
     }
 
     public function update(Request $request, string $id)
@@ -38,6 +43,16 @@ class CartController extends Controller
 
         if (auth()->user()->role == 'admin') {
             return back()->with('alert', 'Berhasil Edit User!');
+        }
+    }
+
+    public function destroy(string $id)
+    {
+        $cart = Transaksi::findOrFail($id);
+        $cart->delete();
+
+        if (auth()->user()->role == 'admin') {
+            return back()->with('alert', 'Berhasil Hapus User!');
         }
     }
 }

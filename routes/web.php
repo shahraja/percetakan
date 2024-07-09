@@ -57,7 +57,7 @@ Route::middleware([Admin::class])->name('admin.')->prefix('admin')->group(functi
     //KELOLA PESANAN
     Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
     Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
-    // Route::put('/pesanan/{id}', [TransaksiController::class, 'update'])->name('cart.update');
+    Route::delete('/pesanan/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
     
     //KELOLA PEMBAYARAN
     Route::get('/pembayaran', [PaymentController::class, 'index'])->name('payment.index');
