@@ -141,7 +141,7 @@ class BrosurController extends Controller
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),
-            'produk_id' => 1,
+            'produk_id' => 2,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $hp,
             'jml_total' => $jumlahCetak,

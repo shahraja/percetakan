@@ -20,14 +20,22 @@ class UserSeeder extends Seeder
                 'name' => 'Test User',
                 'email' => 'admin@admin.com',
                 'role' => 'admin',
+                'no_telp' => '08558464',
                 'alamat' => 'jalan raya',
+                'provinsi' => 'lampung',
+                'kota' => 'bandar lampung',
+                'kecamatan' => 'campang jaya',
                 'password' => Hash::make('password')
                 ],
                 [
                 'name' => 'Test User',
                 'email' => 'user@user.com',
                 'role' => 'user',
+                'no_telp' => '08558464878',
                 'alamat' => 'jalan raya',
+                'provinsi' => 'lampung',
+                'kota' => 'bandar lampung',
+                'kecamatan' => 'campang jaya',
                 'password' => Hash::make('password')
                 ],
         ];

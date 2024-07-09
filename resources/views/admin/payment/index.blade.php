@@ -29,38 +29,38 @@
                       </tr>
                       </thead>
                       <tbody>
-                        @foreach ($payments as $payment)
+                        @foreach ($transaksis as $transaksi)
                             <tr>
                                 <td>{{$loop->iteration}}</td>
-                                <td>{{$payment->token_user}}</td>
-                                <td>{{$payment->tgl_transaksi}}</td>
-                                <td>{{$payment->nama}}</td>
-                                <td>{{$payment->produk}}</td>
-                                <td>{{$payment->waktu}}</td>
-                                <td><img class="img img-fluid" width="100" src="{{asset('assets/img/'. $payment->gambar)}}" alt=""></td>
+                                <td>{{$transaksi->nomor_pesanan}}</td>
+                                <td>{{$transaksi->created_at->format('d-m-Y')}}</td>
+                                <td>{{$transaksi->user->name}}</td>
+                                <td>{{$transaksi->produk->judul}}</td>
+                                <td>{{$transaksi->created_at->format('H:i')}}</td>
+                                <td><img class="img img-fluid" width="100" src="{{asset('assets/img/'. $transaksi->gambar)}}" alt=""></td>
                                 <td>
-                                  @if ($payment->status == 'Dibatalkan')
-                                    <span class="badge badge-danger">{{$payment->status}}</span>  
-                                  @elseif ($payment->status == 'Verifikasi')
-                                    <span class="badge badge-success">{{$payment->status}}</span> 
-                                  @elseif ($payment->status == 'Menunggu Konfirmasi')
-                                    <span class="badge badge-warning">{{$payment->status}}</span> 
+                                  @if ($transaksi->status == 'Ditolak')
+                                    <span class="badge badge-danger">{{$transaksi->status}}</span>  
+                                  @elseif ($transaksi->status == 'Diproses')
+                                    <span class="badge badge-success">{{$transaksi->status}}</span> 
+                                  @elseif ($transaksi->status == 'Menunggu Pembayaran')
+                                    <span class="badge badge-warning">{{$transaksi->status}}</span> 
                                   @endif
                                 </td>
                                 <td>
                                   <div>
-                                    <form action="{{route('admin.payment.update', $payment->id)}}" method="POST">
+                                    <form action="{{route('admin.payment.update', $transaksi->id)}}" method="POST">
                                       @csrf
                                       @method('PUT')
-                                      <input type="hidden" name="status" value="Dibatalkan">
+                                      <input type="hidden" name="status" value="Ditolak">
                                       <button class="btn btn-danger my-2" type="submit">Batalkan</button>
                                     </form>
                                   </div>
                                   <div>
-                                    <form action="{{route('admin.payment.update', $payment->id)}}" method="POST">
+                                    <form action="{{route('admin.payment.update', $transaksi->id)}}" method="POST">
                                       @csrf
                                       @method('PUT')
-                                      <input type="hidden" name="status" value="Verifikasi">
+                                      <input type="hidden" name="status" value="Diproses">
                                       <button class="btn btn-success my-2" type="submit">Pesanan Diverifikasi</button>
                                     </form>
                                   </div>

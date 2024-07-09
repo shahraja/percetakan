@@ -31,7 +31,7 @@ class CartController extends Controller
             'status' => 'required|max:255',
         ]);
 
-        $cart = Cart::findOrFail($id);
+        $cart = Transaksi::findOrFail($id);
         $cart->update([
             'status' => $request->status,
         ]);

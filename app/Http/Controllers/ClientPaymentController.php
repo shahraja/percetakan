@@ -21,12 +21,12 @@ class ClientPaymentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(string $produk_id, string $nomor_pesanan)
+    public function create(string $produk_id, string $nomor_pesanan, string $metode_pengambilan)
     {
         $transaksi = Transaksi::with('produk')
         ->where('nomor_pesanan', $nomor_pesanan)
         ->where('produk_id', $produk_id)->first();
-        // dd($nomor_pesanan);
+        $transaksi->update(['metode_pengambilan' => $metode_pengambilan]);
         $products = Product::all();
         return view('client.payment', compact('transaksi', 
         'products'));
@@ -67,7 +67,7 @@ class ClientPaymentController extends Controller
                 'gambar'=>'file|image|mimes:jpeg,png,jpg|max:5120',
     
             ]);
-    
+            // dd($metode_pengambilan);
             $transaksi = Transaksi::where('nomor_pesanan', $nomor_pesanan)
             ->first();
             $gambar = uniqid().'_'.$request->file('gambar')->getClientOriginalName();

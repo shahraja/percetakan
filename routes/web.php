@@ -8,6 +8,7 @@ use App\Http\Middleware\User;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\TransaksiController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\BrosurController;
 use App\Http\Controllers\BukuController;
@@ -15,6 +16,7 @@ use App\Http\Controllers\ClientPaymentController;
 use App\Http\Controllers\KalenderController;
 use App\Http\Controllers\MajalahController;
 use App\Http\Controllers\UndanganController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -29,8 +31,9 @@ Auth::routes();
 Route::middleware(['auth'])->group(function () {
     Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
     Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
-    Route::get('/profile', [HomeController::class, 'profile'])->name('profile');
-    Route::get('/pembayaran/{produk_id}-{nomor_pesanan}', [ClientPaymentController::class, 'create'])->name('payment');
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'create'])->name('payment');
     Route::put('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'update'])->name('payment.update');
     Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
 
@@ -54,6 +57,7 @@ Route::middleware([Admin::class])->name('admin.')->prefix('admin')->group(functi
     //KELOLA PESANAN
     Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
     Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
+    // Route::put('/pesanan/{id}', [TransaksiController::class, 'update'])->name('cart.update');
     
     //KELOLA PEMBAYARAN
     Route::get('/pembayaran', [PaymentController::class, 'index'])->name('payment.index');

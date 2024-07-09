@@ -16,7 +16,11 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('role')->nullable();
+            $table->string('no_telp')->nullable();
             $table->string('alamat')->nullable();
+            $table->string('provinsi')->nullable();
+            $table->string('kota')->nullable();
+            $table->string('kecamatan')->nullable();
             $table->string('password')->nullable();
             $table->rememberToken();
             $table->timestamps();

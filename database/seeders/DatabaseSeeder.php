@@ -21,5 +21,6 @@ class DatabaseSeeder extends Seeder
         $this->call(KalenderSeeder::class);
         $this->call(MajalahSeeder::class);
         $this->call(UndanganSeeder::class);
+        $this->call(PaymentSeeder::class);
     }
 }

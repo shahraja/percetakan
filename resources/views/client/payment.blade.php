@@ -4,7 +4,12 @@
 
 @section('content')
     <div class="container mb-3">
-        <h2 class="my-5"><span class="btn btn-success bg-utama"><i class="fa fa-arrow-left pe-2"></i></span> Keranjang Saya</h2>
+        <h2 class="my-5">
+            <a href="javascript:history.back()" class="btn btn-success bg-utama">
+                <i class="fa fa-arrow-left pe-2"></i>
+            </a> 
+            Keranjang Saya
+        </h2>
         <form action="{{route('payment.update',[$transaksi->produk_id, $transaksi->nomor_pesanan, $transaksi->metode_pengambilan])}}" method="POST" enctype="multipart/form-data">
             @method('PUT')
             @csrf

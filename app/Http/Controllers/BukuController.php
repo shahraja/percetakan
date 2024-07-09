@@ -49,7 +49,7 @@ class BukuController extends Controller
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),
-            'produk_id' => 2,
+            'produk_id' => 1,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $harga_plano,
             'jml_total' => $jumlah,

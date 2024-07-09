@@ -49,23 +49,27 @@
                                             <td>{{ $item->gramasi }}</td>
                                             <td>{{ $item->laminasi }}</td>
                                             <td>
-                                                <img src="{{ asset('payment/' . $item->gambar) }}" alt="">
+                                                @isset($item->gambar)
+                                                <img src="{{ asset('payment/' . $item->gambar) }}" class="object-fit-contain border rounded" width="80" height="80" alt="">
+                                                @else
+                                                <img src="{{ asset('assets/img/logo-2.png') }}" class="object-fit-contain border rounded" width="80" height="80" alt="">
+                                                @endisset
                                             </td>
                                             <td>
-                                                {{-- @if ($item->metode_pengambilan) --}}
-                                                    <span class="badge bg-success">
-                                                        @isset($item->Buku->halaman)
-                                                        {{$item->Buku}}
-                                                        @endisset
+                                                @if ($item->metode_pengambilan)
+                                                    <span class="badge bg-success"> Pick Up
                                                     </span>
-                                                {{-- @else
+                                                @else
                                                     <span class="badge bg-warning">Delivery</span>
-                                                @endif --}}
+                                                @endif
                                             </td>
                                             <td>
-                                              @include('admin.cart.edit')
-
-                                                <button type="button" class="btn btn-danger"><i class="fa-solid fa-trash"></i></button>
+                                                {{-- @isset($item->Buku) --}}
+                                                    
+                                                @include('admin.cart.edit')
+                                                {{-- @endisset --}}
+                                                    
+                                                <button type="button" class="btn btn-danger m-1"><i class="fa-solid fa-trash"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach

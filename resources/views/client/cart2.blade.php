@@ -7,16 +7,15 @@
 @section('content')
     <div class="container mb-5">
         <h2 class="my-5">
-            <span class="btn btn-success bg-utama">
-                <a href="#" onclick="history.back();">
-                    <p class="text-black"><i class="fas fa-arrow-left fs-4"></i></p>
-                </a>
-            </span> Keranjang Saya
+            <a href="javascript:history.back()" class="btn btn-success bg-utama">
+                <i class="fa fa-arrow-left pe-2"></i>
+            </a> 
+            Keranjang Saya
         </h2>
         <form action="">
             @foreach ($transaksis as $transaksi)
                 {{-- @if (auth()->user()->id == $buku->transaksi->user_id) --}}
-                <div class="row my-5">
+                <div class="row my-3">
                     <div class="border rounded p-3 me-5 shadow">
                         <div class="row">
                             {{-- <div class="col-md-9">

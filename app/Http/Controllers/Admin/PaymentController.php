@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
 {
     public function index()
     {
-        $payments = Payment::all();
-        return view('admin.payment.index', compact('payments'));
+        $transaksis = Transaksi::all();
+        return view('admin.payment.index', compact('transaksis'));
     }
 
     public function update(Request $request, string $id)
@@ -20,8 +21,8 @@ class PaymentController extends Controller
             'status' => 'required|max:255',
         ]);
 
-        $payment = Payment::findOrFail($id);
-        $payment->update([
+        $transaksi = Transaksi::findOrFail($id);
+        $transaksi->update([
             'status' => $request->status,
         ]);
 

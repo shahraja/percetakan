@@ -4,7 +4,11 @@
 
 @section('content')
     <div class="container mb-5">
-        <h2 class="my-5"><span class="btn btn-success bg-utama"><i class="fa fa-arrow-left pe-2"></i></span> Keranjang Saya
+        <h2 class="my-5">
+            <a href="javascript:history.back()" class="btn btn-success bg-utama">
+                <i class="fa fa-arrow-left pe-2"></i>
+            </a> 
+            Keranjang Saya
         </h2>
         <form action="">
             <label>
