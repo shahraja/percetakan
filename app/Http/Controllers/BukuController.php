@@ -18,19 +18,10 @@ class BukuController extends Controller
                 'uk_width' => 'required',
                 'uk_height' => 'required',
                 'finishing' => 'required',
-                // 'produk_id' => 'required',
-                // 'total_harga' => 'required',
-                // 'harga_plano' => 'required',
-                // 'jumlah' => 'required',
-                // 'gramasi' => 'required',
-                // 'laminasi' => 'required',
             ]
         );
 
-        // dd($request->all());
-
         // Ambil data dari request
-        // dd($request->all());
         $produk_id = $request->produk_id;
         $user_id = $request->user_id;
         $alamat = $request->alamat;

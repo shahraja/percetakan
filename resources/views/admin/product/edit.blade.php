@@ -1,57 +1,66 @@
 <!-- Button to trigger modal -->
-<button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModal{{$product->id}}">
+<button type="button" class="btn btn-success" data-toggle="modal" data-target="#editModal{{ $product->id }}">
     <i class="fa fa-edit"></i>
-  </button>
-  
-  <!-- Modal -->
-  <div class="modal fade" id="editModal{{$product->id}}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="editModal{{ $product->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editModalLabel">Edit Item</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel">Edit Item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for editing -->
+                <form id="editForm" action="{{ route('admin.product.update', $product->id) }}" method="POST"
+                    enctype="multipart/form-data">
+                    @csrf
+                    @method('POST')
+                    <div class="form-group">
+                        <label for="judul">Judul</label>
+                        <input type="text" class="form-control" name="judul" id="judul"
+                            placeholder="Enter item name" required value="{{ $product->judul }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="kertas">kertas</label>
+                        <input type="text" class="form-control" name="kertas" id="kertas"
+                            placeholder="Enter item name" disabled value="{{ $product->kertas }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="gambar">gambar</label><br>
+                        <img class="img img-fluid" width="100" src="{{ asset('assets/img/' . $product->gambar) }}"
+                            alt="">
+                        <input type="file" class="form-control" name="gambar" id="gambar"
+                            placeholder="Enter item name" enabled value="{{ $product->gambar }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="deskripsi">deskripsi</label>
+                        <input type="text" class="form-control" name="deskripsi" id="deskripsi"
+                            placeholder="Enter item name" required value="{{ $product->deskripsi }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="harga">harga</label>
+                        <input type="text" class="form-control" name="harga" id="harga"
+                            placeholder="Enter item name" disabled value="{{ $product->harga }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="sisi">sisi</label>
+                        <input type="text" class="form-control" name="sisi" id="sisi"
+                            placeholder="Enter item name" disabled value="{{ $product->sisi }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="ukuran">ukuran</label>
+                        <input type="text" class="form-control" name="ukuran" id="ukuran"
+                            placeholder="Enter item name" disabled value="{{ $product->ukuran }}">
+                    </div>
+                    <!-- Add more input fields for other properties you want to edit -->
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </form>
+            </div>
         </div>
-        <div class="modal-body">
-          <!-- Form for editing -->
-          <form id="editForm" action="{{route('admin.product.update', $product->id)}}" method="POST" enctype="multipart/form-data">
-            @csrf
-            @method('POST')
-            <div class="form-group">
-              <label for="judul">Judul</label>
-              <input type="text" class="form-control" name="judul" id="judul" placeholder="Enter item name" required value="{{$product->judul}}">
-            </div>
-            <div class="form-group">
-              <label for="kertas">kertas</label>
-              <input type="text" class="form-control" name="kertas" id="kertas" placeholder="Enter item name" disabled value="{{$product->kertas}}">
-            </div>
-            <div class="form-group">
-              <label for="gambar">gambar</label><br>
-              <img class="img img-fluid" width="100" src="{{asset('assets/img/'. $product->gambar)}}" alt="">
-              <input type="file" class="form-control" name="gambar" id="gambar" placeholder="Enter item name" enabled value="{{$product->gambar}}">
-            </div>
-            <div class="form-group">
-              <label for="deskripsi">deskripsi</label>
-              <input type="text" class="form-control" name="deskripsi" id="deskripsi" placeholder="Enter item name" required value="{{$product->deskripsi}}">
-            </div>
-            <div class="form-group">
-              <label for="harga">harga</label>
-              <input type="text" class="form-control" name="harga" id="harga" placeholder="Enter item name" disabled value="{{$product->harga}}">
-            </div>
-            <div class="form-group">
-              <label for="sisi">sisi</label>
-              <input type="text" class="form-control" name="sisi" id="sisi" placeholder="Enter item name" disabled value="{{$product->sisi}}">
-            </div>
-            <div class="form-group">
-              <label for="ukuran">ukuran</label>
-              <input type="text" class="form-control" name="ukuran" id="ukuran" placeholder="Enter item name" disabled value="{{$product->ukuran}}">
-            </div>
-            <!-- Add more input fields for other properties you want to edit -->
-            <button type="submit" class="btn btn-primary">Save changes</button>
-          </form>
-        </div>
-      </div>
     </div>
-  </div>
-  
+</div>

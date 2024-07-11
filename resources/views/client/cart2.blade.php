@@ -14,15 +14,9 @@
         </h2>
         <form action="">
             @foreach ($transaksis as $transaksi)
-                {{-- @if (auth()->user()->id == $buku->transaksi->user_id) --}}
                 <div class="row my-3">
                     <div class="border rounded p-3 me-5 shadow">
                         <div class="row">
-                            {{-- <div class="col-md-9">
-                                <div class="col text-end">
-                                    <p>SPXID03623984165C</p>
-                                </div>
-                            </div> --}}
                             <div class="col-md-12">
                                 <div class="col text-end">
                                     <p><b>{{ $transaksi->status }}</b></p>
@@ -96,7 +90,6 @@
                                                 @endif
                                             @endif
                                         </p>
-                                        {{-- <p>variasi: {{$buku->transaksi->harga_plano}}, {{$buku->transaksi->jml_total}}, {{$buku->transaksi->gramasi}}, {{$buku->transaksi->laminasi}}, {{$buku->halaman}}, {{$buku->finishing}}</p> --}}
                                     </div>
                                 </div>
                             </div>
@@ -107,7 +100,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- @endif --}}
             @endforeach
         </form>
     </div>
