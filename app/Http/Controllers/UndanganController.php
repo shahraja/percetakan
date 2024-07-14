@@ -136,6 +136,8 @@ class UndanganController extends Controller
 
         $totalHarga = $harga + $hargaLaminasi;
 
+        dd($request->all());
+
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
             'nomor_pesanan' => random_int(100000, 999999),

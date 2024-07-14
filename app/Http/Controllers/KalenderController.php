@@ -70,6 +70,8 @@ class KalenderController extends Controller
             $harga = ($jumlahPlano * $hp) + $jsc;
             $hargaLaminasi = $this->calculateLaminasiCost($ukWidth, $ukHeight, $jc, $request->laminasi);
             
+            // dd($request->all());
+
             // Calculate harga jilid
             $hargaJilid = 0;
             if ($request->jilid === 'kaleng') {

@@ -41,6 +41,8 @@ class MajalahController extends Controller
         $uk_asli = $request->uk_asli;
         $uk_width = $request->uk_width;
         $uk_height = $request->uk_height;
+
+        // dd($request->all());
         
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,

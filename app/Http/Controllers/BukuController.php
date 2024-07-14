@@ -20,7 +20,7 @@ class BukuController extends Controller
                 'finishing' => 'required',
             ]
         );
-
+        // dd($request->all());
         // Ambil data dari request
         $produk_id = $request->produk_id;
         $user_id = $request->user_id;

@@ -47,7 +47,7 @@ $products = Product::all();
                         <button class="btn btn-primary bg-utama col-md-6" type="submit">Login</button>
                     </div>
                     <div class="text-center mb-4">
-                        <a class="text-warning" href="">Register</a>
+                        <a class="text-warning" href="{{ route('register') }}">Register</a>
                     </div>
                 </form>
             </div>
