@@ -17,6 +17,7 @@ use App\Http\Controllers\KalenderController;
 use App\Http\Controllers\MajalahController;
 use App\Http\Controllers\UndanganController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Middleware\Auth\MidtransSignatureKey;
 use Illuminate\Support\Facades\Auth;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -28,14 +29,17 @@ Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
 
 Auth::routes();
 
+
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
     Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'create'])->name('payment');
-    Route::put('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'update'])->name('payment.update');
+    // Route::put('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'update'])->name('payment.update');
     Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
+
 
 // DASHBOARD
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
@@ -75,5 +79,10 @@ Route::post('/majalah', [MajalahController::class, 'store'])->name('majalah.stor
 Route::post('/undangan', [UndanganController::class, 'store'])->name('undangan.store');
 
 });
+
+Route::post('/update-transaction-status', [KalenderController::class, 'updateStatus'])->name('update.transaction.status');
+Route::post('/update-delivery-method', [KalenderController::class, 'updateDeliveryMethod'])->name('update.delivery.method');
+
+
 
 });

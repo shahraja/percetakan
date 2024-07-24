@@ -10,7 +10,16 @@ class Product extends Model
     use HasFactory;
     
     protected $table = 'product';
-    protected $fillable = ['judul', 'kertas', 'gambar', 'deskripsi', 'harga', 'sisi', 'ukuran'];
+    protected $fillable = 
+    [
+        'judul', 
+        'kertas', 
+        'gambar', 
+        'deskripsi', 
+        'harga', 
+        'sisi', 
+        'ukuran'
+    ];
 
     public function transaksi()
     {

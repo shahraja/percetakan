@@ -6,6 +6,7 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Brosur;
 use App\Models\Product;
+use App\Services\CreateSnapToken;
 
 class BrosurController extends Controller
 {
@@ -158,7 +159,34 @@ class BrosurController extends Controller
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
-        return view('client.checkout', compact('transaksi', 'brosur', 'products'));
+
+        $transaction_details = [
+            'order_id'      => $transaksi->id,
+            'gross_amount'  => $totalHarga,
+        ];
+        $items = [
+            [
+                'id'    => 2,
+                'quantity'  => $jumlahCetak,
+                'price' => $totalHarga,
+                'name'  => 'Brosur',
+            ]
+        ];
+
+        $customer_details = [
+            'name'          => $transaksi->user->name,
+            'email'         => $transaksi->user->email,
+        ];
+
+        $params = [
+            'transaction_details'   => $transaction_details,
+            'item_details'          => $items,
+            'customer_details'      => $customer_details,
+        ];
+        $snapToken = new CreateSnapToken($params);
+        $token = $snapToken->getSnapToken();
+
+        return view('client.checkout', compact('transaksi', 'brosur', 'products', 'token'));
     }
 
     private function calculateJSC($width, $height, $jc)

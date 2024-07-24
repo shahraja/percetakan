@@ -20,13 +20,24 @@ return new class extends Migration
             $table->foreignId('produk_id')->references('id')->on('product')->onDelete('cascade')->onUpdate('cascade');
             $table->string('alamat')->nullable();
             $table->string('total_harga')->nullable();
+            $table->string('payment_type')->nullable();
+            $table->string('payment_code')->nullable();
+            $table->string('pdf_url')->nullable();
             $table->string('harga_plano')->nullable();
             $table->string('jml_total')->nullable();
             $table->string('gramasi')->nullable();
             $table->string('laminasi')->nullable();
             $table->string('gambar')->nullable();
             $table->boolean('metode_pengambilan')->default(false);
-            $table->enum('status',['Ditolak','Diproses','Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai',])->default('Menunggu Pembayaran');
+            $table->enum('status',[
+                'Ditolak',
+                'Expire',
+                'Pending',
+                'Diproses',
+                'Menunggu Pembayaran', 
+                'Telah Dikonfirmasi', 
+                'Selesai',])
+                ->default('Menunggu Pembayaran');
             $table->timestamps();
         });
     }

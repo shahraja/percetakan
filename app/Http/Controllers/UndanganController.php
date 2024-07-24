@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Undangan;
+use App\Services\CreateSnapToken;
 
 class UndanganController extends Controller
 {
@@ -158,7 +159,34 @@ class UndanganController extends Controller
             'uk_width' => $request->uk_width,
             'uk_height' => $request->uk_height
         ]);
-        return view('client.checkout', compact('transaksi', 'undangan', 'products'));
+
+        $transaction_details = [
+            'order_id'      => $transaksi->id,
+            'gross_amount'  => $totalHarga,
+        ];
+        $items = [
+            [
+                'id'    => 4,
+                'quantity'  => $jumlahCetak,
+                'price' => $totalHarga,
+                'name'  => 'Undangan',
+            ]
+        ];
+
+        $customer_details = [
+            'name'          => $transaksi->user->name,
+            'email'         => $transaksi->user->email,
+        ];
+
+        $params = [
+            'transaction_details'   => $transaction_details,
+            'item_details'          => $items,
+            'customer_details'      => $customer_details,
+        ];
+        $snapToken = new CreateSnapToken($params);
+        $token = $snapToken->getSnapToken();
+
+        return view('client.checkout', compact('transaksi', 'undangan', 'products', 'token'));
     }
 
     private function calculateJSC($width, $height, $jc)

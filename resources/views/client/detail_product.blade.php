@@ -97,6 +97,13 @@
                         <option value="doff2">Doff Bolak-Balik</option>
                     </select>
                 </div>
+                {{-- <label>
+                    <input type="radio" name="metode_pengambilan" value="0" checked onclick="toggleCard()"> Delivery
+                </label>
+                <label class="ms-5">
+                    <input type="radio" name="metode_pengambilan" value="1" onclick="toggleCard()"> Pick Up
+                </label> --}}
+
                 <div class="text-center my-3">
                     <button class="btn btn-primary bg-utama col-md-6" type="button" onclick="calculatePrice()">Cek
                         Harga</button>
@@ -120,6 +127,26 @@
                             <td>: </td>
                             <td align="right" id="result"></td>
                         </tr>
+                        {{-- <div class="row my-2">
+                            <div id="deliveryCard" class="border rounded p-3 me-5 shadow card">
+                                <div class="row">
+                                    <div>
+                                        <div class="row py-3">
+                                            <div class="col-md-3">
+                                                <div class="container">
+                                                    <p class="my-1"><b>{{ $transaksi->user->name }}</b></p>
+                                                    <p>{{ $transaksi->user->no_telp }}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-9 mb-1">
+                                                <p class="my-1"><b>Alamat Pengiriman</b></p>
+                                                <p>{{ $transaksi->user->alamat }}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> --}}
                         <input type="hidden" name="uk_asli" id="uk_asli">
                         <input type="hidden" name="uk_width" id="uk_width">
                         <input type="hidden" name="uk_height" id="uk_height">

@@ -34,7 +34,9 @@ class HomeController extends Controller
     public function detail_product(Request $request, $id)
     {
         $products = Product::all();
+        $transaksi = Transaksi::where('user_id', auth()->user()->id)->get();
         $product = Product::findOrFail($id);
+
         return view('client.detail_product', compact('product', 'products'));
     }
 

@@ -6,6 +6,7 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Majalah;
 use App\Models\Product;
+use App\Services\CreateSnapToken;
 
 class MajalahController extends Controller
 {
@@ -76,7 +77,34 @@ class MajalahController extends Controller
             // 'status' => $status,
             // 'laminasi' => $laminasi,
         ]);
-        return view('client.checkout', compact('transaksi', 'majalah', 'products'));
+
+        $transaction_details = [
+            'order_id'      => $transaksi->id,
+            'gross_amount'  => $hargaTotal,
+        ];
+        $items = [
+            [
+                'id'    => 5,
+                'quantity'  => $jumlah,
+                'price' => $hargaTotal,
+                'name'  => 'Majalah',
+            ]
+        ];
+
+        $customer_details = [
+            'name'          => $transaksi->user->name,
+            'email'         => $transaksi->user->email,
+        ];
+
+        $params = [
+            'transaction_details'   => $transaction_details,
+            'item_details'          => $items,
+            'customer_details'      => $customer_details,
+        ];
+        $snapToken = new CreateSnapToken($params);
+        $token = $snapToken->getSnapToken();
+
+        return view('client.checkout', compact('transaksi', 'majalah', 'products', 'token'));
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)
