@@ -133,7 +133,9 @@
                                 </p>
                                 <hr width="100%" noshade>
                                 <div class="text-center my-3">
-                                    <a id="paymentLink" href="{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, '0']) }}"
+                                    {{-- <a id="paymentLink" href="{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, '0']) }}"
+                                        class="btn btn-success bg-utama col-md-8">Bayar</a> --}}
+                                    <a id="paymentLink" href="{{ route('payment', [$transaksi->nomor_pesanan]) }}"
                                         class="btn btn-success bg-utama col-md-8">Bayar</a>
                                 </div>
                             </div>

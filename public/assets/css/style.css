@@ -5,3 +5,18 @@
 .bg-utama {
     background-color: #029094;
 }
+
+/* Hides the arrows in input type number in all browsers */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Hides the arrows in input type number in Firefox */
+input[type="number"] {
+    appearance: textfield;
+}
+p {
+    text-align: justify;
+}

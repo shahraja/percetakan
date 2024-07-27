@@ -14,7 +14,7 @@ class Majalah extends Model
         'finishing',
         'uk_asli',
         'uk_width',
-        'uk_height'
+        'uk_height',
     ];
 
     public function transaksi()

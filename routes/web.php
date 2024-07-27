@@ -25,7 +25,6 @@ Route::get('/beranda', [HomeController::class, 'index'])->name('beranda');
 Route::get('/tentang', [HomeController::class, 'about'])->name('about');
 Route::get('/produk/{id}', [HomeController::class, 'detail_product'])->name('detail_product');
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
-// Route::get('/pembayaran', [HomeController::class, 'paymnet'])->name('paymnet');
 
 Auth::routes();
 
@@ -36,7 +35,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::get('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'create'])->name('payment');
+    Route::get('/pembayaran-{nomor_pesanan}', [HomeController::class, 'payment'])->name('payment');
+    // Route::get('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'create'])->name('payment');
     // Route::put('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'update'])->name('payment.update');
     Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
 
@@ -81,7 +81,6 @@ Route::post('/undangan', [UndanganController::class, 'store'])->name('undangan.s
 });
 
 Route::post('/update-transaction-status', [KalenderController::class, 'updateStatus'])->name('update.transaction.status');
-Route::post('/update-delivery-method', [KalenderController::class, 'updateDeliveryMethod'])->name('update.delivery.method');
 
 
 

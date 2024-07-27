@@ -92,7 +92,7 @@ class KalenderController extends Controller
 
             $transaksi = Transaksi::create([
                 'user_id' => auth()->user()->id,
-                'nomor_pesanan' => rand(100, 1000),
+                'nomor_pesanan' => uniqid(),
                 'produk_id' => 3,
                 'alamat' => auth()->user()->alamat,
                 'harga_plano' => $hp,
@@ -127,7 +127,7 @@ class KalenderController extends Controller
             ]);
 
             $transaction_details = [
-                'order_id'      => $transaksi->id,
+                'order_id'      => $transaksi->nomor_pesanan,
                 'gross_amount'  => intval($totalHarga),
             ];
             $items = [

@@ -8,7 +8,7 @@
         <h1 class="my-5">Kontak</h1>
         <div class="col-md-10">
             <h3>Address</h3>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, rem dolorem? Fugiat corrupti alias eum quas debitis suscipit nostrum in labore ut impedit assumenda quis, molestiae tenetur cupiditate harum nihil.</p>
+            <p>Jl. Teuku Umar No.2, Pasir Gintung, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35121</p>
         </div>
         <div class="col-md-10">
             <i class="fa-xl fa-solid fa-envelope text-warning"></i>
@@ -18,17 +18,17 @@
         <div class="col-md-10">
             <i class="fa-xl fa-brands fa-whatsapp text-warning"></i>
             <h5>WhatsApp</h5>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, rem dolorem? Fugiat corrupti alias eum quas debitis suscipit nostrum in labore ut impedit assumenda quis, molestiae tenetur cupiditate harum nihil.</p>
+            <p>0821-8213-6011</p>
         </div>
         <div class="col-md-10">
             <i class="fa-xl fa-brands fa-instagram text-warning"></i>
             <h5>Instagram</h5>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, rem dolorem? Fugiat corrupti alias eum quas debitis suscipit nostrum in labore ut impedit assumenda quis, molestiae tenetur cupiditate harum nihil.</p>
+            <p>Yogi Grafika Lampung</p>
         </div>
         <div class="col-md-10">
             <i class="fa-xl fa-brands fa-facebook text-warning"></i>
             <h5>Facebook</h5>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, rem dolorem? Fugiat corrupti alias eum quas debitis suscipit nostrum in labore ut impedit assumenda quis, molestiae tenetur cupiditate harum nihil.</p>
+            <p>Yogi Grafika</p>
         </div>
     </div>
     <div class="mb-5 d-flex justify-content-center">

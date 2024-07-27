@@ -25,7 +25,9 @@ class Transaksi extends Model
         'laminasi',
         'gambar',
         'metode_pengambilan',
-        'status'];
+        'status',
+        'snap_token',
+    ];
 
     public function user()
     {

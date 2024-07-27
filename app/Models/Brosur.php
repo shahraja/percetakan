@@ -12,7 +12,7 @@ class Brosur extends Model
         'transaksi_id',
         'uk_asli',
         'uk_width',
-        'uk_height'
+        'uk_height',
     ];
 
     public function transaksi()

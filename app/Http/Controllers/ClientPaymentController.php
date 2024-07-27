@@ -57,7 +57,7 @@ class ClientPaymentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $produk_id, string $nomor_pesanan, string $metode_pengambilan)
+    public function update(Request $request)
     {
         // DB::beginTransaction();
         // try {
@@ -94,8 +94,14 @@ class ClientPaymentController extends Controller
 
     public function callback(Request $request)
     {
+
+        // $request->validate([
+        //     'nomor_pesanan' => 'required|string',
+        //     'transaction_status' => 'required|string',
+        // ]);
+
         $nomor_pesanan = $request->nomor_pesanan;
-        $status = $request->status;
+        $status = $request->transaction_status;
         $fraud = $request->fraud_status;
         DB::beginTransaction();
         try {

@@ -22,12 +22,12 @@
             Keranjang Saya
         </h2>
         {{-- <form action=""> --}}
-        <label>
+        {{-- <label>
             <input type="radio" name="metode_pengambilan" value="0" checked onclick="toggleCard()"> Delivery
         </label>
         <label class="ms-5">
             <input type="radio" name="metode_pengambilan" value="1" onclick="toggleCard()"> Pick Up
-        </label>
+        </label> --}}
         <div class="row my-2">
             <div id="deliveryCard" class="border rounded p-3 me-5 shadow card">
                 <div class="row">
@@ -150,11 +150,11 @@
                     <p class="summary-item">Subtotal: <span class="float-end">Rp <span
                                 id="subtotal">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span>
                     </p>
-                    <p class="summary-item" id="shippingCost" style="display: none;">Ongkos Kirim: <span
-                            class="float-end">Rp<span id="shipping">50.000</span></span></p>
+                    {{-- <p class="summary-item" id="shippingCost" style="display: none;">Ongkos Kirim: <span
+                            class="float-end">Rp<span id="shipping">50.000</span></span></p> --}}
                     <hr>
                     <p id="paymentLink" class="summary-total">Total Pembayaran: <span class="float-end">Rp<span
-                                id="total-payment">700.000</span></span></p>
+                                id="total-payment">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span></p>
                     <div class="text-center my-3">
                         <button class="btn btn-success bg-utama col-md-8" id="pay-button">Pay!</button>
                         {{-- <a id="paymentLink" href="{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, '0']) }}"
@@ -253,7 +253,7 @@
                         },
                         body: JSON.stringify({
                             id: '{{ $transaksi->id }}',
-                            status: 'Selesai'
+                            status: 'Diproses'
                         })
                     })
                     .then(response => response.json())

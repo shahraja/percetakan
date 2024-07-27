@@ -38,6 +38,7 @@ return new class extends Migration
                 'Telah Dikonfirmasi', 
                 'Selesai',])
                 ->default('Menunggu Pembayaran');
+            $table->string('snap_token')->nullable();
             $table->timestamps();
         });
     }
