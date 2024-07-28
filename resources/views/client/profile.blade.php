@@ -5,13 +5,18 @@
 @section('content')
     <div class="container mb-5">
         <h1>Profile</h1>
-        <form action="{{route('profile.update')}}" method="POST">
+        <form action="{{route('profile.update')}}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="row">
                 <div class="col-md-3 me-3">
-                    <img src="{{asset('assets/img/logo-1.png')}}" class="img img-fluid border rounded-circle" alt="">
+                    <img 
+                        src="{{ Auth::user()->gambar ? asset('uploads/' . Auth::user()->gambar) : asset('assets/img/logo-1.png') }}" 
+                        class="img img-fluid border rounded-circle raunded-image"  
+                        alt="Profile Photo">
+                    <input class="form-control" type="file" name="gambar" id="gambar" accept="image/png, image/gif, image/jpeg">
                 </div>
+                
                 <div class="col-md-8 border rounded p-3 ms-3">
                     <div class="form-group mb-2">
                         <label for="name" class="from-label">Name</label>

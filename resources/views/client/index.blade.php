@@ -3,17 +3,20 @@
 @section('title', 'Beranda')
 
 @section('content')
-    <img src="{{asset('assets/img/anesh_printing_1.png')}}" class="shadow" width="100%" alt="">
+    <img src="{{asset('assets/img/anesh_printing_1.png')}}" class="shadow bg-gradient" width="100%" alt="">
     <div class="container px-0 mb-4" >
-        <h3 class="text-center p-4">Layanan Kami</h3>
-        <div class="row">
-            @foreach ($products as $product)
-            <div class="col-md-3 text-center">
-                <a href="{{route('detail_product', $product->id)}}">
-                    <img src="{{asset('assets/img/'. $product->gambar)}}" class="img img-fluid rounded" style="object-fit: cover" width="200" alt="">
-                    <p>{{$product->judul}}</p>
-                </a>
-            </div>
+        <h2 class="text-center p-4">Produk Kami</h2>
+        <div class="row justify-content-center text-center">
+            @foreach ($products as $index => $product)
+                @if ($index % 3 == 0 && $index != 0)
+                    </div><div class="row justify-content-center text-center">
+                @endif
+                <div class="col-3 p-3 text-center">
+                    <a href="{{ route('detail_product', $product->id) }}">
+                        <img src="{{ asset('assets/img/' . $product->gambar) }}" class="img img-fluid rounded" style="object-fit: cover" width="200" alt="">
+                        <p class="text-center text-black">{{ $product->judul }}</p>
+                    </a>
+                </div>
             @endforeach
         </div>
     </div>

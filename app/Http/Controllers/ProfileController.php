@@ -23,6 +23,7 @@ class ProfileController extends Controller
         $user = User::findOrFail($user_id);
 
         $request->validate([
+            'gambar' => 'file|image|mimes:jpeg,png,jpg|max:5120',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8|confirmed',
@@ -33,6 +34,13 @@ class ProfileController extends Controller
             'kecamatan' => 'nullable|string|max:255',
         ]);
 
+
+        if ($request->hasFile('gambar')) {
+            $image = $request->file('gambar');
+            $filename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('uploads'), $filename);
+            $user->gambar = $filename;
+        }
         $user->name = $request->name;
         $user->email = $request->email;
         if ($request->password) {

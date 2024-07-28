@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
 
         $User = [
             [
+                'gambar' => 'undangan.jpg',
                 'name' => 'Test User',
                 'email' => 'admin@admin.com',
                 'role' => 'admin',
@@ -28,6 +29,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password')
                 ],
                 [
+                'gambar' => 'undangan.jpg',
                 'name' => 'Test User',
                 'email' => 'user@user.com',
                 'role' => 'user',

@@ -118,7 +118,7 @@
                 </swiper-container>
             </div>
             <div class="col-md-6">
-                <p>{{ $product->deskripsi }}</p>
+                <p class="desk">{{ $product->deskripsi }}</p>
                 <h5 class="py-2">Spesifikasi Produk</h5>
             </div>
         </div>

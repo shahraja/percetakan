@@ -10,7 +10,7 @@
             <a href="javascript:history.back()" class="btn btn-success bg-utama">
                 <i class="fa fa-arrow-left pe-2"></i>
             </a> 
-            Keranjang Saya
+            Pesanan Saya
         </h2>
         <form action="">
             @foreach ($transaksis as $transaksi)
@@ -95,7 +95,7 @@
                             </div>
                             <div class="col-md-4 text-end">
                                 <p>Total Pesanan:</p>
-                                <p><b>Rp{{ $transaksi->total_harga }}</b></p>
+                                <p><b>Rp{{ number_format($transaksi->total_harga, 0, ',', '.') }}</b></p>
                             </div>
                         </div>
                     </div>
