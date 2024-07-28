@@ -40,7 +40,7 @@ class BukuController extends Controller
 
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
-            'nomor_pesanan' => random_int(100000, 999999),
+            'nomor_pesanan' => uniqid(),
             'produk_id' => 1,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $harga_plano,
@@ -62,21 +62,23 @@ class BukuController extends Controller
         ]);
 
         $transaction_details = [
-            'order_id'      => $transaksi->id,
-            'gross_amount'  => $total_harga,
+            'order_id'      => $transaksi->nomor_pesanan,
+            'gross_amount'  => intval($total_harga),
         ];
         $items = [
             [
                 'id'    => 1,
-                'quantity'  => $jumlah,
-                'price' => $total_harga,
-                'name'  => 'Buku',
+                'quantity'  => 1,
+                'price' => intval($total_harga),
+                'name'  => 'Kalender',
             ]
         ];
 
         $customer_details = [
-            'name'          => $transaksi->user->name,
+            'first_name'          => $transaksi->user->name,
             'email'         => $transaksi->user->email,
+            'phone'         => $transaksi->user->no_telp,
+            'address'       => $transaksi->user->alamat,
         ];
 
         $params = [
@@ -196,5 +198,20 @@ class BukuController extends Controller
             default:
                 return 0;
         }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        // Validasi input jika perlu
+        $transaksi = Transaksi::find($request->input('id'));
+
+        if ($transaksi) {
+            $transaksi->status = $request->input('status');
+            $transaksi->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
     }
 }

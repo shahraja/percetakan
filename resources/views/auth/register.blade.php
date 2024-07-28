@@ -18,8 +18,8 @@ $products = Product::all();
 </head>
 <body class="bg-warning">
     <main class="">
-        @include('layouts.client.navbar')
-    <div class="container mb-5 my-5">
+        {{-- @include('layouts.client.navbar') --}}
+    <div class="container my-5 justify-content-center">
         <div class="d-flex justify-content-center">
             <div class="bg-light border rounded shadow col-md-6">
                 <div class="container my-3" style="max-height: 180px; max-width: 180px;">
@@ -67,7 +67,7 @@ $products = Product::all();
             </div>
         </div>
     </div>
-    @include('layouts.client.footer')
+    {{-- @include('layouts.client.footer') --}}
 </main>
 
 {{-- ini script --}}

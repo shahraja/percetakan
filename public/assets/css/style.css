@@ -6,6 +6,10 @@
     background-color: #029094;
 }
 
+.navbar-toggler{
+    background-color: #029094;
+}
+
 /* Hides the arrows in input type number in all browsers */
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
@@ -19,4 +23,12 @@ input[type="number"] {
 }
 p {
     text-align: justify;
+}
+
+.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+.dropdown > .dropdown-toggle:active {
+    pointer-events: none;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
 }

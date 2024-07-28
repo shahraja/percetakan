@@ -141,7 +141,7 @@ class BrosurController extends Controller
         // dd($request->all());
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
-            'nomor_pesanan' => random_int(100000, 999999),
+            'nomor_pesanan' => uniqid(),
             'produk_id' => 2,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $hp,
@@ -161,21 +161,23 @@ class BrosurController extends Controller
         ]);
 
         $transaction_details = [
-            'order_id'      => $transaksi->id,
-            'gross_amount'  => $totalHarga,
+            'order_id'      => $transaksi->nomor_pesanan,
+            'gross_amount'  => intval($totalHarga),
         ];
         $items = [
             [
                 'id'    => 2,
-                'quantity'  => $jumlahCetak,
-                'price' => $totalHarga,
-                'name'  => 'Brosur',
+                'quantity'  => 1,
+                'price' => intval($totalHarga),
+                'name'  => 'Kalender',
             ]
         ];
 
         $customer_details = [
-            'name'          => $transaksi->user->name,
+            'first_name'    => $transaksi->user->name,
             'email'         => $transaksi->user->email,
+            'phone'         => $transaksi->user->no_telp,
+            'address'       => $transaksi->user->alamat,
         ];
 
         $params = [
@@ -215,5 +217,20 @@ class BrosurController extends Controller
             default:
                 return 0;
         }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        // Validasi input jika perlu
+        $transaksi = Transaksi::find($request->input('id'));
+
+        if ($transaksi) {
+            $transaksi->status = $request->input('status');
+            $transaksi->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
     }
 }

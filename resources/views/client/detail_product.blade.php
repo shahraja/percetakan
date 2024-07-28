@@ -119,6 +119,7 @@
             </div>
             <div class="col-md-6">
                 <p>{{ $product->deskripsi }}</p>
+                <h5 class="py-2">Spesifikasi Produk</h5>
             </div>
         </div>
         @if ($product->judul == 'Undangan')

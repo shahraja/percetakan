@@ -137,11 +137,11 @@ class UndanganController extends Controller
 
         $totalHarga = $harga + $hargaLaminasi;
 
-        dd($request->all());
+        // dd($request->all());
 
         $transaksi = Transaksi::create([
             'user_id' => auth()->user()->id,
-            'nomor_pesanan' => random_int(100000, 999999),
+            'nomor_pesanan' => uniqid(),
             'produk_id' => 4,
             'alamat' => auth()->user()->alamat,
             'harga_plano' => $hp,
@@ -161,21 +161,23 @@ class UndanganController extends Controller
         ]);
 
         $transaction_details = [
-            'order_id'      => $transaksi->id,
-            'gross_amount'  => $totalHarga,
+            'order_id'      => $transaksi->nomor_pesanan,
+            'gross_amount'  => intval($totalHarga),
         ];
         $items = [
             [
                 'id'    => 4,
-                'quantity'  => $jumlahCetak,
-                'price' => $totalHarga,
-                'name'  => 'Undangan',
+                'quantity'  => 1,
+                'price' => intval($totalHarga),
+                'name'  => 'Kalender',
             ]
         ];
 
         $customer_details = [
-            'name'          => $transaksi->user->name,
+            'first_name'          => $transaksi->user->name,
             'email'         => $transaksi->user->email,
+            'phone'         => $transaksi->user->no_telp,
+            'address'       => $transaksi->user->alamat,
         ];
 
         $params = [
@@ -215,5 +217,20 @@ class UndanganController extends Controller
             default:
                 return 0;
         }
+    }
+
+    public function updateStatus(Request $request)
+    {
+        // Validasi input jika perlu
+        $transaksi = Transaksi::find($request->input('id'));
+
+        if ($transaksi) {
+            $transaksi->status = $request->input('status');
+            $transaksi->save();
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false], 404);
     }
 }

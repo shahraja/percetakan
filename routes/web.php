@@ -80,7 +80,14 @@ Route::post('/undangan', [UndanganController::class, 'store'])->name('undangan.s
 
 });
 
+
+// UPDATE STATUS TRANSAKSI KE DATABASE
 Route::post('/update-transaction-status', [KalenderController::class, 'updateStatus'])->name('update.transaction.status');
+Route::post('/update-transaction-status', [BrosurController::class, 'updateStatus'])->name('update.transaction.status');
+Route::post('/update-transaction-status', [BukuController::class, 'updateStatus'])->name('update.transaction.status');
+Route::post('/update-transaction-status', [MajalahController::class, 'updateStatus'])->name('update.transaction.status');
+Route::post('/update-transaction-status', [UndanganController::class, 'updateStatus'])->name('update.transaction.status');
+
 
 
 
