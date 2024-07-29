@@ -46,8 +46,11 @@ $products = Product::all();
                     <div class="text-center my-3">
                         <button class="btn btn-primary bg-utama col-md-6" type="submit">Login</button>
                     </div>
-                    <div class="text-center mb-4">
+                    <div class="text-center mb-1">
                         <a class="text-warning" href="{{ route('register') }}">Register</a>
+                    </div>
+                    <div class="text-center mb-4">
+                        <a class="text-warning" href="{{ route('password.request') }}">Lupa Password</a>
                     </div>
                 </form>
             </div>
