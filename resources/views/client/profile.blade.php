@@ -9,10 +9,12 @@
             @csrf
             @method('PUT')
             <div class="row">
-                <div class="col-md-3 me-3">
+                <div class="col-md-3 py-3 me-3 d-flex flex-column align-items-center">
                     <img 
                         src="{{ Auth::user()->gambar ? asset('uploads/' . Auth::user()->gambar) : asset('assets/img/logo-1.png') }}" 
-                        class="img img-fluid border rounded-circle raunded-image"  
+                        class=" rounded-circle object-fit-cover" 
+                        width="150"
+                        height="150" 
                         alt="Profile Photo">
                     <input class="form-control" type="file" name="gambar" id="gambar" accept="image/png, image/gif, image/jpeg">
                 </div>

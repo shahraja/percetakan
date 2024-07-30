@@ -15,6 +15,7 @@ use App\Http\Controllers\BukuController;
 use App\Http\Controllers\ClientPaymentController;
 use App\Http\Controllers\KalenderController;
 use App\Http\Controllers\MajalahController;
+use App\Http\Controllers\OngkirController;
 use App\Http\Controllers\UndanganController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Auth\MidtransSignatureKey;
@@ -27,6 +28,10 @@ Route::get('/produk/{id}', [HomeController::class, 'detail_product'])->name('det
 Route::get('/kontak', [HomeController::class, 'contact'])->name('contact');
 
 Auth::routes(['verify' => true]);
+
+Route::get('/provinsi', [OngkirController::class, 'province'])->name('provinsi');
+Route::get('/kota-{province_id}', [OngkirController::class, 'city'])->name('kota');
+Route::post('/ongkir', [OngkirController::class, 'cost'])->name('ongkir');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
@@ -84,8 +89,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // UPDATE STATUS TRANSAKSI KE DATABASE
     Route::post('/update-transaction-status', [KalenderController::class, 'updateStatus'])->name('update.transaction.status');
-    Route::post('/update-transaction-status', [BrosurController::class, 'updateStatus'])->name('update.transaction.status');
-    Route::post('/update-transaction-status', [BukuController::class, 'updateStatus'])->name('update.transaction.status');
-    Route::post('/update-transaction-status', [MajalahController::class, 'updateStatus'])->name('update.transaction.status');
-    Route::post('/update-transaction-status', [UndanganController::class, 'updateStatus'])->name('update.transaction.status');
+    // Route::post('/update-transaction-status', [BrosurController::class, 'updateStatus'])->name('update.transaction.status');
+    // Route::post('/update-transaction-status', [BukuController::class, 'updateStatus'])->name('update.transaction.status');
+    // Route::post('/update-transaction-status', [MajalahController::class, 'updateStatus'])->name('update.transaction.status');
+    // Route::post('/update-transaction-status', [UndanganController::class, 'updateStatus'])->name('update.transaction.status');
 });

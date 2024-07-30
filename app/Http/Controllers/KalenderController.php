@@ -12,6 +12,10 @@ class KalenderController extends Controller
 {
     public function store(Request $request)
     {
+        if(auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
+            return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
+        }
+        // dd(auth()->user()->kecamatan);
         $request->validate(
             [
                 'produk_id' => 'required',
@@ -140,7 +144,7 @@ class KalenderController extends Controller
             ];
     
             $customer_details = [
-                'first_name'          => $transaksi->user->name,
+                'first_name'    => $transaksi->user->name,
                 'email'         => $transaksi->user->email,
                 'phone'         => $transaksi->user->no_telp,
                 'address'       => $transaksi->user->alamat,
@@ -203,13 +207,13 @@ class KalenderController extends Controller
         // Validasi input jika perlu
         $transaksi = Transaksi::find($request->input('id'));
 
-        if ($transaksi) {
-            $transaksi->status = $request->input('status');
-            $transaksi->save();
+        // if ($transaksi) {
+        //     $transaksi->status = $request->input('status');
+        //     $transaksi->save();
 
-            return response()->json(['success' => true]);
-        }
+        //     return response()->json(['success' => true]);
+        // }
 
-        return response()->json(['success' => false], 404);
+        return response()->json(['success' => false], 200);
     }
 }

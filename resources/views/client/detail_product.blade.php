@@ -70,10 +70,26 @@
             object-fit: cover;
         }
     </style>
+
 @endsection
 
+
 @section('content')
+
+
     <div class="container">
+        @if (session('alert'))
+            <div class="toast align-items-center text-white {{ session('alert') ? 'bg-danger' : 'bg-success' }} show border-0 top-5 end-3 position-absolute"
+                role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ session('alert') }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+                </div>
+            </div>
+        @endif
         <h1 class="my-5">{{ $product->judul }}</h1>
         <div class="row">
             <div class="col-md-6">
@@ -192,12 +208,22 @@
                     <option value="doff2">Doff Bolak-Balik</option>
                 </select>
             </div>
-            {{-- <label>
-                <input type="radio" name="metode_pengambilan" value="0" checked onclick="toggleCard()"> Delivery
+
+            {{-- <div class="form-group row pe-2">
+                <label class="form-label col-md-3" for="metode_pengambilan">Metode Pengambilan</label>
+                <select name="metode_pengambilan" id="metode_pengambilan" class="form-select col-md-9">
+                    <option value=""></option>
+                    <option value="delivery">Delivery</option>
+                    <option value="pickup">Pick Up</option>
+                </select>
+            </div> --}}
+
+            <label>
+                <input type="radio" name="request_desain" value="request_desain" id="request_desain"> Request Desain
             </label>
             <label class="ms-5">
-                <input type="radio" name="metode_pengambilan" value="1" onclick="toggleCard()"> Pick Up
-            </label> --}}
+                <input type="radio" name="request_desain" value="no_request" id="request_desain"> Tidak Request
+            </label>
 
             <div class="text-center my-3">
                 <button class="btn btn-primary bg-utama col-md-6" type="button" onclick="calculatePrice()">Cek
@@ -227,10 +253,16 @@
                     <input type="hidden" name="uk_height" id="uk_height">
                     <input type="hidden" name="produk_id" id="produk_id" value="{{ $product->judul }}">
                     <tr>
-                        <button class="btn btn-primary bg-utama col-md-6 content-center" type="submit">Check Out</button>
                     </tr>
                 </tbody>
             </table>
+            @auth
+                {{-- <input type="file" class="form-control col-md-9" name="gambar" id="gambar" required> --}}
+                <button class="btn btn-primary bg-utama col-md-8 offset-md-2" type="submit">Check Out</button>
+            @endauth
+            @guest
+                <p>Login terlebih dahulu</p>
+            @endguest
         </div>
         </form>
     </div>
@@ -241,7 +273,7 @@
     @elseif($product->judul == 'Majalah')
         <script src="{{ asset('/assets/js/majalah.js') }}"></script>
     @elseif($product->judul == 'Kalender')
-        <script src="{{ asset('/assets/js/kalender.js') }}"></script>
+        <script src="{{ asset('/assets/js/kalender.js') }}" crossorigin="anonymous"></script>
     @elseif($product->judul == 'Buku')
         <script src="{{ asset('/assets/js/buku.js') }}"></script>
     @elseif($product->judul == 'Brosur')
@@ -261,6 +293,74 @@
                 }
             });
         });
+
+        document.querySelector('.btn-close').addEventListener('click', function() {
+            var toastEl = document.querySelector('.toast');
+            var toast = new bootstrap.Toast(toastEl);
+            toast.hide();
+        });
+
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     // Fetch Provinces
+        //     fetch('/provinsi')
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             let provinces = data.data.rajaongkir.results;
+        //             provinces.forEach(province => {
+        //                 let option = document.createElement('option');
+        //                 option.value = province.province_id;
+        //                 option.textContent = province.province;
+        //                 document.getElementById('province').appendChild(option);
+        //             });
+        //         });
+
+        //     // Fetch Cities based on selected province
+        //     document.getElementById('province').addEventListener('change', function() {
+        //         let province_id = this.value;
+        //         let citySelect = document.getElementById('city');
+        //         citySelect.innerHTML = '<option value="">Select City</option>';
+
+        //         if (province_id) {
+        //             fetch(`/kota-${province_id}`)
+        //                 .then(response => response.json())
+        //                 .then(data => {
+        //                     let cities = data.data.rajaongkir.results;
+        //                     cities.forEach(city => {
+        //                         let option = document.createElement('option');
+        //                         option.value = city.city_id;
+        //                         option.textContent = city.city_name;
+        //                         citySelect.appendChild(option);
+        //                     });
+        //                 });
+        //         }
+        //     });
+
+        //     // Calculate Cost
+        //     document.getElementById('calculateCost').addEventListener('click', function() {
+        //         let origin = 501; // Example origin city ID, you can change as needed
+        //         let destination = document.getElementById('city').value;
+        //         let weight = document.getElementById('weight').value;
+        //         let courier = document.getElementById('courier').value;
+
+        //         if (destination && weight && courier) {
+        //             let url =
+        //                 `/ongkir?origin=${origin}&destination=${destination}&weight=${weight}&courier=${courier}`;
+        //             fetch(url)
+        //                 .then(response => response.json())
+        //                 .then(data => {
+        //                     let costs = data.data.rajaongkir.results[0].costs;
+        //                     let costInfo = '';
+        //                     costs.forEach(cost => {
+        //                         costInfo +=
+        //                             `<p>Service: ${cost.service} - Cost: ${cost.cost[0].value} - Estimated Delivery Time: ${cost.cost[0].etd} days</p>`;
+        //                     });
+        //                     document.getElementById('cost').innerHTML = costInfo;
+        //                 });
+        //         } else {
+        //             alert('Please select city, enter weight, and select courier');
+        //         }
+        //     });
+        // });
     </script>
 
 @endsection

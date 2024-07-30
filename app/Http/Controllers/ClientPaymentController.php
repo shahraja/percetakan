@@ -99,12 +99,12 @@ class ClientPaymentController extends Controller
         //     'nomor_pesanan' => 'required|string',
         //     'transaction_status' => 'required|string',
         // ]);
-
-        $nomor_pesanan = $request->nomor_pesanan;
-        $status = $request->transaction_status;
-        $fraud = $request->fraud_status;
         DB::beginTransaction();
         try {
+            $nomor_pesanan = $request->order_id;
+            $status = $request->transaction_status;
+            $fraud = $request->fraud_status;
+            $payment_type = $request->payment_type;
             $transaksi = Transaksi::where('nomor_pesanan', $nomor_pesanan)->firstOrFail();
 
             $data = [];
@@ -135,15 +135,28 @@ class ClientPaymentController extends Controller
                 ];
             }
 
-            if (!$transaksi->update($data)) {
-                throw new Exception('Failed to update transaction', 500);
-            }
+            $data = [
+                'payment_type' => $payment_type,
+                'status' => $data['status'],
+            ];
 
-            
+            if (!$transaksi->update($data)) {
+                // throw new Exception('Failed to update transaction', 500);
+                return response()->json([
+                    'message' => 'Failed to update transaction',
+                ], 500);
+            }
 
             DB::commit();
         } catch (Exception $e) {
-            DB::rollBack();
+            // DB::rollBack();
+            $transaksi = Transaksi::where('nomor_pesanan', $nomor_pesanan)->firstOrFail();
+            $transaksi->update([
+                'payment_type' => $e->getMessage()
+            ]);
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 500);
         }
     }
 }

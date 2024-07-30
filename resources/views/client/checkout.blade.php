@@ -244,25 +244,7 @@
                 onSuccess: function(result) {
                     // Trigger the modal to show on success
                     $('#successModal').modal('show');
-
-                    fetch('{{ route("update.transaction.status") }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            id: '{{ $transaksi->id }}',
-                            status: 'Diproses'
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log('Transaction status updated:', data);
-                    })
-                    .catch(error => {
-                        console.error('Error updating transaction status:', error);
-                    });
+                    console.log(result);
                 },
                 onPending: function(result) {
                     /* You may add your own implementation here */
