@@ -44,33 +44,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/keranjang_saya', [HomeController::class, 'cart2'])->name('cart2');
 
     // DASHBOARD
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    // Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // ADMIN
     Route::middleware([Admin::class])
-        ->name('admin.')
         ->prefix('admin')
         ->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-            // KELOLA PRODUK
-            Route::get('/produk', [ProductController::class, 'index'])->name('product.index');
-            Route::post('/produk/{id}', [ProductController::class, 'update'])->name('product.update');
-
-            // KELOLA USER
-            Route::get('/user', [UserController::class, 'index'])->name('user.index');
-            Route::post('/user', [UserController::class, 'store'])->name('user.store');
-            Route::post('/user/{id}', [UserController::class, 'update'])->name('user.update');
-            Route::delete('/user/{id}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
-
-            //KELOLA PESANAN
-            Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
-            Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
-            Route::delete('/pesanan/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
-
-            //KELOLA PEMBAYARAN
-            Route::get('/pembayaran', [PaymentController::class, 'index'])->name('payment.index');
-            Route::put('/pembayaran/{id}', [PaymentController::class, 'update'])->name('payment.update');
+            Route::name('admin.')->group(function () {
+                
+                // KELOLA PRODUK
+                Route::get('/produk', [ProductController::class, 'index'])->name('product.index');
+                Route::post('/produk/{id}', [ProductController::class, 'update'])->name('product.update');
+    
+                // KELOLA USER
+                Route::get('/user', [UserController::class, 'index'])->name('user.index');
+                Route::post('/user', [UserController::class, 'store'])->name('user.store');
+                Route::post('/user/{id}', [UserController::class, 'update'])->name('user.update');
+                Route::delete('/user/{id}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
+    
+                //KELOLA PESANAN
+                Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
+                Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
+                Route::delete('/pesanan/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
+    
+                //KELOLA PEMBAYARAN
+                Route::get('/pembayaran', [PaymentController::class, 'index'])->name('payment.index');
+                Route::put('/pembayaran/{id}', [PaymentController::class, 'update'])->name('payment.update');
+            });
         });
 
     // USER

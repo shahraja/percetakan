@@ -76,7 +76,6 @@
 
 @section('content')
 
-
     <div class="container">
         @if (session('alert'))
             <div class="toast align-items-center text-white {{ session('alert') ? 'bg-danger' : 'bg-success' }} show border-0 top-5 end-3 position-absolute"
@@ -261,7 +260,10 @@
                 <button class="btn btn-primary bg-utama col-md-8 offset-md-2" type="submit">Check Out</button>
             @endauth
             @guest
-                <p>Login terlebih dahulu</p>
+                <div class="alert alert-primary" role="alert">
+                    Jika ingin melakukan pemesanan, <a href="{{ route('login') }}" class="alert-link">Login</a> atau <a
+                        href="{{ route('register') }}" class="alert-link">Registrasi</a> terlebih dahulu
+                </div>
             @endguest
         </div>
         </form>
@@ -299,7 +301,6 @@
             var toast = new bootstrap.Toast(toastEl);
             toast.hide();
         });
-
         // document.addEventListener('DOMContentLoaded', function() {
         //     // Fetch Provinces
         //     fetch('/provinsi')

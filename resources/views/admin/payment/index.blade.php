@@ -23,7 +23,7 @@
                         <th>Nama</th>
                         <th>Produk</th>
                         <th>Waktu</th>
-                        <th>Gambar</th>
+                        <th>Metode Pembayaran</th>
                         <th>Status</th>
                         <th>Aksi</th>
                       </tr>
@@ -37,7 +37,7 @@
                                 <td>{{$transaksi->user->name}}</td>
                                 <td>{{$transaksi->produk->judul}}</td>
                                 <td>{{$transaksi->created_at->format('H:i')}}</td>
-                                <td><img class="img img-fluid" width="100" src="{{asset('assets/img/'. $transaksi->gambar)}}" alt=""></td>
+                                <td>{{$transaksi->payment_type}}</td>
                                 <td>
                                   @if ($transaksi->status == 'Ditolak')
                                     <span class="badge badge-danger">{{$transaksi->status}}</span>  
@@ -77,7 +77,7 @@
                         <th>Nama</th>
                         <th>Produk</th>
                         <th>Waktu</th>
-                        <th>Gambar</th>
+                        <th>Metode Pembayaran</th>
                         <th>Status</th>
                         <th>Aksi</th>
                       </tr>

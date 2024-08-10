@@ -8,7 +8,6 @@ use App\Models\Kalender;
 use App\Models\Product;
 use App\Services\CreateSnapToken;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\Http;
 
 class KalenderController extends Controller
 {
@@ -99,72 +98,45 @@ class KalenderController extends Controller
                     $request->file('gambar')->move('payment', $gambar);
                 }
     
-                $provinceName = auth()->user()->provinsi;
+                $province = auth()->user()->provinsi;
                 $city = auth()->user()->kota;
-                
+    
                 // Fetch province ID
-                $api_key = env('RAJA_ONGKIR_KEY');
-                $apiURL = 'https://api.rajaongkir.com/starter/province';
-
-                    $response = Http::withHeaders([
-                        'key' => $api_key,
-                    ])->get($apiURL);
-
-                    if ($response->successful()) {
-                        $provinceResponse = $response->body();
-                    } else {
-                        return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
-                    }
-                
-                $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
-                try{
-                    $provinceId = array_filter($provinces, function($prov) use ($provinceName) {
-                        return $prov['province'] === $provinceName;
-                    });
-                    $provinceId = reset($provinceId)['province_id'];
-                }catch(\Exception $e){
-                    return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
-                }
+                $client = new Client();
+                $provinceResponse = $client->get(route('provinsi'));
+                $provinces = json_decode($provinceResponse->getBody()->getContents(), true)['data']['rajaongkir']['results'];
+                $provinceId = array_filter($provinces, function($prov) use ($province) {
+                    return $prov['province'] === $province;
+                });
+                $provinceId = reset($provinceId)['province_id'];
+    
                 // Fetch city ID
-                $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
-                
-                $response = Http::withHeaders([
-                    'key' => $api_key,
-                    ])->get($apiURL);
-                    
-                if (!$response->successful()) {
-                    return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
-                }
-                $cityResponse = $response->body();
-                $cities = json_decode($cityResponse, true)['rajaongkir']['results'];
+                $cityResponse = $client->get(route('kota', ['province_id' => $provinceId]));
+                $cities = json_decode($cityResponse->getBody()->getContents(), true)['data']['rajaongkir']['results'];
                 $cityId = array_filter($cities, function($cityItem) use ($city) {
                     return $cityItem['city_name'] === $city;
                 });
                 $cityId = reset($cityId)['city_id'];
-                
-                // Fetch shipping cost
+    
+                // Calculate shipping cost
+                $courier = 'jne';
                 $weight = 2000;
                 $origin = 21;
-                $apiURL = 'https://api.rajaongkir.com/starter/cost';
-                $response = Http::withHeaders([
-                    'key' => $api_key,
-                    'content-type' => 'application/x-www-form-urlencoded',
-                ])->withBody(
-                    http_build_query([
+                $costResponse = $client->post(route('ongkir'), [
+                    'form_params' => [
                         'origin' => $origin,
                         'destination' => $cityId,
                         'weight' => $weight,
-                        'courier' => 'jne',
-                    ]),
-                    'application/x-www-form-urlencoded'
-                )->post($apiURL);
-                $costData = json_decode($response->body(), true);
+                        'courier' => $courier,
+                    ]
+                ]);
+                $costData = json_decode($costResponse->getBody()->getContents(), true);
                 $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function($cost) {
                     return $cost['service'] === 'REG';
                 });
-                
                 $shippingCost = reset($shippingCost)['cost'][0]['value'];
-
+    
+                dd($shippingCost);
                 // Add shipping cost to total price
                 $totalHarga += $shippingCost;
     

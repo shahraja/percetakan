@@ -13,7 +13,7 @@
                     </div>
                     <!-- /.card-header -->
                     <div class="card-body">
-                        <div class="table-responsive">
+                        <div class="table-responsive" style="overflow-x: overlay">
                             <table id="example1" class="table table-bordered table-hover">
                                 <thead>
                                     <tr>
@@ -28,7 +28,7 @@
                                         <th>Jumlah Total Cetak</th>
                                         <th>Gramasi</th>
                                         <th>Laminasi</th>
-                                        <th>Gambar</th>
+                                        <th>Metode Pembayran</th>
                                         <th>Metode Pengambilan</th>
                                         <th>Aksi</th>
                                     </tr>
@@ -48,17 +48,7 @@
                                             <td>{{ $item->jml_total }}</td>
                                             <td>{{ $item->gramasi }}</td>
                                             <td>{{ $item->laminasi }}</td>
-                                            <td>
-                                                @isset($item->gambar)
-                                                    <img src="{{ asset('payment/' . $item->gambar) }}"
-                                                        class="object-fit-contain border rounded" width="80" height="80"
-                                                        alt="">
-                                                @else
-                                                    <img src="{{ asset('assets/img/logo-2.png') }}"
-                                                        class="object-fit-contain border rounded" width="80" height="80"
-                                                        alt="">
-                                                @endisset
-                                            </td>
+                                            <td>{{$item->payment_type}}</td>
                                             <td>
                                                 @if ($item->metode_pengambilan)
                                                     <span class="badge bg-success"> Pick Up
@@ -88,17 +78,13 @@
                                         <th>Jumlah Total Cetak</th>
                                         <th>Gramasi</th>
                                         <th>Laminasi</th>
-                                        <th>Gambar</th>
+                                        <th>Metode Pembayran</th>
                                         <th>Metode Pengambilan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </tfoot>
                             </table>
-                            @if ($transaksi->hasPages())
-                                <div class="pagination-wrapper">
-                                    {{ $transaksi->links() }}
-                                </div>
-                            @endif
+
                         </div>
                     </div>
                     <!-- /.card-body -->

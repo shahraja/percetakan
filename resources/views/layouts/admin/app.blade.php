@@ -249,6 +249,7 @@ $.widget.bridge('uibutton', $.ui.button)
       $("#example1").DataTable({
           "responsive": false,
           "lengthChange": true,
+          "ordering": true,
           "autoWidth": true,
           "paging": true,
           "buttons": [{
