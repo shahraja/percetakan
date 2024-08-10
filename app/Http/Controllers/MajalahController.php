@@ -7,106 +7,182 @@ use Illuminate\Http\Request;
 use App\Models\Majalah;
 use App\Models\Product;
 use App\Services\CreateSnapToken;
+use Illuminate\Support\Facades\Http;
 
 class MajalahController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            'halaman' => 'required',
-            'uk_asli' => 'required',
-            'uk_width' => 'required',
-            'uk_height' => 'required',
-            'finishing' => 'required',
-            // 'produk_id' => 'required',
-            // 'total_harga' => 'required',
-            // 'harga_plano' => 'required',
-            // 'jumlah' => 'required',
-            // 'gramasi' => 'required',
-            // 'laminasi' => 'required',
-        ]);
-        
-        // Ambil data dari request
-        // dd($request->all());
-        $produk_id = $request->produk_id;
-        $user_id = $request->user_id;
-        $alamat = $request->alamat;
-        $gramasi = $request->gramasi;
-        $finishing = $request->finishing;
-        $hargaTotal = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
-        $harga_plano = $this->calculateUkuranData($request->ukuran, 'prices', $gramasi);
-        $jumlah = $request->jumlah;
-        $status = $request->status;
-        $halaman = $request->halaman;
-        $laminasi = $request->laminasi;
-        $uk_asli = $request->uk_asli;
-        $uk_width = $request->uk_width;
-        $uk_height = $request->uk_height;
+        try {
+            if (auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
+                return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
+            }
+            $request->validate([
+                'halaman' => 'required',
+                'uk_asli' => 'required',
+                'uk_width' => 'required',
+                'uk_height' => 'required',
+                'finishing' => 'required',
+                // 'produk_id' => 'required',
+                // 'total_harga' => 'required',
+                // 'harga_plano' => 'required',
+                // 'jumlah' => 'required',
+                // 'gramasi' => 'required',
+                // 'laminasi' => 'required',
+            ]);
 
-        // dd($request->all());
-        
-        $transaksi = Transaksi::create([
-            'user_id' => auth()->user()->id,
-            'nomor_pesanan' => uniqid(),
-            'produk_id' => 5,
-            'alamat' => auth()->user()->alamat,
-            'harga_plano' => $harga_plano,
-            'jml_total' => $jumlah,
-            'total_harga' => $hargaTotal,
-            'gramasi' => $gramasi,
-            'laminasi' => $laminasi,
-        ]);
+            // Ambil data dari request
+            $produk_id = $request->produk_id;
+            $user_id = $request->user_id;
+            $alamat = $request->alamat;
+            $gramasi = $request->gramasi;
+            $finishing = $request->finishing;
+            $hargaTotal = $this->calculateTotalPrice($request); // Hitung total harga menggunakan fungsi baru
+            $harga_plano = $this->calculateUkuranData($request->ukuran, 'prices', $gramasi);
+            $jumlah = $request->jumlah;
+            $status = $request->status;
+            $halaman = $request->halaman;
+            $laminasi = $request->laminasi;
+            $uk_asli = $request->uk_asli;
+            $uk_width = $request->uk_width;
+            $uk_height = $request->uk_height;
 
-        $products = Product::all();
+            $provinceName = auth()->user()->provinsi;
+            $city = auth()->user()->kota;
 
-        // Simpan ke database
-        $majalah = Majalah::create([
-            'transaksi_id' => $transaksi->id,
-            'halaman' => $halaman,
-            'uk_asli' => $uk_asli,
-            'uk_width' => $uk_width,
-            'uk_height' => $uk_height,
-            'finishing' => $finishing,
-            // 'produk_id' => $produk_id,
-            // 'user_id' => $user_id,
-            // 'alamat' => $alamat,
-            // 'total_harga' => $total_harga,
-            // 'harga_plano' => $harga_plano,
-            // 'jumlah' => $jumlah,
-            // 'gramasi' => $gramasi,
-            // 'status' => $status,
-            // 'laminasi' => $laminasi,
-        ]);
+            // Fetch province ID
+            $api_key = env('RAJA_ONGKIR_KEY');
+            $apiURL = 'https://api.rajaongkir.com/starter/province';
 
-        $transaction_details = [
-            'order_id'      => $transaksi->nomor_pesanan,
-            'gross_amount'  => intval($hargaTotal),
-        ];
-        $items = [
-            [
-                'id'    => 5,
-                'quantity'  => 1,
-                'price' => intval($hargaTotal),
-                'name'  => 'Kalender',
-            ]
-        ];
+            $response = Http::withHeaders([
+                'key' => $api_key,
+            ])->get($apiURL);
 
-        $customer_details = [
-            'first_name'          => $transaksi->user->name,
-            'email'         => $transaksi->user->email,
-            'phone'         => $transaksi->user->no_telp,
-            'address'       => $transaksi->user->alamat,
-        ];
+            if ($response->successful()) {
+                $provinceResponse = $response->body();
+            } else {
+                return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
+            }
 
-        $params = [
-            'transaction_details'   => $transaction_details,
-            'item_details'          => $items,
-            'customer_details'      => $customer_details,
-        ];
-        $snapToken = new CreateSnapToken($params);
-        $token = $snapToken->getSnapToken();
+            $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
+            try {
+                $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
+                    return $prov['province'] === $provinceName;
+                });
+                $provinceId = reset($provinceId)['province_id'];
+            } catch (\Exception $e) {
+                return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+            }
+            // Fetch city ID
+            $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
 
-        return view('client.checkout', compact('transaksi', 'majalah', 'products', 'token'));
+            $response = Http::withHeaders([
+                'key' => $api_key,
+            ])->get($apiURL);
+
+            if (!$response->successful()) {
+                return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+            }
+            $cityResponse = $response->body();
+            $cities = json_decode($cityResponse, true)['rajaongkir']['results'];
+            $cityId = array_filter($cities, function ($cityItem) use ($city) {
+                return $cityItem['city_name'] === $city;
+            });
+            $cityId = reset($cityId)['city_id'];
+
+            // Fetch shipping cost
+            $weight = 2000;
+            $origin = 21;
+            $apiURL = 'https://api.rajaongkir.com/starter/cost';
+            $response = Http::withHeaders([
+                'key' => $api_key,
+                'content-type' => 'application/x-www-form-urlencoded',
+            ])
+                ->withBody(
+                    http_build_query([
+                        'origin' => $origin,
+                        'destination' => $cityId,
+                        'weight' => $weight,
+                        'courier' => 'jne',
+                    ]),
+                    'application/x-www-form-urlencoded',
+                )
+                ->post($apiURL);
+            $costData = json_decode($response->body(), true);
+            $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
+                return $cost['service'] === 'REG';
+            });
+
+            $shippingCost = reset($shippingCost)['cost'][0]['value'];
+
+            // Add shipping cost to total price
+            $hargaTotal += $shippingCost;
+
+            $transaksi = Transaksi::create([
+                'user_id' => auth()->user()->id,
+                'nomor_pesanan' => uniqid(),
+                'produk_id' => 5,
+                'alamat' => auth()->user()->alamat,
+                'harga_plano' => $harga_plano,
+                'jml_total' => $jumlah,
+                'total_harga' => $hargaTotal,
+                'gramasi' => $gramasi,
+                'laminasi' => $laminasi,
+            ]);
+
+            $products = Product::all();
+
+            // Simpan ke database
+            $majalah = Majalah::create([
+                'transaksi_id' => $transaksi->id,
+                'halaman' => $halaman,
+                'uk_asli' => $uk_asli,
+                'uk_width' => $uk_width,
+                'uk_height' => $uk_height,
+                'finishing' => $finishing,
+                // 'produk_id' => $produk_id,
+                // 'user_id' => $user_id,
+                // 'alamat' => $alamat,
+                // 'total_harga' => $total_harga,
+                // 'harga_plano' => $harga_plano,
+                // 'jumlah' => $jumlah,
+                // 'gramasi' => $gramasi,
+                // 'status' => $status,
+                // 'laminasi' => $laminasi,
+            ]);
+
+            $transaction_details = [
+                'order_id' => $transaksi->nomor_pesanan,
+                'gross_amount' => intval($hargaTotal),
+            ];
+            $items = [
+                [
+                    'id' => 5,
+                    'quantity' => 1,
+                    'price' => intval($hargaTotal),
+                    'name' => 'Kalender',
+                ],
+            ];
+
+            $customer_details = [
+                'first_name' => $transaksi->user->name,
+                'email' => $transaksi->user->email,
+                'phone' => $transaksi->user->no_telp,
+                'address' => $transaksi->user->alamat,
+            ];
+
+            $params = [
+                'transaction_details' => $transaction_details,
+                'item_details' => $items,
+                'customer_details' => $customer_details,
+            ];
+            $snapToken = new CreateSnapToken($params);
+            $token = $snapToken->getSnapToken();
+
+            return view('client.checkout', compact('transaksi', 'majalah', 'products', 'token'));
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)
@@ -130,7 +206,7 @@ class MajalahController extends Controller
             ],
         ];
 
-        if($kertas == null){
+        if ($kertas == null) {
             return $ukuranData[$ukuran][$param];
         }
         return intval($ukuranData[$ukuran][$param][$kertas]);
@@ -150,40 +226,30 @@ class MajalahController extends Controller
         $hargaKertas = $this->calculateUkuranData($ukuran, 'prices', $kertas);
         // Hitung harga total berdasarkan logika perhitungan yang ada
         // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
-        $hargaTotal = $this->calculatePriceLogic(
-            $halaman,
-            $jumlah,
-            $this->calculateUkuranData($ukuran, 'width', null),
-            $this->calculateUkuranData($ukuran, 'height', null),
-            $ukuran,
-            $hargaKertas,
-            $laminasi,
-            $finishing
-        );
+        $hargaTotal = $this->calculatePriceLogic($halaman, $jumlah, $this->calculateUkuranData($ukuran, 'width', null), $this->calculateUkuranData($ukuran, 'height', null), $ukuran, $hargaKertas, $laminasi, $finishing);
 
         return $hargaTotal;
     }
 
     private function calculatePriceLogic($halaman, $jumlah, $width, $height, $ukuran, $hargaKertas, $laminasi, $finishing)
-{
-    $keteren = ceil($halaman / 8);
-    $jumlahPagePerPlano = ceil($jumlah / 2);
-    $jumlahPlano = $jumlahPagePerPlano * $keteren;
+    {
+        $keteren = ceil($halaman / 8);
+        $jumlahPagePerPlano = ceil($jumlah / 2);
+        $jumlahPlano = $jumlahPagePerPlano * $keteren;
 
-    $jsc = $this->calculateJSC($width, $height, $jumlah);
-    $harga = ($jumlahPlano * $hargaKertas) + ($jsc * 2);
-    $hargaLaminasi = $this->calculateLaminasiCost($width, $height, $jumlah, $laminasi);
-    $harga += $hargaLaminasi;
+        $jsc = $this->calculateJSC($width, $height, $jumlah);
+        $harga = $jumlahPlano * $hargaKertas + $jsc * 2;
+        $hargaLaminasi = $this->calculateLaminasiCost($width, $height, $jumlah, $laminasi);
+        $harga += $hargaLaminasi;
 
-    if ($finishing === 'steples') {
-        $harga += $jumlah * 1000;
-    } elseif ($finishing === 'binding') {
-        $harga += $jumlah * 2000;
+        if ($finishing === 'steples') {
+            $harga += $jumlah * 1000;
+        } elseif ($finishing === 'binding') {
+            $harga += $jumlah * 2000;
+        }
+
+        return $harga;
     }
-
-    return $harga;
-}
-
 
     private function calculateJSC($width, $height, $jc)
     {
@@ -191,7 +257,7 @@ class MajalahController extends Controller
         // Sesuaikan dengan logika dari frontend
         if ($width <= 21 && $height <= 28) {
             return 440000;
-        } else if ($width <= 14.8 && $height <= 21) {
+        } elseif ($width <= 14.8 && $height <= 21) {
             return 360000;
         } else {
             return 0;
@@ -209,26 +275,11 @@ class MajalahController extends Controller
             case 'glossy2':
                 return $area * 0.19 * $jc * 2;
             case 'doff1':
-                return $area * 0.20 * $jc;
+                return $area * 0.2 * $jc;
             case 'doff2':
-                return $area * 0.20 * $jc * 2;
+                return $area * 0.2 * $jc * 2;
             default:
                 return 0;
         }
-    }
-
-    public function updateStatus(Request $request)
-    {
-        // Validasi input jika perlu
-        $transaksi = Transaksi::find($request->input('id'));
-
-        if ($transaksi) {
-            $transaksi->status = $request->input('status');
-            $transaksi->save();
-
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false], 404);
     }
 }

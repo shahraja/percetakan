@@ -7,195 +7,272 @@ use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Undangan;
 use App\Services\CreateSnapToken;
+use Illuminate\Support\Facades\Http;
 
 class UndanganController extends Controller
 {
     public function store(Request $request)
     {
-        $request->validate([
-            // 'produk_id' => 'required',
-            // 'user_id' => 'required',
-            // 'alamat' => 'required|max:255',
-            // 'total_harga' => 'required',
-            // 'harga_plano' => 'required',
-            // 'jumlah' => 'required',
-            // 'gramasi' => 'required',
-            // 'laminasi' => 'required',
-            // 'uk_asli' => 'required',
-            // 'uk_width' => 'required',
-            // 'uk_height' => 'required'
-        ]);
+        try {
+            if (auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
+                return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
+            }
+            $request->validate([
+                // 'produk_id' => 'required',
+                // 'user_id' => 'required',
+                // 'alamat' => 'required|max:255',
+                // 'total_harga' => 'required',
+                // 'harga_plano' => 'required',
+                // 'jumlah' => 'required',
+                // 'gramasi' => 'required',
+                // 'laminasi' => 'required',
+                // 'uk_asli' => 'required',
+                // 'uk_width' => 'required',
+                // 'uk_height' => 'required'
+            ]);
 
-        $ukuranData = [
-            'plano1' => [
-                'width' => 30.5,
-                'height' => 46,
-                'hp' => 3200,
-                'plano' => [61, 92],
-                'prices' => [
-                    '120' => 2000,
-                    '150' => 2300,
-                    '190' => 2950,
-                    '210' => 3200,
-                    '230' => 3500,
-                ]
-            ],
-            'plano2' => [
-                'width' => 32.5,
-                'height' => 45,
-                'hp' => 3400,
-                'plano' => [65, 90],
-                'prices' => [
-                    '120' => 2100,
-                    '150' => 2450,
-                    '190' => 3050,
-                    '210' => 3400,
-                    '230' => 3600,
-                    '260' => 4050,
-                    '310' => 4800,
-                ]
-            ],
-            'plano3' => [
-                'width' => 32.5,
-                'height' => 50,
-                'hp' => 3700,
-                'plano' => [65, 100],
-                'prices' => [
-                    '120' => 2250,
-                    '150' => 2700,
-                    '190' => 3400,
-                    '210' => 3700,
-                    '230' => 4000,
-                    '260' => 4500,
-                    '310' => 5200,
-                ]
-            ],
-            'plano4' => [
-                'width' => 39.5,
-                'height' => 54.5,
-                'hp' => 4800,
-                'plano' => [79, 109],
-                'prices' => [
-                    '120' => 2900,
-                    '150' => 3500,
-                    '190' => 4400,
-                    '210' => 4800,
-                    '230' => 5200,
-                    '260' => 5800,
-                    '310' => 7000,
-                    '400' => 8800,
-                ]
-            ],
-            'plano5' => [
-                'width' => 36,
-                'height' => 39,
-                'hp' => 4800,
-                'plano' => [79, 109],
-                'prices' => [
-                    '120' => 2900,
-                    '150' => 3500,
-                    '190' => 4400,
-                    '210' => 4800,
-                    '230' => 5200,
-                    '260' => 5800,
-                    '310' => 7000,
-                    '400' => 8800,
-                ]
-            ],
-            'plano6' => [
-                'width' => 35,
-                'height' => 44,
-                'hp' => 4800,
-                'plano' => [79, 109],
-                'prices' => [
-                    '120' => 2900,
-                    '150' => 3500,
-                    '190' => 4400,
-                    '210' => 4800,
-                    '230' => 5200,
-                    '260' => 5800,
-                    '310' => 7000,
-                    '400' => 8800,
-                ]
-            ]
-        ];
+            $ukuranData = [
+                'plano1' => [
+                    'width' => 30.5,
+                    'height' => 46,
+                    'hp' => 3200,
+                    'plano' => [61, 92],
+                    'prices' => [
+                        '120' => 2000,
+                        '150' => 2300,
+                        '190' => 2950,
+                        '210' => 3200,
+                        '230' => 3500,
+                    ],
+                ],
+                'plano2' => [
+                    'width' => 32.5,
+                    'height' => 45,
+                    'hp' => 3400,
+                    'plano' => [65, 90],
+                    'prices' => [
+                        '120' => 2100,
+                        '150' => 2450,
+                        '190' => 3050,
+                        '210' => 3400,
+                        '230' => 3600,
+                        '260' => 4050,
+                        '310' => 4800,
+                    ],
+                ],
+                'plano3' => [
+                    'width' => 32.5,
+                    'height' => 50,
+                    'hp' => 3700,
+                    'plano' => [65, 100],
+                    'prices' => [
+                        '120' => 2250,
+                        '150' => 2700,
+                        '190' => 3400,
+                        '210' => 3700,
+                        '230' => 4000,
+                        '260' => 4500,
+                        '310' => 5200,
+                    ],
+                ],
+                'plano4' => [
+                    'width' => 39.5,
+                    'height' => 54.5,
+                    'hp' => 4800,
+                    'plano' => [79, 109],
+                    'prices' => [
+                        '120' => 2900,
+                        '150' => 3500,
+                        '190' => 4400,
+                        '210' => 4800,
+                        '230' => 5200,
+                        '260' => 5800,
+                        '310' => 7000,
+                        '400' => 8800,
+                    ],
+                ],
+                'plano5' => [
+                    'width' => 36,
+                    'height' => 39,
+                    'hp' => 4800,
+                    'plano' => [79, 109],
+                    'prices' => [
+                        '120' => 2900,
+                        '150' => 3500,
+                        '190' => 4400,
+                        '210' => 4800,
+                        '230' => 5200,
+                        '260' => 5800,
+                        '310' => 7000,
+                        '400' => 8800,
+                    ],
+                ],
+                'plano6' => [
+                    'width' => 35,
+                    'height' => 44,
+                    'hp' => 4800,
+                    'plano' => [79, 109],
+                    'prices' => [
+                        '120' => 2900,
+                        '150' => 3500,
+                        '190' => 4400,
+                        '210' => 4800,
+                        '230' => 5200,
+                        '260' => 5800,
+                        '310' => 7000,
+                        '400' => 8800,
+                    ],
+                ],
+            ];
 
-        $ukuran = $request->ukuran;
-        $gramasi = $request->gramasi;
-        $jumlahCetak = $request->jumlah;
-        $laminasi = $request->laminasi;
+            $ukuran = $request->ukuran;
+            $gramasi = $request->gramasi;
+            $jumlahCetak = $request->jumlah;
+            $laminasi = $request->laminasi;
 
-        $selectedUkuran = $ukuranData[$ukuran];
-        $hp = $selectedUkuran['prices'][$gramasi];
+            $selectedUkuran = $ukuranData[$ukuran];
+            $hp = $selectedUkuran['prices'][$gramasi];
 
-        $jumlahPagePerPlano = floor($selectedUkuran['plano'][0] / $selectedUkuran['width']) * floor($selectedUkuran['plano'][1] / $selectedUkuran['height']);
-        $jumlahPlano = ceil($jumlahCetak / $jumlahPagePerPlano);
+            $jumlahPagePerPlano = floor($selectedUkuran['plano'][0] / $selectedUkuran['width']) * floor($selectedUkuran['plano'][1] / $selectedUkuran['height']);
+            $jumlahPlano = ceil($jumlahCetak / $jumlahPagePerPlano);
 
-        $jsc = $this->calculateJSC($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak);
-        $harga = ($jumlahPlano * $hp) + $jsc;
-        $hargaLaminasi = $this->calculateLaminasiCost($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak, $laminasi);
+            $jsc = $this->calculateJSC($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak);
+            $harga = $jumlahPlano * $hp + $jsc;
+            $hargaLaminasi = $this->calculateLaminasiCost($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak, $laminasi);
 
-        $totalHarga = $harga + $hargaLaminasi;
+            $totalHarga = $harga + $hargaLaminasi;
 
-        // dd($request->all());
+            $provinceName = auth()->user()->provinsi;
+            $city = auth()->user()->kota;
 
-        $transaksi = Transaksi::create([
-            'user_id' => auth()->user()->id,
-            'nomor_pesanan' => uniqid(),
-            'produk_id' => 4,
-            'alamat' => auth()->user()->alamat,
-            'harga_plano' => $hp,
-            'jml_total' => $jumlahCetak,
-            'total_harga' => $totalHarga,
-            'gramasi' => $gramasi,
-            'laminasi' => $laminasi,
-        ]);
+            // Fetch province ID
+            $api_key = env('RAJA_ONGKIR_KEY');
+            $apiURL = 'https://api.rajaongkir.com/starter/province';
 
-        $products = Product::all();
+            $response = Http::withHeaders([
+                'key' => $api_key,
+            ])->get($apiURL);
 
-        $undangan = Undangan::create([
-            'transaksi_id' => $transaksi->id,
-            'uk_asli' => $request->uk_asli,
-            'uk_width' => $request->uk_width,
-            'uk_height' => $request->uk_height
-        ]);
+            if ($response->successful()) {
+                $provinceResponse = $response->body();
+            } else {
+                return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
+            }
 
-        $transaction_details = [
-            'order_id'      => $transaksi->nomor_pesanan,
-            'gross_amount'  => intval($totalHarga),
-        ];
-        $items = [
-            [
-                'id'    => 4,
-                'quantity'  => 1,
-                'price' => intval($totalHarga),
-                'name'  => 'Kalender',
-            ]
-        ];
+            $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
+            try {
+                $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
+                    return $prov['province'] === $provinceName;
+                });
+                $provinceId = reset($provinceId)['province_id'];
+            } catch (\Exception $e) {
+                return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+            }
+            // Fetch city ID
+            $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
 
-        $customer_details = [
-            'first_name'          => $transaksi->user->name,
-            'email'         => $transaksi->user->email,
-            'phone'         => $transaksi->user->no_telp,
-            'address'       => $transaksi->user->alamat,
-        ];
+            $response = Http::withHeaders([
+                'key' => $api_key,
+            ])->get($apiURL);
 
-        $params = [
-            'transaction_details'   => $transaction_details,
-            'item_details'          => $items,
-            'customer_details'      => $customer_details,
-        ];
-        $snapToken = new CreateSnapToken($params);
-        $token = $snapToken->getSnapToken();
+            if (!$response->successful()) {
+                return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+            }
+            $cityResponse = $response->body();
+            $cities = json_decode($cityResponse, true)['rajaongkir']['results'];
+            $cityId = array_filter($cities, function ($cityItem) use ($city) {
+                return $cityItem['city_name'] === $city;
+            });
+            $cityId = reset($cityId)['city_id'];
 
-        return view('client.checkout', compact('transaksi', 'undangan', 'products', 'token'));
+            // Fetch shipping cost
+            $weight = 2000;
+            $origin = 21;
+            $apiURL = 'https://api.rajaongkir.com/starter/cost';
+            $response = Http::withHeaders([
+                'key' => $api_key,
+                'content-type' => 'application/x-www-form-urlencoded',
+            ])
+                ->withBody(
+                    http_build_query([
+                        'origin' => $origin,
+                        'destination' => $cityId,
+                        'weight' => $weight,
+                        'courier' => 'jne',
+                    ]),
+                    'application/x-www-form-urlencoded',
+                )
+                ->post($apiURL);
+            $costData = json_decode($response->body(), true);
+            $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
+                return $cost['service'] === 'REG';
+            });
+
+            $shippingCost = reset($shippingCost)['cost'][0]['value'];
+
+            // Add shipping cost to total price
+            $totalHarga += $shippingCost;
+
+            $transaksi = Transaksi::create([
+                'user_id' => auth()->user()->id,
+                'nomor_pesanan' => uniqid(),
+                'produk_id' => 4,
+                'alamat' => auth()->user()->alamat,
+                'harga_plano' => $hp,
+                'jml_total' => $jumlahCetak,
+                'total_harga' => $totalHarga,
+                'gramasi' => $gramasi,
+                'laminasi' => $laminasi,
+            ]);
+
+            $products = Product::all();
+
+            $undangan = Undangan::create([
+                'transaksi_id' => $transaksi->id,
+                'uk_asli' => $request->uk_asli,
+                'uk_width' => $request->uk_width,
+                'uk_height' => $request->uk_height,
+            ]);
+
+            $transaction_details = [
+                'order_id' => $transaksi->nomor_pesanan,
+                'gross_amount' => intval($totalHarga),
+            ];
+            $items = [
+                [
+                    'id' => 4,
+                    'quantity' => 1,
+                    'price' => intval($totalHarga),
+                    'name' => 'Kalender',
+                ],
+            ];
+
+            $customer_details = [
+                'first_name' => $transaksi->user->name,
+                'email' => $transaksi->user->email,
+                'phone' => $transaksi->user->no_telp,
+                'address' => $transaksi->user->alamat,
+            ];
+
+            $params = [
+                'transaction_details' => $transaction_details,
+                'item_details' => $items,
+                'customer_details' => $customer_details,
+            ];
+            $snapToken = new CreateSnapToken($params);
+            $token = $snapToken->getSnapToken();
+
+            return view('client.checkout', compact('transaksi', 'undangan', 'products', 'token'));
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
 
     private function calculateJSC($width, $height, $jc)
     {
         if ($width <= 37 && $height <= 52 && $jc <= 2500) {
             return 360000;
-        } else if (($width > 37 || $height > 52) && $jc <= 2500) {
+        } elseif (($width > 37 || $height > 52) && $jc <= 2500) {
             return 440000;
         } else {
             return 0;
@@ -211,26 +288,11 @@ class UndanganController extends Controller
             case 'glossy2':
                 return $area * 0.19 * $jc * 2;
             case 'doff1':
-                return $area * 0.20 * $jc;
+                return $area * 0.2 * $jc;
             case 'doff2':
-                return $area * 0.20 * $jc * 2;
+                return $area * 0.2 * $jc * 2;
             default:
                 return 0;
         }
-    }
-
-    public function updateStatus(Request $request)
-    {
-        // Validasi input jika perlu
-        $transaksi = Transaksi::find($request->input('id'));
-
-        if ($transaksi) {
-            $transaksi->status = $request->input('status');
-            $transaksi->save();
-
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false], 404);
     }
 }

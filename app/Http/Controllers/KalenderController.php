@@ -33,7 +33,7 @@ class KalenderController extends Controller
                     'laminasi' => 'required',
                     'uk_asli' => 'required',
                     'uk_width' => 'required|numeric',
-                    'uk_height' => 'required|numeric'
+                    'uk_height' => 'required|numeric',
                 ]
             );
             
@@ -93,11 +93,11 @@ class KalenderController extends Controller
                 
                 $totalHarga = $harga + $hargaLaminasi + $hargaJilid;
     
-                $gambar = $request->input('gambar');
-                if (!empty($gambar)) {
-                    $gambar = uniqid() . '_' . $request->file('gambar')->getClientOriginalName();
-                    $request->file('gambar')->move('payment', $gambar);
-                }
+                // $gambar = $request->input('gambar');
+                // if (!empty($gambar)) {
+                //     $gambar = uniqid() . '_' . $request->file('gambar')->getClientOriginalName();
+                //     $request->file('gambar')->move('payment', $gambar);
+                // }
     
                 $provinceName = auth()->user()->provinsi;
                 $city = auth()->user()->kota;
@@ -178,7 +178,7 @@ class KalenderController extends Controller
                     'total_harga' => $totalHarga,
                     'gramasi' => $selectedKertas,
                     'laminasi' => $request->laminasi,
-                    // 'metode_pengambilan' => $request->metode_pengambilan,
+                    'metode_pengambilan' => $request->metode_pengambilan,
                     'gambar' => $request->gambar,
     
                     
@@ -240,16 +240,6 @@ class KalenderController extends Controller
             dd($e);
         }
     }
-    public function payment_post(Request $request)
-    {
-        $json = json_decode($request->get('json'));
-        $transaksi = new Transaksi();
-        $transaksi->payment_type = $json->payment_type;
-        $transaksi->payment_code = $json->payment_code;
-        $transaksi->payment_url = $json->payment_url;
-        $transaksi->save();
-        // return redirect($transaksi->payment_url);
-    } 
 
     private function calculateJSC($width, $height, $jc)
     {
@@ -277,20 +267,5 @@ class KalenderController extends Controller
             default:
                 return 0;
         }
-    }
-
-    public function updateStatus(Request $request)
-    {
-        // Validasi input jika perlu
-        $transaksi = Transaksi::find($request->input('id'));
-
-        if ($transaksi) {
-            $transaksi->status = $request->input('status');
-            $transaksi->save();
-
-            return response()->json(['success' => true]);
-        }
-
-        return response()->json(['success' => false], 404);
     }
 }
