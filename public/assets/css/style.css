@@ -2,6 +2,40 @@
     color: #029094;
 }
 
+/* html, body {
+    height: 100%;
+    margin: 0;
+} */
+
+.content {
+    min-height: 100%;
+    box-sizing: border-box;
+    padding-bottom: 130px; 
+}
+
+.contact-info p {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.contact-info i {
+    margin-right: 10px; 
+}
+
+footer {
+    /* height: 130px;  */
+    /* background-color: #333;  */
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+.content {
+    min-height: calc(100vh - 130px); /* 130px adalah tinggi footer */
+}
+
 .bg-utama {
     background-color: #029094;
 }

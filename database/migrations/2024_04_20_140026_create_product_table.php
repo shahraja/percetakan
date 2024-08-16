@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->integer('harga');
             $table->string('sisi');
+            $table->json('spesifikasi')->nullable();
             $table->string('ukuran');
             $table->timestamps();
         });

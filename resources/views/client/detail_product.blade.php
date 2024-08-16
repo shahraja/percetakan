@@ -89,7 +89,7 @@
                 </div>
             </div>
         @endif
-        <h1 class="my-5">{{ $product->judul }}</h1>
+        <h1 class="my-4">{{ $product->judul }}</h1>
         <div class="row">
             <div class="col-md-6">
                 <div>
@@ -101,6 +101,43 @@
                         'Brosur' => ['brosur-1.jpg', 'brosur-2.jpg', 'brosur-3.jpg'],
                         'Buku' => ['buku-1.jpg', 'buku-2.jpg'],
                         'Kalender' => ['kalender-1.jpg', 'kalender-2.jpg', 'kalender-3.jpg'],
+                    ];
+                    $deskripsis = [
+                        'Undangan' => [
+                            'Undangan ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
+                            'Jumlah cetak yang sesuai kebutuhan Anda.',
+                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
+                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
+                            'Dengan desain yang menarik dan kreatif, Undangan ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
+                        ],
+                        'Majalah' => [
+                            'Majalah ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
+                            'Jumlah cetak yang sesuai kebutuhan Anda.',
+                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
+                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
+                            'Dengan desain yang menarik dan kreatif, majalah ini memudahkan Anda dalam mengirimkan majalah ke teman atau keluarga.',
+                        ],
+                        'Brosur' => [
+                            'Brosur ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
+                            'Jumlah cetak yang sesuai kebutuhan Anda.',
+                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
+                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
+                            'Dengan desain yang menarik dan kreatif, brosur ini memudahkan Anda dalam mengirimkan brosur ke teman atau keluarga.',
+                        ],
+                        'Buku' => [
+                            'Buku ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
+                            'Jumlah cetak yang sesuai kebutuhan Anda.',
+                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
+                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
+                            'Dengan desain yang menarik dan kreatif, Buku ini memudahkan Anda dalam mengirimkan buku ke teman atau keluarga.',
+                        ],
+                        'Kalender' => [
+                            'Kalender ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
+                            'Jumlah cetak yang sesuai kebutuhan Anda.',
+                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
+                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
+                            'Dengan desain yang menarik dan kreatif, Kalender ini memudahkan Anda dalam mengirimkan kalender ke teman atau keluarga.',
+                        ],
                     ];
                 @endphp
 
@@ -134,7 +171,12 @@
             </div>
             <div class="col-md-6">
                 <p class="desk">{{ $product->deskripsi }}</p>
-                <h5 class="py-2">Spesifikasi Produk</h5>
+                {{-- <h5 class="py-2">Spesifikasi Produk</h5> --}}
+                {{-- @if (isset($deskripsis[$product->judul]))
+                    @foreach ($deskripsis[$product->judul] as $deskripsi)
+                        <p class="desk">{{ $deskripsi }}</p>
+                    @endforeach
+                @endif --}}
             </div>
         </div>
         @if ($product->judul == 'Undangan')
@@ -210,19 +252,20 @@
 
             <div class="form-group">
                 <label>
-                    <input type="radio" name="metode_pengambilan" value="0" checked onclick="toggleCard()"> Delivery
+                    <input type="radio" name="metode_pengambilan" value="0" id="metode_pengambilan"> Delivery
                 </label>
                 <label class="ms-5">
-                    <input type="radio" name="metode_pengambilan" value="1" onclick="toggleCard()"> Pick Up
+                    <input type="radio" name="metode_pengambilan" value="1" id="metode_pengambilan"> Pick Up
                 </label>
             </div>
 
             <div class="form-group">
                 <label>
-                    <input type="radio" name="request_desain" value="request_desain" id="request_desain"> Request Desain
+                    <input type="radio" name="request_desain" value="0" id="request_desain"> Request
+                    Desain
                 </label>
                 <label class="ms-5">
-                    <input type="radio" name="request_desain" value="no_request" id="request_desain"> Tidak Request
+                    <input type="radio" name="request_desain" value="1" id="request_desain"> Tidak Request
                 </label>
             </div>
 

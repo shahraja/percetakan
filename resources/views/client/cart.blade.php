@@ -11,7 +11,7 @@
             Keranjang Saya
         </h2>
         <form action="">
-            <div class="row">
+            <div class="row content">
                 @foreach ($transaksis as $transaksi)
                 {{-- {{ $transaksi->status }} --}}
                 <div class="border rounded my-2 p-3 me-5 shadow">

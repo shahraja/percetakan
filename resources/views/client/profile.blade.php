@@ -35,6 +35,42 @@
                     <div class="form-group mb-2">
                         <label for="provinsi" class="from-label">Provinsi</label>
                         <input type="text" class="form-control" name="provinsi" id="provinsi" value="{{$user->provinsi}}" placeholder="Masukan Provinsi">
+                        {{-- <select name="finishing" id="finishing" class="form-select col-md-9">
+                            <option value="{{$user->provinsi}}">Bali</option>
+                            <option value="{{$user->provinsi}}">Bangka Belitung</option>
+                            <option value="{{$user->provinsi}}">Banten</option>
+                            <option value="{{$user->provinsi}}">Bengkulu</option>
+                            <option value="{{$user->provinsi}}">DI Yogyakarta</option>
+                            <option value="{{$user->provinsi}}">DKI Jakarta</option>
+                            <option value="{{$user->provinsi}}">Gorontalo</option>
+                            <option value="{{$user->provinsi}}">Jambi</option>
+                            <option value="{{$user->provinsi}}">Jawa Barat</option>
+                            <option value="{{$user->provinsi}}">Jawa Tengah</option>
+                            <option value="{{$user->provinsi}}">Jawa Timur</option>
+                            <option value="{{$user->provinsi}}">Kalimantan Barat</option>
+                            <option value="{{$user->provinsi}}">Kalimantan Selatan</option>
+                            <option value="{{$user->provinsi}}">Kalimantan Tengah</option>
+                            <option value="{{$user->provinsi}}">Kalimantan Timur</option>
+                            <option value="{{$user->provinsi}}">Kalimantan Utara</option>
+                            <option value="{{$user->provinsi}}">Kepulauan Riau</option>
+                            <option value="{{$user->provinsi}}">Lampung</option>
+                            <option value="{{$user->provinsi}}">Maluku</option>
+                            <option value="{{$user->provinsi}}">Maluku Utara</option>
+                            <option value="{{$user->provinsi}}">Nanggroe Aceh Darussalam (NAD)</option>
+                            <option value="{{$user->provinsi}}">usa Tenggara Barat (NTB)</option>
+                            <option value="{{$user->provinsi}}">usa Tenggara Timur (NTT)</option>
+                            <option value="{{$user->provinsi}}">Papua</option>
+                            <option value="{{$user->provinsi}}">Papua Barat</option>
+                            <option value="{{$user->provinsi}}">Riau</option>
+                            <option value="{{$user->provinsi}}">Sulawesi Barat</option>
+                            <option value="{{$user->provinsi}}">Sulawesi Selatan</option>
+                            <option value="{{$user->provinsi}}">Sulawesi Tengah</option>
+                            <option value="{{$user->provinsi}}">Sulawesi Tenggara</option>
+                            <option value="{{$user->provinsi}}">Sulawesi Utara</option>
+                            <option value="{{$user->provinsi}}">Sumatera Barat</option>
+                            <option value="{{$user->provinsi}}">Sumatera Selatan</option>
+                            <option value="{{$user->provinsi}}">Sumatera Utara</option>
+                        </select> --}}
                     </div>
                     <div class="form-group mb-2">
                         <label for="kota" class="from-label">Kota</label>

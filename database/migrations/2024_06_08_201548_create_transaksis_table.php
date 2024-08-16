@@ -21,8 +21,7 @@ return new class extends Migration
             $table->string('alamat')->nullable();
             $table->string('total_harga')->nullable();
             $table->string('payment_type')->nullable();
-            $table->string('payment_code')->nullable();
-            $table->string('pdf_url')->nullable();
+            $table->boolean('request_desain')->nullable()->default(false);
             $table->string('harga_plano')->nullable();
             $table->string('jml_total')->nullable();
             $table->string('gramasi')->nullable();
