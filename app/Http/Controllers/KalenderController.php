@@ -12,6 +12,7 @@ use App\Models\Ukuran;
 use App\Services\CreateSnapToken;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class KalenderController extends Controller
 {
@@ -66,7 +67,7 @@ class KalenderController extends Controller
             $ukuranData = [];
 
             foreach ($ukuran as $key => $value) {
-                $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
+                $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
 
                 $detailUkuranArray = [];
                 foreach ($detail_ukurans as $detail_ukuran) {
@@ -88,11 +89,10 @@ class KalenderController extends Controller
                             }
                         }
                         if (!empty($planoArray)) {
-                            $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = $planoArray;
+                            $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
                         }
                     }
                 }
-
                 $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
             }
 
@@ -100,15 +100,24 @@ class KalenderController extends Controller
             $selectedUkuran = $request->ukuran;
             $selectedKertas = $request->gramasi;
             $jc = $request->jumlah;
+            $requestDesain = $request->request_desain;
+            $metodePengambilan = $request->metode_pengambilan;
 
             if (isset($ukuranData[$selectedUkuran])) {
                 $ukuran = $ukuranData[$selectedUkuran];
-                $ukAsli = $ukuran['plano'] ?? [];
-                $ukWidth = $ukuran['width'] ?? 0;
-                $ukHeight = $ukuran['height'] ?? 0;
+                $ukAsli = isset($ukuran['plano']['plano']) ? explode(', ', $ukuran['plano']['plano']) : null;
+                $ukWidth = $ukuran['width']['width'] ?? 0;
+                $ukHeight = $ukuran['height']['height'] ?? 0;
                 $hp = $ukuran['prices'][$selectedKertas] ?? 0;
 
-                if (!isset($ukAsli[0]) || !isset($ukAsli[1]) || $ukWidth == 0 || $ukHeight == 0) {
+                // Validasi tambahan
+                Log::info('Selected Ukuran Data: ' . json_encode($ukuran));
+                Log::info('Selected UkAsli: ' . json_encode($ukAsli));
+                Log::info('Selected UkWidth: ' . $ukWidth);
+                Log::info('Selected UkHeight: ' . $ukHeight);
+                Log::info('Selected Hp: ' . $hp);
+                // dd($ukuranData, $selectedUkuran, $ukuran, $ukAsli, $ukWidth, $ukHeight, $hp);
+                if ($ukAsli === null || !is_array($ukAsli) || count($ukAsli) < 2 || $ukWidth <= 0 || $ukHeight <= 0 || $hp <= 0) {
                     return redirect()->back()->with('alert', 'Ukuran atau Plano tidak valid');
                 }
 
@@ -138,76 +147,83 @@ class KalenderController extends Controller
                 //     $request->file('gambar')->move('payment', $gambar);
                 // }
 
-                $provinceName = auth()->user()->provinsi;
-                $city = auth()->user()->kota;
-
-                // Fetch province ID
-                $api_key = env('RAJA_ONGKIR_KEY');
-                $apiURL = 'https://api.rajaongkir.com/starter/province';
-
-                $response = Http::withHeaders([
-                    'key' => $api_key,
-                ])->get($apiURL);
-
-                if ($response->successful()) {
-                    $provinceResponse = $response->body();
-                } else {
-                    return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
+                if ($requestDesain == 0) {
+                    // Jika pengguna memilih Request Desain
+                    $totalHarga += 85000;
                 }
 
-                $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
-                try {
-                    $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
-                        return $prov['province'] === $provinceName;
+                if ($metodePengambilan == 0) {
+                    $provinceName = auth()->user()->provinsi;
+                    $city = auth()->user()->kota;
+    
+                    // Fetch province ID
+                    $api_key = env('RAJA_ONGKIR_KEY');
+                    $apiURL = 'https://api.rajaongkir.com/starter/province';
+    
+                    $response = Http::withHeaders([
+                        'key' => $api_key,
+                    ])->get($apiURL);
+    
+                    if ($response->successful()) {
+                        $provinceResponse = $response->body();
+                    } else {
+                        return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
+                    }
+    
+                    $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
+                    try {
+                        $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
+                            return $prov['province'] === $provinceName;
+                        });
+                        $provinceId = reset($provinceId)['province_id'];
+                    } catch (\Exception $e) {
+                        return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+                    }
+                    // Fetch city ID
+                    $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
+    
+                    $response = Http::withHeaders([
+                        'key' => $api_key,
+                    ])->get($apiURL);
+    
+                    if (!$response->successful()) {
+                        return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+                    }
+                    $cityResponse = $response->body();
+                    $cities = json_decode($cityResponse, true)['rajaongkir']['results'];
+                    $cityId = array_filter($cities, function ($cityItem) use ($city) {
+                        return $cityItem['city_name'] === $city;
                     });
-                    $provinceId = reset($provinceId)['province_id'];
-                } catch (\Exception $e) {
-                    return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
+                    $cityId = reset($cityId)['city_id'];
+    
+                    // Fetch shipping cost
+                    $weight = 2000;
+                    $origin = 21;
+                    $apiURL = 'https://api.rajaongkir.com/starter/cost';
+                    $response = Http::withHeaders([
+                        'key' => $api_key,
+                        'content-type' => 'application/x-www-form-urlencoded',
+                    ])
+                        ->withBody(
+                            http_build_query([
+                                'origin' => $origin,
+                                'destination' => $cityId,
+                                'weight' => $weight,
+                                'courier' => 'jne',
+                            ]),
+                            'application/x-www-form-urlencoded',
+                        )
+                        ->post($apiURL);
+                    $costData = json_decode($response->body(), true);
+                    $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
+                        return $cost['service'] === 'REG';
+                    });
+    
+                    $shippingCost = reset($shippingCost)['cost'][0]['value'];
+    
+                    // Add shipping cost to total price
+                    $totalHarga += $shippingCost;
                 }
-                // Fetch city ID
-                $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
-
-                $response = Http::withHeaders([
-                    'key' => $api_key,
-                ])->get($apiURL);
-
-                if (!$response->successful()) {
-                    return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
-                }
-                $cityResponse = $response->body();
-                $cities = json_decode($cityResponse, true)['rajaongkir']['results'];
-                $cityId = array_filter($cities, function ($cityItem) use ($city) {
-                    return $cityItem['city_name'] === $city;
-                });
-                $cityId = reset($cityId)['city_id'];
-
-                // Fetch shipping cost
-                $weight = 2000;
-                $origin = 21;
-                $apiURL = 'https://api.rajaongkir.com/starter/cost';
-                $response = Http::withHeaders([
-                    'key' => $api_key,
-                    'content-type' => 'application/x-www-form-urlencoded',
-                ])
-                    ->withBody(
-                        http_build_query([
-                            'origin' => $origin,
-                            'destination' => $cityId,
-                            'weight' => $weight,
-                            'courier' => 'jne',
-                        ]),
-                        'application/x-www-form-urlencoded',
-                    )
-                    ->post($apiURL);
-                $costData = json_decode($response->body(), true);
-                $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
-                    return $cost['service'] === 'REG';
-                });
-
-                $shippingCost = reset($shippingCost)['cost'][0]['value'];
-
-                // Add shipping cost to total price
-                $totalHarga += $shippingCost;
 
                 $transaksi = Transaksi::create([
                     'user_id' => auth()->user()->id,
@@ -220,6 +236,7 @@ class KalenderController extends Controller
                     'gramasi' => $selectedKertas,
                     'laminasi' => $request->laminasi,
                     'metode_pengambilan' => $request->metode_pengambilan,
+                    'request_desain' => $requestDesain,
                     'gambar' => $request->gambar,
                 ]);
 
