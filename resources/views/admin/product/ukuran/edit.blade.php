@@ -32,22 +32,26 @@
                     @foreach ($ukuran->detail_ukuran as $detail)
                         <div class="form-group">
                             <label for="nama_detail_ukuran">Detail Ukuran</label>
-                            <input type="hidden" name="detail_ukuran_id[]" value="{{ $detail->id }}">
-                            <input type="text" class="form-control" name="nama_detail_ukuran[]"
-                                id="nama_detail_ukuran_{{ $detail->id }}" value="{{ $detail->nama_detail_ukuran }}"
-                                required>
-                                <a href="{{ route('admin.valueUkuran.value_ukuran', $detail->id) }}" class="btn btn-danger btn-delete">+</a>
+                            <div class="input-group">
+                                <input type="hidden" name="detail_ukuran_id[]" value="{{ $detail->id }}">
+                                <input type="text" class="form-control" name="nama_detail_ukuran[]"
+                                    id="nama_detail_ukuran_{{ $detail->id }}"
+                                    value="{{ $detail->nama_detail_ukuran }}" required>
+                                <div class="input-group-append">
+                                    <a href="{{ route('admin.valueUkuran.value_ukuran', $detail->id) }}"
+                                        class="btn btn-danger">+</a>
+                                </div>
+                            </div>
                         </div>
                     @endforeach
                     <div id="newDetailUkuranContainer_{{ $ukuran->id }}"></div>
-    
+
                     <!-- Button to add a new input field -->
                     <button type="button" class="btn btn-primary addDetailUkuranButton" data-id="{{ $ukuran->id }}">
                         Add New Detail Ukuran
                     </button>
-                    <button type="submit" class="btn btn-primary ">Update Detail Ukuran</button>
+                    <button type="submit" class="btn btn-primary">Update Detail Ukuran</button>
                 </form>
-                {{-- <button type="submit" class="btn btn-primary">Update Ukuran</button> --}}
             </div>
         </div>
     </div>
@@ -71,17 +75,37 @@
                 newLabel.setAttribute('for', 'nama_detail_ukuran');
                 newLabel.innerText = 'Detail Ukuran';
 
+                // Create the input group
+                var inputGroup = document.createElement('div');
+                inputGroup.classList.add('input-group');
+
                 // Create the new input field
                 var newInput = document.createElement('input');
                 newInput.setAttribute('type', 'text');
                 newInput.setAttribute('name', 'nama_detail_ukuran[]');
                 newInput.classList.add('form-control');
-                newInput.setAttribute('id', 'nama_detail_ukuran');
                 newInput.required = true;
 
-                // Append the label and input to the new div
+                // Create the input group append (for the button)
+                var inputGroupAppend = document.createElement('div');
+                inputGroupAppend.classList.add('input-group-append');
+
+                // Create the "+" button
+                var newButton = document.createElement('button');
+                newButton.classList.add('btn', 'btn-danger');
+                newButton.setAttribute('type', 'button');
+                newButton.innerText = '+';
+
+                // Append the button to the input group append
+                inputGroupAppend.appendChild(newButton);
+
+                // Append the input and append group to the input group
+                inputGroup.appendChild(newInput);
+                inputGroup.appendChild(inputGroupAppend);
+
+                // Append the label and input group to the new div
                 newDiv.appendChild(newLabel);
-                newDiv.appendChild(newInput);
+                newDiv.appendChild(inputGroup);
 
                 // Append the new div to the container
                 container.appendChild(newDiv);
