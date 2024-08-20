@@ -17,7 +17,7 @@ class UndanganController extends Controller
     public function store(Request $request)
     {
         try {
-            if (auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
+            if (auth()->user()->no_telp != true || auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
                 return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
             }
             $request->validate([

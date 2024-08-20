@@ -25,11 +25,11 @@
                         <input type="text" class="form-control" name="judul" id="judul"
                             placeholder="Enter item name" required value="{{ $product->judul }}">
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="kertas">kertas</label>
                         <input type="text" class="form-control" name="kertas" id="kertas"
                             placeholder="Enter item name" disabled value="{{ $product->kertas }}">
-                    </div>
+                    </div> --}}
                     <div class="form-group">
                         <label for="gambar">gambar</label><br>
                         <img class="img img-fluid" width="100" src="{{ asset('assets/img/' . $product->gambar) }}"
@@ -42,12 +42,38 @@
                         <input type="text" class="form-control" name="deskripsi" id="deskripsi"
                             placeholder="Enter item name" required value="{{ $product->deskripsi }}">
                     </div>
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="harga">harga</label>
                         <input type="text" class="form-control" name="harga" id="harga"
                             placeholder="Enter item name" disabled value="{{ $product->harga }}">
-                    </div>
-                    <div class="form-group">
+                    </div> --}}
+                    {{-- <div class="form-group">
+                        <label for="prices">Prices</label>
+                        @foreach ($product->sizes as $size)
+                            <div class="form-group">
+                                <label for="price_{{ $size->id }}">Price for {{ $size->nama_ukuran }}</label>
+                                <input type="number" class="form-control" name="prices[{{ $size->id }}]"
+                                    id="price_{{ $size->id }}" placeholder="Enter price"
+                                    value="{{ $size->prices }}" required>
+                            </div>
+                        @endforeach
+                    </div> --}}
+                    {{-- <div class="form-group">
+                        <label>Prices</label>
+                        @foreach ($product->ukuran as $ukuran)
+                            @foreach ($ukuran->detailUkuran as $detailUkuran)
+                                @if (!$detailUkuran->is_parent && $detailUkuran->nama_detail_ukuran == 'prices')
+                                    @foreach ($detailUkuran->detailValueUkuran as $valueUkuran)
+                                        <div class="form-group">
+                                            <label for="price_{{ $valueUkuran->id }}">Price ({{ $ukuran->nama_ukuran }}, {{ $valueUkuran->nama_value_ukuran }})</label>
+                                            <input type="number" class="form-control" name="prices[{{ $valueUkuran->id }}]" id="price_{{ $valueUkuran->id }}" placeholder="Enter price" value="{{ $valueUkuran->value }}" required>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            @endforeach
+                        @endforeach
+                    </div> --}}
+                    {{-- <div class="form-group">
                         <label for="sisi">sisi</label>
                         <input type="text" class="form-control" name="sisi" id="sisi"
                             placeholder="Enter item name" disabled value="{{ $product->sisi }}">
@@ -56,7 +82,7 @@
                         <label for="ukuran">ukuran</label>
                         <input type="text" class="form-control" name="ukuran" id="ukuran"
                             placeholder="Enter item name" disabled value="{{ $product->ukuran }}">
-                    </div>
+                    </div> --}}
                     <!-- Add more input fields for other properties you want to edit -->
                     <button type="submit" class="btn btn-primary">Save changes</button>
                 </form>

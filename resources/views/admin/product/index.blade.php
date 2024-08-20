@@ -33,6 +33,7 @@
                           <td>RP.{{$product->harga}}</td>
                           <td>
                             @include('admin.product.edit')
+                            <a href="{{ route('admin.product.ukuran', $product->judul) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i> {{ __('Detail') }}</a>
                           </td>
                         </tr>
                         @endforeach

@@ -19,11 +19,6 @@ class UkuranSeeder extends Seeder
                 ['id' => 1, 'product_id' => 1, 'nama_ukuran' => 'A4'],
                 ['id' => 2, 'product_id' => 1, 'nama_ukuran' => 'A5'],
             ],
-            // Tabel Majalah (product_id = 5)
-            [
-                ['id' => 3, 'product_id' => 5, 'nama_ukuran' => 'A4'],
-                ['id' => 4, 'product_id' => 5, 'nama_ukuran' => 'A5'],
-            ],
             // Tabel Brosur (product_id = 2)
             [
                 ['id' => 5, 'product_id' => 2, 'nama_ukuran' => 'plano1'],
@@ -32,6 +27,11 @@ class UkuranSeeder extends Seeder
                 ['id' => 8, 'product_id' => 2, 'nama_ukuran' => 'plano4'],
                 ['id' => 9, 'product_id' => 2, 'nama_ukuran' => 'plano5'],
                 ['id' => 10, 'product_id' => 2, 'nama_ukuran' => 'plano6'],
+            ],
+            // Tabel Kalender (product_id = 3)
+            [
+                ['id' => 17, 'product_id' => 3, 'nama_ukuran' => 'plano4'],
+                ['id' => 18, 'product_id' => 3, 'nama_ukuran' => 'plano7'],
             ],
             // Tabel Undangan (product_id = 4)
             [
@@ -42,10 +42,10 @@ class UkuranSeeder extends Seeder
                 ['id' => 15, 'product_id' => 4, 'nama_ukuran' => 'plano5'],
                 ['id' => 16, 'product_id' => 4, 'nama_ukuran' => 'plano6'],
             ],
-            // Tabel Kalender (product_id = 3)
+            // Tabel Majalah (product_id = 5)
             [
-                ['id' => 17, 'product_id' => 3, 'nama_ukuran' => 'plano4'],
-                ['id' => 18, 'product_id' => 3, 'nama_ukuran' => 'plano7'],
+                ['id' => 3, 'product_id' => 5, 'nama_ukuran' => 'A4'],
+                ['id' => 4, 'product_id' => 5, 'nama_ukuran' => 'A5'],
             ],
         ];
         

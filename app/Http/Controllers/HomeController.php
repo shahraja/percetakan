@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AboutPage;
 use App\Models\Brosur;
 use App\Models\Buku;
 use App\Models\DetailUkuran;
@@ -14,6 +15,7 @@ use App\Models\Transaksi;
 use App\Models\Ukuran;
 use App\Models\Undangan;
 use App\Services\CreateSnapToken;
+use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
 {
@@ -57,11 +59,11 @@ class HomeController extends Controller
 
         // foreach ($ukuran as $key => $value) {
         //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
-            
+
         //     $detailUkuranArray = [];
         //     foreach ($detail_ukurans as $detail_ukuran) {
         //         $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-        
+
         //         if ($detail_ukuran->is_parent) {
         //             $childArray = [];
         //             foreach ($detail_values as $childDetail) {
@@ -84,13 +86,13 @@ class HomeController extends Controller
         //             }
         //         }
         //     }
-        
+
         //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         // }
 
         // foreach ($ukuran as $key => $value) {
         //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
-            
+
         //     $detailUkuranArray = [];
         //     foreach ($detail_ukurans as $detail_ukuran) {
         //         if ($detail_ukuran->is_parent) {
@@ -109,7 +111,7 @@ class HomeController extends Controller
         //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
         //         }
         //     }
-        
+
         //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         // }
 
@@ -147,19 +149,6 @@ class HomeController extends Controller
 
         $products = Product::all();
         return view('client.cart', compact('transaksis', 'products'));
-        // dd($transaksi);
-        // $products = $transaksi->produk;
-        // $brosurs = $transaksi->brosur();
-        // $bukus = $transaksi->buku();
-        // $kalenders = $transaksi->kalender();
-        // $majalahs = $transaksi->majalah();
-        // $undangans = $transaksi->undangan();
-        // $brosurs = Brosur::all();
-        // $bukus = Buku::all();
-        // $kalenders = Kalender::all();
-        // $majalahs = Majalah::all();
-        // $undangans = Undangan::all();
-        // return view('client.cart', compact('transaksi', 'products', 'brosurs', 'bukus', 'kalenders', 'majalahs', 'undangans'));
     }
 
     public function cart2()
@@ -170,11 +159,6 @@ class HomeController extends Controller
 
         $products = Product::all();
 
-        // $brosurs = Brosur::all();
-        // $bukus = Buku::all();
-        // $kalenders = Kalender::all();
-        // $majalahs = Majalah::all();
-        // $undangans = Undangan::all();
         return view('client.cart2', compact('transaksis', 'products'));
     }
 
@@ -247,5 +231,17 @@ class HomeController extends Controller
     {
         $products = Product::all();
         return view('client.profile', compact('products'));
+    }
+
+    public function clear($transaksiId)
+    {
+        $transaksi = Transaksi::where('id', $transaksiId)->where('user_id', auth()->id())->first();
+
+        if ($transaksi) {
+            $transaksi->delete();
+            return redirect()->route('cart')->with('success', 'Produk berhasil dihapus dari keranjang.');
+        }
+
+        return redirect()->route('cart')->with('error', 'Produk tidak ditemukan atau tidak dapat dihapus.');
     }
 }

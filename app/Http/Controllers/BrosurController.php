@@ -17,7 +17,7 @@ class BrosurController extends Controller
     public function store(Request $request)
     {
         try {
-            if (auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
+            if (auth()->user()->no_telp != true || auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
                 return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
             }
             $request->validate([
@@ -130,23 +130,6 @@ class BrosurController extends Controller
 
             $ukuranData = $this->getUkuranData();
 
-            // $ukuran = $request->ukuran;
-            // $gramasi = $request->gramasi;
-            // $jumlahCetak = $request->jumlah;
-            // $laminasi = $request->laminasi;
-
-            // $selectedUkuran = $ukuranData[$ukuran];
-            // $hp = $selectedUkuran['prices'][$gramasi];
-
-            // $jumlahPagePerPlano = floor($selectedUkuran['plano'][0] / $selectedUkuran['width']) * floor($selectedUkuran['plano'][1] / $selectedUkuran['height']);
-            // $jumlahPlano = ceil($jumlahCetak / $jumlahPagePerPlano);
-
-            // $jsc = $this->calculateJSC($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak);
-            // $harga = $jumlahPlano * $hp + $jsc;
-            // $hargaLaminasi = $this->calculateLaminasiCost($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak, $laminasi);
-
-            // $totalHarga = $harga + $hargaLaminasi;
-
             // Ambil input dari form
             $ukuran = $request->ukuran;
             $gramasi = $request->gramasi;
@@ -155,7 +138,6 @@ class BrosurController extends Controller
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
 
-            // Gunakan ukuran yang dipilih untuk perhitungan
             $selectedUkuran = $ukuranData[$ukuran];
             $selectedUkuran = [
                 'width' => $selectedUkuran['width']['width'],

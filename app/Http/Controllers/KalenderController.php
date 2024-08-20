@@ -20,7 +20,7 @@ class KalenderController extends Controller
     {
         try {
             //code...
-            if (auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
+            if (auth()->user()->no_telp != true || auth()->user()->alamat != true || auth()->user()->provinsi != true || auth()->user()->kota != true || auth()->user()->kecamatan != true) {
                 return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
             }
             $request->validate([
@@ -110,23 +110,17 @@ class KalenderController extends Controller
                 $ukHeight = $ukuran['height']['height'] ?? 0;
                 $hp = $ukuran['prices'][$selectedKertas] ?? 0;
 
-                // Validasi tambahan
-                Log::info('Selected Ukuran Data: ' . json_encode($ukuran));
-                Log::info('Selected UkAsli: ' . json_encode($ukAsli));
-                Log::info('Selected UkWidth: ' . $ukWidth);
-                Log::info('Selected UkHeight: ' . $ukHeight);
-                Log::info('Selected Hp: ' . $hp);
-                // dd($ukuranData, $selectedUkuran, $ukuran, $ukAsli, $ukWidth, $ukHeight, $hp);
                 if ($ukAsli === null || !is_array($ukAsli) || count($ukAsli) < 2 || $ukWidth <= 0 || $ukHeight <= 0 || $hp <= 0) {
                     return redirect()->back()->with('alert', 'Ukuran atau Plano tidak valid');
                 }
 
-                $jumlahPagePerPlano = floor($ukAsli[0] / $ukWidth) * floor($ukAsli[1] / $ukHeight);
-                $jumlahPlano = ceil($jc / $jumlahPagePerPlano);
-                $jumlahPlano *= $request->lembar; // Adjust jumlahPlano based on lembar
+                $jumlahPagePerPlano = ceil($jc / 4);
+                // $jumlahPlano = ceil($jc / $jumlahPagePerPlano);
+                // $jumlahPlano *= $request->lembar;
+                $jumlahPlano = $jumlahPagePerPlano * $request->lembar;
 
                 $jsc = $this->calculateJSC($ukWidth, $ukHeight, $jc);
-                $harga = $jumlahPlano * $hp + $jsc;
+                $harga = ($jumlahPlano * $hp) + $jsc;
                 $hargaLaminasi = $this->calculateLaminasiCost($ukWidth, $ukHeight, $jc, $request->laminasi);
 
                 // dd($request->all());
@@ -138,8 +132,9 @@ class KalenderController extends Controller
                 } elseif ($request->jilid === 'spiral') {
                     $hargaJilid = 3500 * $jc;
                 }
-
+    
                 $totalHarga = $harga + $hargaLaminasi + $hargaJilid;
+                // dd($ukuran, $ukAsli, $ukWidth, $ukHeight, $jumlahPagePerPlano .'jumlah page per plano', $jumlahPlano, $jc,  $hp, $jsc, $harga, $hargaLaminasi, $totalHarga);
 
                 // $gambar = $request->input('gambar');
                 // if (!empty($gambar)) {
@@ -155,21 +150,21 @@ class KalenderController extends Controller
                 if ($metodePengambilan == 0) {
                     $provinceName = auth()->user()->provinsi;
                     $city = auth()->user()->kota;
-    
+
                     // Fetch province ID
                     $api_key = env('RAJA_ONGKIR_KEY');
                     $apiURL = 'https://api.rajaongkir.com/starter/province';
-    
+
                     $response = Http::withHeaders([
                         'key' => $api_key,
                     ])->get($apiURL);
-    
+
                     if ($response->successful()) {
                         $provinceResponse = $response->body();
                     } else {
                         return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
                     }
-    
+
                     $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
                     try {
                         $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
@@ -181,11 +176,11 @@ class KalenderController extends Controller
                     }
                     // Fetch city ID
                     $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
-    
+
                     $response = Http::withHeaders([
                         'key' => $api_key,
                     ])->get($apiURL);
-    
+
                     if (!$response->successful()) {
                         return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
                     }
@@ -195,7 +190,7 @@ class KalenderController extends Controller
                         return $cityItem['city_name'] === $city;
                     });
                     $cityId = reset($cityId)['city_id'];
-    
+
                     // Fetch shipping cost
                     $weight = 2000;
                     $origin = 21;
@@ -218,9 +213,9 @@ class KalenderController extends Controller
                     $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
                         return $cost['service'] === 'REG';
                     });
-    
+
                     $shippingCost = reset($shippingCost)['cost'][0]['value'];
-    
+
                     // Add shipping cost to total price
                     $totalHarga += $shippingCost;
                 }

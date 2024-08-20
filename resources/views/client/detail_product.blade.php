@@ -177,6 +177,13 @@
                         <p class="desk">{{ $deskripsi }}</p>
                     @endforeach
                 @endif --}}
+                <h5 class="py-2"><i class="fa-solid fa-thumbtack"></i> Deskripsi</h5>
+                <div class="desk">
+                    <p><i class="fa-solid fa-info"></i> Untuk melakukan pemesanan harap <B>MELENGKAPI DATA</B> diri Anda untuk kebutuhan pemesanan</p>
+                    <p class=""><i class="fa-solid fa-info"></i> Untuk perhitungan produk <b>HANYA</b> kalkulasi produk dengan spesifikasi yang diinginkan oleh Anda</p>
+                    <p><i class="fa-solid fa-info"></i> Untuk metode pengiriman akan dikalkulasikan ulang sesuai dengan daerah tempat tinggal Anda, ketika Anda telah melakukan Checkout</p>
+                    <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
+                </div>
             </div>
         </div>
         @if ($product->judul == 'Undangan')
@@ -278,7 +285,7 @@
             <table class="table">
                 <tbody>
                     <tr>
-                        <td><strong>Harga Per buah</strong></td>
+                        <td><strong>Harga Pelano</strong></td>
                         <td>: </td>
                         <td align="right" id="hp"></td>
                     </tr>

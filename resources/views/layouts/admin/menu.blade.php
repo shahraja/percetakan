@@ -28,6 +28,14 @@
         </a>
       </li>
       <li class="nav-item">
+        <a href="{{route('admin.about.edit', '1')}}" class="nav-link">
+          <i class="fa-solid fa-address-card"></i>
+          <p>
+            Kelola About
+          </p>
+        </a>
+      </li>
+      <li class="nav-item">
         <a href="{{route('admin.product.index')}}" class="nav-link">
           <i class="nav-icon fas fa-tachometer-alt"></i>
           <p>

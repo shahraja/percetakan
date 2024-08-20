@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AboutPageController;
 use App\Http\Controllers\Admin\CartController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
@@ -35,6 +36,9 @@ Route::post('/ongkir', [OngkirController::class, 'cost'])->name('ongkir');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/keranjang', [HomeController::class, 'cart'])->name('cart');
+
+    Route::delete('/cart/clear/{transaksi}', [HomeController::class, 'clear'])->name('cart.clear');
+
     Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -52,25 +56,39 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->group(function () {
             Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
             Route::name('admin.')->group(function () {
-                
                 // KELOLA PRODUK
                 Route::get('/produk', [ProductController::class, 'index'])->name('product.index');
                 Route::post('/produk/{id}', [ProductController::class, 'update'])->name('product.update');
-    
+                Route::get('/produk/ukuran/{judul}', [ProductController::class, 'ukuran'])->name('product.ukuran');
+                Route::post('/produk/ukuran/{product}/add', [ProductController::class, 'storeUkuran'])->name('product.ukuran.store');
+                Route::post('/produk/ukuran/{ukuran}/update', [ProductController::class, 'updateUkuran'])->name('product.ukuran.update');
+                Route::delete('/produk/ukuran/{ukuran}/delete', [ProductController::class, 'deleteUkuran'])->name('product.ukuran.delete');
+                Route::post('/detail-ukuran/update-or-create', [ProductController::class, 'updateOrCreate'])->name('detailUkuran.updateOrCreate');
+
+                Route::get('/detail-ukuran/{id}/value-ukuran', [ProductController::class, 'showValueUkuran'])->name('valueUkuran.value_ukuran');
+
+                Route::post('/value-ukuran/update-or-create/{id}', [ProductController::class, 'updateOrCreateDetailValue'])->name('valueUkuran.updateOrCreate');
+
                 // KELOLA USER
                 Route::get('/user', [UserController::class, 'index'])->name('user.index');
                 Route::post('/user', [UserController::class, 'store'])->name('user.store');
                 Route::post('/user/{id}', [UserController::class, 'update'])->name('user.update');
                 Route::delete('/user/{id}/destroy', [UserController::class, 'destroy'])->name('user.destroy');
-    
+
                 //KELOLA PESANAN
                 Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
                 Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
                 Route::delete('/pesanan/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
-    
+
                 //KELOLA PEMBAYARAN
                 Route::get('/pembayaran', [PaymentController::class, 'index'])->name('payment.index');
                 Route::put('/pembayaran/{id}', [PaymentController::class, 'update'])->name('payment.update');
+
+                //KELOLA TENTANG
+                // Route::get('about/edit', [AboutPageController::class, 'edit'])->name('admin.about.edit');
+                // Route::put('about/update', [AboutPageController::class, 'update'])->name('admin.about.update');
+                Route::get('about/{id}/edit', [AboutPageController::class, 'edit'])->name('about.edit');
+                Route::put('about/{id}/update', [AboutPageController::class, 'update'])->name('about.update');
             });
         });
 
@@ -89,7 +107,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
     // UPDATE STATUS TRANSAKSI KE DATABASE
-    Route::post('/update-transaction-status', [KalenderController::class, 'updateStatus'])->name('update.transaction.status');
+    // Route::post('/update-transaction-status', [KalenderController::class, 'updateStatus'])->name('update.transaction.status');
     // Route::post('/update-transaction-status', [BrosurController::class, 'updateStatus'])->name('update.transaction.status');
     // Route::post('/update-transaction-status', [BukuController::class, 'updateStatus'])->name('update.transaction.status');
     // Route::post('/update-transaction-status', [MajalahController::class, 'updateStatus'])->name('update.transaction.status');

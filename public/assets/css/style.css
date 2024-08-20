@@ -2,9 +2,33 @@
     color: #029094;
 }
 
-/* html, body {
+/* body, html {
     height: 100%;
     margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffc107; 
+} */
+
+/* .login-container {
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px;
+}
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.form-group {
+    margin-bottom: 15px;
+}
+.btn {
+    width: 100%;
 } */
 
 .content {

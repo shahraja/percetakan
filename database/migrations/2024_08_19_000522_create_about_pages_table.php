@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detail_ukuran', function (Blueprint $table) {
+        Schema::create('about_pages', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ukuran_id')->references('id')->on('ukuran')
-                ->onDelete('cascade')->onUpdate('cascade');
-            $table->string('nama_detail_ukuran');
-            $table->boolean('is_parent')->default(false);
+            $table->string('image');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detail_ukuran');
+        Schema::dropIfExists('about_pages');
     }
 };
