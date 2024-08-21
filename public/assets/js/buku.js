@@ -19,28 +19,11 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
-const ukuranData = {
-    A4: {
-        width: 21,
-        height: 28,
-        hp: 4400,
-        plano: [61, 92],
-        prices: {
-            '120': 2000,
-            '150': 2300
-        }
-    },
-    A5: {
-        width: 14.8,
-        height: 21,
-        hp: 3600,
-        plano: [65, 90],
-        prices: {
-            '120': 2100,
-            '150': 2450
-        }
-    }
-};
+const ukuranDataElement = document.getElementById('ukuranData');
+const ukuranData = JSON.parse(ukuranDataElement.getAttribute('data-ukuran'));
+
+console.log(ukuranData);
+
 
 const kertasData = [{
         value: '120',
@@ -83,16 +66,34 @@ function handleUkuranChange() {
     populateKertasOptions();
 }
 
+// function updateUkuranInputs() {
+//     const selectedOption = document.getElementById('ukuran').value;
+//     const ukAsli = ukuranData[selectedOption].plano;
+//     const ukWidth = ukuranData[selectedOption].width;
+//     const ukHeight = ukuranData[selectedOption].height;
+
+//     document.getElementById('uk_asli').value = `${ukAsli[0]} x ${ukAsli[1]}`;
+//     document.getElementById('uk_width').value = ukWidth;
+//     document.getElementById('uk_height').value = ukHeight;
+// }
 function updateUkuranInputs() {
     const selectedOption = document.getElementById('ukuran').value;
-    const ukAsli = ukuranData[selectedOption].plano;
-    const ukWidth = ukuranData[selectedOption].width;
-    const ukHeight = ukuranData[selectedOption].height;
+    
+    if (selectedOption && ukuranData[selectedOption]) {
+        const ukAsli = ukuranData[selectedOption].plano || [];
+        const ukWidth = ukuranData[selectedOption].width;
+        const ukHeight = ukuranData[selectedOption].height;
 
-    document.getElementById('uk_asli').value = `${ukAsli[0]} x ${ukAsli[1]}`;
-    document.getElementById('uk_width').value = ukWidth;
-    document.getElementById('uk_height').value = ukHeight;
+        // Pastikan ukAsli memiliki setidaknya 2 elemen sebelum diakses
+        document.getElementById('uk_asli').value = ukAsli.length >= 2 ? `${ukAsli[0]} x ${ukAsli[1]}` : 'Ukuran tidak tersedia';
+        document.getElementById('uk_width').value = ukWidth;
+        document.getElementById('uk_height').value = ukHeight;
+    } else {
+        // Handle kasus di mana selectedOption tidak valid
+        console.error('Ukuran tidak valid atau tidak ditemukan.');
+    }
 }
+
 
 function updateHargaPerBuah() {
     const selectedUkuran = document.getElementById('ukuran').value;

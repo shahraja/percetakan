@@ -287,3 +287,37 @@ class KalenderController extends Controller
         }
     }
 }
+
+
+ // foreach ($ukuran as $key => $value) {
+        //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
+
+        //     $detailUkuranArray = [];
+        //     foreach ($detail_ukurans as $detail_ukuran) {
+        //         $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
+
+        //         if ($detail_ukuran->is_parent) {
+        //             $childArray = [];
+        //             foreach ($detail_values as $childDetail) {
+        //                 $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
+        //             }
+        //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
+        //         } else {
+        //             // Jika ada beberapa value untuk 'plano', simpan dalam array
+        //             $planoArray = [];
+        //             foreach ($detail_values as $detail_value) {
+        //                 if ($detail_value->nama_value_ukuran == 'plano') {
+        //                     $planoArray[] = $detail_value->value;
+        //                 } else {
+        //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
+        //                 }
+        //             }
+        //             // Tambahkan array 'plano' ke detail ukuran jika ada data
+        //             if (!empty($planoArray)) {
+        //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
+        //             }
+        //         }
+        //     }
+
+        //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
+        // }

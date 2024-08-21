@@ -23,20 +23,32 @@ class HomeController extends Controller
     {
         $products = Product::all();
         // $ukuranOriginal = [
-        //     'A4' => [
-        //         'width' => 21,
-        //         'height' => 28,
+        //     'plano1' => [
+        //         'width' => 30.5,
+        //         'height' => 46,
+        //         'hp' => 3200,
+        //         'plano' => [61, 92],
         //         'prices' => [
         //             '120' => 2000,
         //             '150' => 2300,
+        //             '190' => 2950,
+        //             '210' => 3200,
+        //             '230' => 3500,
         //         ],
         //     ],
-        //     'A5' => [
-        //         'width' => 14.8,
-        //         'height' => 21,
+        //     'plano2' => [
+        //         'width' => 32.5,
+        //         'height' => 45,
+        //         'hp' => 3400,
+        //         'plano' => [65, 90],
         //         'prices' => [
         //             '120' => 2100,
         //             '150' => 2450,
+        //             '190' => 3050,
+        //             '210' => 3400,
+        //             '230' => 3600,
+        //             '260' => 4050,
+        //             '310' => 4800,
         //         ],
         //     ],
         // ];
@@ -62,44 +74,11 @@ class HomeController extends Controller
 
         //     $detailUkuranArray = [];
         //     foreach ($detail_ukurans as $detail_ukuran) {
-        //         $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-
-        //         if ($detail_ukuran->is_parent) {
-        //             $childArray = [];
-        //             foreach ($detail_values as $childDetail) {
-        //                 $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-        //             }
-        //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-        //         } else {
-        //             // Jika ada beberapa value untuk 'plano', simpan dalam array
-        //             $planoArray = [];
-        //             foreach ($detail_values as $detail_value) {
-        //                 if ($detail_value->nama_value_ukuran == 'plano') {
-        //                     $planoArray[] = $detail_value->value;
-        //                 } else {
-        //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-        //                 }
-        //             }
-        //             // Tambahkan array 'plano' ke detail ukuran jika ada data
-        //             if (!empty($planoArray)) {
-        //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
-        //             }
-        //         }
-        //     }
-
-        //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
-        // }
-
-        // foreach ($ukuran as $key => $value) {
-        //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
-
-        //     $detailUkuranArray = [];
-        //     foreach ($detail_ukurans as $detail_ukuran) {
         //         if ($detail_ukuran->is_parent) {
         //             $childDetails = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
         //             $childArray = [];
         //             foreach ($childDetails as $childDetail) {
-        //                 $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
+        //                 $childArray = $childDetail->value;
         //             }
         //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
         //         } else {
@@ -114,7 +93,37 @@ class HomeController extends Controller
 
         //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         // }
-
+                
+        // foreach ($ukuran as $key => $value) {
+        //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
+        
+        //     $detailUkuranArray = [];
+        //     foreach ($detail_ukurans as $detail_ukuran) {
+        //         $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
+                
+        //         if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
+        //             // Jika "plano", simpan semua value dalam array
+        //             $planoValues = [];
+        //             foreach ($detail_values as $detail_value) {
+        //                 $planoValues[] = $detail_value->value;
+        //             }
+        //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $planoValues;
+        //         } elseif (count($detail_values) == 1) {
+        //             // Jika hanya satu nilai, kembalikan sebagai nilai tunggal
+        //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $detail_values->first()->value;
+        //         } else {
+        //             // Untuk multiple values (seperti "prices"), tetap dalam format array
+        //             $prices = [];
+        //             foreach ($detail_values as $detail_value) {
+        //                 $prices[$detail_value->nama_value_ukuran] = $detail_value->value;
+        //             }
+        //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
+        //         }
+        //     }
+        
+        //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
+        // }
+        
         // $tes = $ukuranData;
         // dd($ukuranOriginal, $tes);
 
@@ -138,8 +147,41 @@ class HomeController extends Controller
         $products = Product::all();
         // $transaksi = Transaksi::where('user_id', auth()->user()->id)->get();
         $product = Product::findOrFail($id);
+        $ukuran = Ukuran::where('product_id', $id)->get();
+        $ukuranData = [];
 
-        return view('client.detail_product', compact('product', 'products'));
+        foreach ($ukuran as $key => $value) {
+            $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
+        
+            $detailUkuranArray = [];
+            foreach ($detail_ukurans as $detail_ukuran) {
+                $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
+                
+                if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
+                    // Jika "plano", simpan semua value dalam array
+                    $planoValues = [];
+                    foreach ($detail_values as $detail_value) {
+                        $planoValues[] = $detail_value->value;
+                    }
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $planoValues;
+                } elseif (count($detail_values) == 1) {
+                    // Jika hanya satu nilai, kembalikan sebagai nilai tunggal
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $detail_values->first()->value;
+                } else {
+                    // Untuk multiple values (seperti "prices"), tetap dalam format array
+                    $prices = [];
+                    foreach ($detail_values as $detail_value) {
+                        $prices[$detail_value->nama_value_ukuran] = $detail_value->value;
+                    }
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
+                }
+            }
+        
+            $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
+        }
+        // dd($ukuranData);
+
+        return view('client.detail_product', compact('product', 'products', 'ukuranData'));
     }
 
     public function cart()

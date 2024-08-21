@@ -321,7 +321,7 @@
         </form>
     </div>
 
-
+    <div id="ukuranData" data-ukuran='@json($ukuranData)'></div>
     @if ($product->judul == 'Undangan')
         <script src="{{ asset('/assets/js/undang.js') }}"></script>
     @elseif($product->judul == 'Majalah')

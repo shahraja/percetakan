@@ -29,6 +29,7 @@ class BukuController extends Controller
                 'request_desain' => 'required',
                 // 'metode_pengambilan' => 'required',
             ]);
+
             // dd($request->all());
             // Ambil data dari request
             $produk_id = $request->produk_id;
@@ -48,24 +49,24 @@ class BukuController extends Controller
             $metode_pengambilan = $request->metode_pengambilan;
             $request_desain = $request->request_desain;
 
-            if($metode_pengambilan == '0'){
+            if ($metode_pengambilan == '0') {
                 $provinceName = auth()->user()->provinsi;
                 $city = auth()->user()->kota;
-    
+
                 // Fetch province ID
                 $api_key = env('RAJA_ONGKIR_KEY');
                 $apiURL = 'https://api.rajaongkir.com/starter/province';
-    
+
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-    
+
                 if ($response->successful()) {
                     $provinceResponse = $response->body();
                 } else {
                     return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
                 }
-    
+
                 $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
                 try {
                     $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
@@ -77,11 +78,11 @@ class BukuController extends Controller
                 }
                 // Fetch city ID
                 $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
-    
+
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-    
+
                 if (!$response->successful()) {
                     return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
                 }
@@ -91,7 +92,7 @@ class BukuController extends Controller
                     return $cityItem['city_name'] === $city;
                 });
                 $cityId = reset($cityId)['city_id'];
-    
+
                 // Fetch shipping cost
                 $weight = 2000;
                 $origin = 21;
@@ -114,9 +115,9 @@ class BukuController extends Controller
                 $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
                     return $cost['service'] === 'REG';
                 });
-    
+
                 $shippingCost = reset($shippingCost)['cost'][0]['value'];
-    
+
                 // Add shipping cost to total price
                 $total_harga += $shippingCost;
             }
@@ -124,7 +125,6 @@ class BukuController extends Controller
             if ($request_desain == '0') {
                 $total_harga += 85000; // Tambahkan biaya desain sebesar 85.000
             }
-
             $transaksi = Transaksi::create([
                 'user_id' => auth()->user()->id,
                 'nomor_pesanan' => uniqid(),
@@ -138,9 +138,9 @@ class BukuController extends Controller
                 'metode_pengambilan' => $metode_pengambilan,
                 'request_desain' => $request_desain,
             ]);
-
+            
             $products = Product::all();
-
+            
             $buku = Buku::create([
                 'transaksi_id' => $transaksi->id,
                 'halaman' => $halaman,
@@ -149,7 +149,7 @@ class BukuController extends Controller
                 'uk_height' => $uk_height,
                 'finishing' => $finishing,
             ]);
-
+            
             $transaction_details = [
                 'order_id' => $transaksi->nomor_pesanan,
                 'gross_amount' => intval($total_harga),
@@ -162,14 +162,14 @@ class BukuController extends Controller
                     'name' => 'Kalender',
                 ],
             ];
-
+            
             $customer_details = [
                 'first_name' => $transaksi->user->name,
                 'email' => $transaksi->user->email,
                 'phone' => $transaksi->user->no_telp,
                 'address' => $transaksi->user->alamat,
             ];
-
+            
             $params = [
                 'transaction_details' => $transaction_details,
                 'item_details' => $items,
@@ -177,64 +177,113 @@ class BukuController extends Controller
             ];
             $snapToken = new CreateSnapToken($params);
             $token = $snapToken->getSnapToken();
-
+            
             return view('client.checkout', compact('transaksi', 'buku', 'products', 'token'));
-        } catch (\Exception $e) {
+        } 
+        // catch (\Illuminate\Validation\ValidationException $e) {
+        //     return redirect()->back()->withErrors($e->validator)->withInput();
+        // } 
+        catch (\Exception $e) {
             dd($e);
         }
     }
 
+    // private function calculateUkuranData($ukuran, $param, $kertas)
+    // {
+    //     $produk = Product::where('judul', 'Buku')->first();
+    //     $ukuranList = Ukuran::where('product_id', $produk->id)->get();
+    //     $ukuranData = [];
+
+    //     foreach ($ukuranList as $key => $value) {
+    //         $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
+
+    //         $detailUkuranArray = [];
+    //         foreach ($detail_ukurans as $detail_ukuran) {
+    //             $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
+
+    //             if ($detail_ukuran->is_parent) {
+    //                 $childArray = [];
+    //                 foreach ($detail_values as $childDetail) {
+    //                     $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
+    //                 }
+    //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
+    //             } else {
+    //                 $planoArray = [];
+    //                 foreach ($detail_values as $detail_value) {
+    //                     if ($detail_value->nama_value_ukuran == 'plano') {
+    //                         $planoArray[] = $detail_value->value;
+    //                     } else {
+    //                         $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
+    //                     }
+    //                 }
+    //                 if (!empty($planoArray)) {
+    //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
+    //                 }
+    //             }
+    //         }
+
+    //         $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
+    //     }
+
+    //     // Directly access the numeric value for width and height
+    //     if ($param === 'width' || $param === 'height') {
+    //         return $ukuranData[$ukuran][$param][$param];
+    //     }
+
+    //     if ($kertas === null) {
+    //         return $ukuranData[$ukuran][$param];
+    //     }
+
+    //     if (!isset($ukuranData[$ukuran][$param][$kertas])) {
+    //         throw new \Exception('Invalid kertas key: ' . print_r($kertas, true));
+    //     }
+
+    //     return intval($ukuranData[$ukuran][$param][$kertas]);
+    // }
     private function calculateUkuranData($ukuran, $param, $kertas)
     {
+        // Ambil produk "Buku"
         $produk = Product::where('judul', 'Buku')->first();
         $ukuranList = Ukuran::where('product_id', $produk->id)->get();
         $ukuranData = [];
 
         foreach ($ukuranList as $key => $value) {
             $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
-
             $detailUkuranArray = [];
+
             foreach ($detail_ukurans as $detail_ukuran) {
                 $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
 
-                if ($detail_ukuran->is_parent) {
-                    $childArray = [];
-                    foreach ($detail_values as $childDetail) {
-                        $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-                    }
-                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-                } else {
-                    $planoArray = [];
+                if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
+                    $planoValues = [];
                     foreach ($detail_values as $detail_value) {
-                        if ($detail_value->nama_value_ukuran == 'plano') {
-                            $planoArray[] = $detail_value->value;
-                        } else {
-                            $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-                        }
+                        $planoValues[] = $detail_value->value;
                     }
-                    if (!empty($planoArray)) {
-                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $planoValues;
+                } elseif (count($detail_values) === 1) {
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $detail_values->first()->value;
+                } else {
+                    $prices = [];
+                    foreach ($detail_values as $detail_value) {
+                        $prices[$detail_value->nama_value_ukuran] = $detail_value->value;
                     }
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
                 }
             }
 
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
 
-        // Directly access the numeric value for width and height
+        // Menyediakan data berdasarkan parameter
         if ($param === 'width' || $param === 'height') {
-            return $ukuranData[$ukuran][$param][$param];
+            return isset($ukuranData[$ukuran][$param]) ? $ukuranData[$ukuran][$param] : null;
         }
 
         if ($kertas === null) {
-            return $ukuranData[$ukuran][$param];
+            return $ukuranData[$ukuran][$param] ?? null;
         }
 
-        if (!isset($ukuranData[$ukuran][$param][$kertas])) {
-            throw new \Exception('Invalid kertas key: ' . print_r($kertas, true));
-        }
-
-        return intval($ukuranData[$ukuran][$param][$kertas]);
+        return isset($ukuranData[$ukuran][$param][$kertas]) ? intval($ukuranData[$ukuran][$param][$kertas]) : null;
     }
 
     // private function calculateUkuranData($ukuran, $param, $kertas)
