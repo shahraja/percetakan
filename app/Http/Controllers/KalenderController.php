@@ -24,15 +24,8 @@ class KalenderController extends Controller
                 return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
             }
             $request->validate([
-                'produk_id' => 'required',
-                // 'user_id' => 'required',
-                // 'alamat' => 'required|max:255',
-                'gambar' => 'file|image|mimes:jpeg,png,jpg|max:5120',
-                'jumlah' => 'required|numeric',
-                'gramasi' => 'required',
                 'lembar' => 'required',
                 'jilid' => 'required',
-                'laminasi' => 'required',
                 'uk_asli' => 'required',
                 'uk_width' => 'required|numeric',
                 'uk_height' => 'required|numeric',

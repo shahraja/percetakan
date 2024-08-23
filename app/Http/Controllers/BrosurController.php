@@ -21,19 +21,11 @@ class BrosurController extends Controller
                 return redirect()->back()->with('alert', 'Lengkapi data profil terlebih dahulu');
             }
             $request->validate([
-                // 'produk_id' => 'required',
-                // 'user_id' => 'required',
-                // 'alamat' => 'required|max:255',
-                // 'total_harga' => 'required',
-                // 'harga_plano' => 'required',
-                // 'jumlah' => 'required',
-                // 'gramasi' => 'required',
-                // 'laminasi' => 'required',
-                // 'uk_asli' => 'required',
-                // 'uk_width' => 'required',
-                // 'uk_height' => 'required'
+                'uk_asli' => 'required',
+                'uk_width' => 'required',
+                'uk_height' => 'required'
             ]);
-
+          
             // $ukuranData = [
             //     'plano1' => [
             //         'width' => 30.5,
