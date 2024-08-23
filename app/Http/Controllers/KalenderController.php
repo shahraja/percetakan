@@ -63,36 +63,62 @@ class KalenderController extends Controller
             // ];
 
             $produk = Product::where('judul', 'Kalender')->first();
-            $ukuran = Ukuran::where('product_id', $produk->id)->get();
+            $ukuranList  = Ukuran::where('product_id', $produk->id)->get();
             $ukuranData = [];
 
-            foreach ($ukuran as $key => $value) {
-                $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
+            // foreach ($ukuran as $key => $value) {
+            //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
 
+            //     $detailUkuranArray = [];
+            //     foreach ($detail_ukurans as $detail_ukuran) {
+            //         $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
+
+            //         if ($detail_ukuran->is_parent) {
+            //             $childArray = [];
+            //             foreach ($detail_values as $childDetail) {
+            //                 $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
+            //             }
+            //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
+            //         } else {
+            //             $planoArray = [];
+            //             foreach ($detail_values as $detail_value) {
+            //                 if ($detail_value->nama_value_ukuran == 'plano') {
+            //                     $planoArray[] = $detail_value->value;
+            //                 } else {
+            //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
+            //                 }
+            //             }
+            //             if (!empty($planoArray)) {
+            //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
+            //             }
+            //         }
+            //     }
+            //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
+            // }
+            foreach ($ukuranList as $key => $value) {
+                $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
                 $detailUkuranArray = [];
+            
                 foreach ($detail_ukurans as $detail_ukuran) {
                     $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-
-                    if ($detail_ukuran->is_parent) {
-                        $childArray = [];
-                        foreach ($detail_values as $childDetail) {
-                            $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-                        }
-                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-                    } else {
-                        $planoArray = [];
+            
+                    if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
+                        $planoValues = [];
                         foreach ($detail_values as $detail_value) {
-                            if ($detail_value->nama_value_ukuran == 'plano') {
-                                $planoArray[] = $detail_value->value;
-                            } else {
-                                $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-                            }
+                            $planoValues[] = $detail_value->value;
                         }
-                        if (!empty($planoArray)) {
-                            $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
+                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $planoValues;
+                    } elseif (count($detail_values) === 1) {
+                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $detail_values->first()->value;
+                    } else {
+                        $prices = [];
+                        foreach ($detail_values as $detail_value) {
+                            $prices[$detail_value->nama_value_ukuran] = $detail_value->value;
                         }
+                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
                     }
                 }
+            
                 $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
             }
 
@@ -102,26 +128,24 @@ class KalenderController extends Controller
             $jc = $request->jumlah;
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
-
+            
             if (isset($ukuranData[$selectedUkuran])) {
                 $ukuran = $ukuranData[$selectedUkuran];
-                $ukAsli = isset($ukuran['plano']['plano']) ? explode(', ', $ukuran['plano']['plano']) : null;
-                $ukWidth = $ukuran['width']['width'] ?? 0;
-                $ukHeight = $ukuran['height']['height'] ?? 0;
+                $ukAsli = $ukuran['plano'] ?? null;
+                $ukWidth = $ukuran['width'] ?? 0;
+                $ukHeight = $ukuran['height'] ?? 0;
                 $hp = $ukuran['prices'][$selectedKertas] ?? 0;
-
+            
                 if ($ukAsli === null || !is_array($ukAsli) || count($ukAsli) < 2 || $ukWidth <= 0 || $ukHeight <= 0 || $hp <= 0) {
                     return redirect()->back()->with('alert', 'Ukuran atau Plano tidak valid');
                 }
-
+            
                 $jumlahPagePerPlano = ceil($jc / 4);
-                // $jumlahPlano = ceil($jc / $jumlahPagePerPlano);
-                // $jumlahPlano *= $request->lembar;
                 $jumlahPlano = $jumlahPagePerPlano * $request->lembar;
-
+            
                 $jsc = $this->calculateJSC($ukWidth, $ukHeight, $jc);
                 $harga = ($jumlahPlano * $hp) + $jsc;
-                $hargaLaminasi = $this->calculateLaminasiCost($ukWidth, $ukHeight, $jc, $request->laminasi);
+                $hargaLaminasi = $this->calculateLaminasiCost($ukWidth, $ukHeight, $jc, $request->laminasi);            
 
                 // dd($request->all());
 

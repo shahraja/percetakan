@@ -137,23 +137,21 @@ class UndanganController extends Controller
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
 
-            // Gunakan ukuran yang dipilih untuk perhitungan
+            $ukuranData = $this->getUkuranData();
             $selectedUkuran = $ukuranData[$ukuran];
-            $selectedUkuran = [
-                'width' => $selectedUkuran['width']['width'],
-                'height' => $selectedUkuran['height']['height'],
-                'hp' => $selectedUkuran['hp']['hp'],
-                'plano' => $selectedUkuran['plano']['plano'],
-                'prices' => $selectedUkuran['prices'],
-            ];
+
+            if (!isset($selectedUkuran['width']) || !isset($selectedUkuran['height']) || !isset($selectedUkuran['prices']) || !isset($selectedUkuran['plano'])) {
+                return redirect()->back()->with('alert', 'Data ukuran tidak valid atau tidak lengkap.');
+            }
+
             $hp = $selectedUkuran['prices'][$gramasi];
 
-            // dd($selectedUkuran);
             if (isset($selectedUkuran['plano']) && count($selectedUkuran['plano']) == 2) {
                 $jumlahPagePerPlano = floor($selectedUkuran['plano'][0] / $selectedUkuran['width']) * floor($selectedUkuran['plano'][1] / $selectedUkuran['height']);
             } else {
                 return redirect()->back()->with('alert', 'Data ukuran plano tidak valid atau tidak ditemukan.');
             }
+
             $jumlahPlano = ceil($jumlahCetak / $jumlahPagePerPlano);
 
             $jsc = $this->calculateJSC($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak);
@@ -301,40 +299,36 @@ class UndanganController extends Controller
     private function getUkuranData()
     {
         $produk = Product::where('judul', 'Undangan')->first();
-        $ukuran = Ukuran::where('product_id', $produk->id)->get();
+        $ukuranList = Ukuran::where('product_id', $produk->id)->get();
         $ukuranData = [];
 
-        foreach ($ukuran as $key => $value) {
+        foreach ($ukuranList as $key => $value) {
             $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
-
             $detailUkuranArray = [];
+
             foreach ($detail_ukurans as $detail_ukuran) {
                 $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
 
-                if ($detail_ukuran->is_parent) {
-                    $childArray = [];
-                    foreach ($detail_values as $childDetail) {
-                        $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-                    }
-                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-                } else {
-                    $planoArray = [];
+                if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
+                    $planoValues = [];
                     foreach ($detail_values as $detail_value) {
-                        if ($detail_value->nama_value_ukuran == 'plano') {
-                            $planoArray[] = $detail_value->value;
-                        } else {
-                            $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-                        }
+                        $planoValues[] = $detail_value->value;
                     }
-
-                    if (!empty($planoArray)) {
-                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = $planoArray;
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $planoValues;
+                } elseif (count($detail_values) === 1) {
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $detail_values->first()->value;
+                } else {
+                    $prices = [];
+                    foreach ($detail_values as $detail_value) {
+                        $prices[$detail_value->nama_value_ukuran] = $detail_value->value;
                     }
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
                 }
             }
 
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
+        // dd($ukuranData);
 
         return $ukuranData;
     }

@@ -19,30 +19,35 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
-const ukuranData = {
-    // Existing sizes...
-    plano4: {
-        width: 39.5,
-        height: 54.5,
-        hp: 4800,
-        plano: [79, 109],
-        prices: {
-            '120': 2900,
-            '150': 3500,
-        }
-    },
-    plano7: {
-        width: 36,
-        height: 52,
-        hp: 3500,
-        plano: [72, 104],
-        prices: {
-            '120': 2500,
-            '150': 3000,
-        }
-    },
-    // Add more sizes as necessary
-};
+// const ukuranData = {
+//     // Existing sizes...
+//     plano4: {
+//         width: 39.5,
+//         height: 54.5,
+//         hp: 4800,
+//         plano: [79, 109],
+//         prices: {
+//             '120': 2900,
+//             '150': 3500,
+//         }
+//     },
+//     plano7: {
+//         width: 36,
+//         height: 52,
+//         hp: 3500,
+//         plano: [72, 104],
+//         prices: {
+//             '120': 2500,
+//             '150': 3000,
+//         }
+//     },
+//     // Add more sizes as necessary
+// };
+
+const ukuranDataElement = document.getElementById('ukuranData');
+const ukuranData = JSON.parse(ukuranDataElement.getAttribute('data-ukuran'));
+
+console.log(ukuranData);
 
 const kertasData = [
     { value: '120', text: '120 gr' },
@@ -97,15 +102,33 @@ function handleUkuranChange() {
     updateUkuranInputs(); // Update the input fields
 }
 
+// function updateUkuranInputs() {
+//     const selectedOption = document.getElementById('ukuran').value;
+//     const ukAsli = ukuranData[selectedOption].plano;
+//     const ukWidth = ukuranData[selectedOption].width;
+//     const ukHeight = ukuranData[selectedOption].height;
+
+//     document.getElementById('uk_asli').value = `${ukAsli[0]} x ${ukAsli[1]}`;
+//     document.getElementById('uk_width').value = ukWidth;
+//     document.getElementById('uk_height').value = ukHeight;
+// }
+
 function updateUkuranInputs() {
     const selectedOption = document.getElementById('ukuran').value;
-    const ukAsli = ukuranData[selectedOption].plano;
-    const ukWidth = ukuranData[selectedOption].width;
-    const ukHeight = ukuranData[selectedOption].height;
+    
+    if (selectedOption && ukuranData[selectedOption]) {
+        const ukAsli = ukuranData[selectedOption].plano || [];
+        const ukWidth = ukuranData[selectedOption].width;
+        const ukHeight = ukuranData[selectedOption].height;
 
-    document.getElementById('uk_asli').value = `${ukAsli[0]} x ${ukAsli[1]}`;
-    document.getElementById('uk_width').value = ukWidth;
-    document.getElementById('uk_height').value = ukHeight;
+        // Pastikan ukAsli memiliki setidaknya 2 elemen sebelum diakses
+        document.getElementById('uk_asli').value = ukAsli.length >= 2 ? `${ukAsli[0]} x ${ukAsli[1]}` : 'Ukuran tidak tersedia';
+        document.getElementById('uk_width').value = ukWidth;
+        document.getElementById('uk_height').value = ukHeight;
+    } else {
+        // Handle kasus di mana selectedOption tidak valid
+        console.error('Ukuran tidak valid atau tidak ditemukan.');
+    }
 }
 
 function updateHargaPerBuah() {

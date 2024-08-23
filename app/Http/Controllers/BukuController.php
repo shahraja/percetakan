@@ -188,58 +188,6 @@ class BukuController extends Controller
         }
     }
 
-    // private function calculateUkuranData($ukuran, $param, $kertas)
-    // {
-    //     $produk = Product::where('judul', 'Buku')->first();
-    //     $ukuranList = Ukuran::where('product_id', $produk->id)->get();
-    //     $ukuranData = [];
-
-    //     foreach ($ukuranList as $key => $value) {
-    //         $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
-
-    //         $detailUkuranArray = [];
-    //         foreach ($detail_ukurans as $detail_ukuran) {
-    //             $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-
-    //             if ($detail_ukuran->is_parent) {
-    //                 $childArray = [];
-    //                 foreach ($detail_values as $childDetail) {
-    //                     $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-    //                 }
-    //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-    //             } else {
-    //                 $planoArray = [];
-    //                 foreach ($detail_values as $detail_value) {
-    //                     if ($detail_value->nama_value_ukuran == 'plano') {
-    //                         $planoArray[] = $detail_value->value;
-    //                     } else {
-    //                         $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-    //                     }
-    //                 }
-    //                 if (!empty($planoArray)) {
-    //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = implode(', ', $planoArray);
-    //                 }
-    //             }
-    //         }
-
-    //         $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
-    //     }
-
-    //     // Directly access the numeric value for width and height
-    //     if ($param === 'width' || $param === 'height') {
-    //         return $ukuranData[$ukuran][$param][$param];
-    //     }
-
-    //     if ($kertas === null) {
-    //         return $ukuranData[$ukuran][$param];
-    //     }
-
-    //     if (!isset($ukuranData[$ukuran][$param][$kertas])) {
-    //         throw new \Exception('Invalid kertas key: ' . print_r($kertas, true));
-    //     }
-
-    //     return intval($ukuranData[$ukuran][$param][$kertas]);
-    // }
     private function calculateUkuranData($ukuran, $param, $kertas)
     {
         // Ambil produk "Buku"
@@ -273,7 +221,7 @@ class BukuController extends Controller
 
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
-
+        // dd($ukuranData);
         // Menyediakan data berdasarkan parameter
         if ($param === 'width' || $param === 'height') {
             return isset($ukuranData[$ukuran][$param]) ? $ukuranData[$ukuran][$param] : null;

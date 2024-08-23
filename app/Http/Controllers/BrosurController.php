@@ -138,22 +138,21 @@ class BrosurController extends Controller
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
 
+            $ukuranData = $this->getUkuranData();
             $selectedUkuran = $ukuranData[$ukuran];
-            $selectedUkuran = [
-                'width' => $selectedUkuran['width']['width'],
-                'height' => $selectedUkuran['height']['height'],
-                'hp' => $selectedUkuran['hp']['hp'],
-                'plano' => $selectedUkuran['plano']['plano'],
-                'prices' => $selectedUkuran['prices'],
-            ];
+
+            if (!isset($selectedUkuran['width']) || !isset($selectedUkuran['height']) || !isset($selectedUkuran['prices']) || !isset($selectedUkuran['plano'])) {
+                return redirect()->back()->with('alert', 'Data ukuran tidak valid atau tidak lengkap.');
+            }
+
             $hp = $selectedUkuran['prices'][$gramasi];
 
-            // dd($selectedUkuran);
             if (isset($selectedUkuran['plano']) && count($selectedUkuran['plano']) == 2) {
                 $jumlahPagePerPlano = floor($selectedUkuran['plano'][0] / $selectedUkuran['width']) * floor($selectedUkuran['plano'][1] / $selectedUkuran['height']);
             } else {
                 return redirect()->back()->with('alert', 'Data ukuran plano tidak valid atau tidak ditemukan.');
             }
+
             $jumlahPlano = ceil($jumlahCetak / $jumlahPagePerPlano);
 
             $jsc = $this->calculateJSC($selectedUkuran['width'], $selectedUkuran['height'], $jumlahCetak);
@@ -162,29 +161,31 @@ class BrosurController extends Controller
 
             $totalHarga = $harga + $hargaLaminasi;
 
+            // Lanjutkan logika lain sesuai kebutuhan
+
             if ($requestDesain == 0) {
                 // Jika pengguna memilih Request Desain
                 $totalHarga += 85000;
             }
 
-            if($metodePengambilan == 0) {
+            if ($metodePengambilan == 0) {
                 $provinceName = auth()->user()->provinsi;
                 $city = auth()->user()->kota;
-    
+
                 // Fetch province ID
                 $api_key = env('RAJA_ONGKIR_KEY');
                 $apiURL = 'https://api.rajaongkir.com/starter/province';
-    
+
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-    
+
                 if ($response->successful()) {
                     $provinceResponse = $response->body();
                 } else {
                     return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
                 }
-    
+
                 $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
                 try {
                     $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
@@ -196,11 +197,11 @@ class BrosurController extends Controller
                 }
                 // Fetch city ID
                 $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
-    
+
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-    
+
                 if (!$response->successful()) {
                     return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
                 }
@@ -210,7 +211,7 @@ class BrosurController extends Controller
                     return $cityItem['city_name'] === $city;
                 });
                 $cityId = reset($cityId)['city_id'];
-    
+
                 // Fetch shipping cost
                 $weight = 2000;
                 $origin = 21;
@@ -233,9 +234,9 @@ class BrosurController extends Controller
                 $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
                     return $cost['service'] === 'REG';
                 });
-    
+
                 $shippingCost = reset($shippingCost)['cost'][0]['value'];
-    
+
                 // Add shipping cost to total price
                 $totalHarga += $shippingCost;
             }
@@ -297,46 +298,84 @@ class BrosurController extends Controller
         }
     }
 
+    // private function getUkuranData()
+    // {
+    //     $produk = Product::where('judul', 'Brosur')->first();
+    //     $ukuran = Ukuran::where('product_id', $produk->id)->get();
+    //     $ukuranData = [];
+
+    //     foreach ($ukuran as $key => $value) {
+    //         $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
+
+    //         $detailUkuranArray = [];
+    //         foreach ($detail_ukurans as $detail_ukuran) {
+    //             $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
+
+    //             if ($detail_ukuran->is_parent) {
+    //                 $childArray = [];
+    //                 foreach ($detail_values as $childDetail) {
+    //                     $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
+    //                 }
+    //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
+    //             } else {
+    //                 $planoArray = [];
+    //                 foreach ($detail_values as $detail_value) {
+    //                     if ($detail_value->nama_value_ukuran == 'plano') {
+    //                         $planoArray[] = $detail_value->value;
+    //                     } else {
+    //                         $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
+    //                     }
+    //                 }
+
+    //                 if (!empty($planoArray)) {
+    //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = $planoArray;
+    //                 }
+    //             }
+    //         }
+
+    //         $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
+    //     }
+    //     // dd($ukuranData);
+
+    //     return $ukuranData;
+    // }
     private function getUkuranData()
     {
         $produk = Product::where('judul', 'Brosur')->first();
-        $ukuran = Ukuran::where('product_id', $produk->id)->get();
+        $ukuranList = Ukuran::where('product_id', $produk->id)->get();
         $ukuranData = [];
 
-        foreach ($ukuran as $key => $value) {
+        foreach ($ukuranList as $key => $value) {
             $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
-
             $detailUkuranArray = [];
+
             foreach ($detail_ukurans as $detail_ukuran) {
                 $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
 
-                if ($detail_ukuran->is_parent) {
-                    $childArray = [];
-                    foreach ($detail_values as $childDetail) {
-                        $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-                    }
-                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-                } else {
-                    $planoArray = [];
+                if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
+                    $planoValues = [];
                     foreach ($detail_values as $detail_value) {
-                        if ($detail_value->nama_value_ukuran == 'plano') {
-                            $planoArray[] = $detail_value->value;
-                        } else {
-                            $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-                        }
+                        $planoValues[] = $detail_value->value;
                     }
-
-                    if (!empty($planoArray)) {
-                        $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = $planoArray;
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $planoValues;
+                } elseif (count($detail_values) === 1) {
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $detail_values->first()->value;
+                } else {
+                    $prices = [];
+                    foreach ($detail_values as $detail_value) {
+                        $prices[$detail_value->nama_value_ukuran] = $detail_value->value;
                     }
+                    $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
                 }
             }
 
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
+        // dd($ukuranData);
 
         return $ukuranData;
     }
+
     private function calculateJSC($width, $height, $jc)
     {
         if ($width <= 37 && $height <= 52 && $jc <= 2500) {

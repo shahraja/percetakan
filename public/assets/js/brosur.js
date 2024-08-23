@@ -19,99 +19,104 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
-const ukuranData = {
-    plano1: {
-        width: 30.5,
-        height: 46,
-        hp: 3200,
-        plano: [61, 92],
-        prices: {
-            '120': 2000,
-            '150': 2300,
-            '190': 2950,
-            '210': 3200,
-            '230': 3500,
-        }
-    },
-    plano2: {
-        width: 32.5,
-        height: 45,
-        hp: 3400,
-        plano: [65, 90],
-        prices: {
-            '120': 2100,
-            '150': 2450,
-            '190': 3050,
-            '210': 3400,
-            '230': 3600,
-            '260': 4050,
-            '310': 4800,
-        }
-    },
-    plano3: {
-        width: 32.5,
-        height: 50,
-        hp: 3700,
-        plano: [65, 100],
-        prices: {
-            '120': 2250,
-            '150': 2700,
-            '190': 3400,
-            '210': 3700,
-            '230': 4000,
-            '260': 4500,
-            '310': 5200,
-        }
-    },
-    plano4: {
-        width: 39.5,
-        height: 54.5,
-        hp: 4800,
-        plano: [79, 109],
-        prices: {
-            '120': 2900,
-            '150': 3500,
-            '190': 4400,
-            '210': 4800,
-            '230': 5200,
-            '260': 5800,
-            '310': 7000,
-            '400': 8800,
-        }
-    },
-    plano5: {
-        width: 36,
-        height: 39,
-        hp: 4800,
-        plano: [79, 109],
-        prices: {
-            '120': 2900,
-            '150': 3500,
-            '190': 4400,
-            '210': 4800,
-            '230': 5200,
-            '260': 5800,
-            '310': 7000,
-            '400': 8800,
-        }
-    },
-    plano6: {
-        width: 35,
-        height: 44,
-        hp: 4800,
-        plano: [79, 109],
-        prices: {
-            '120': 2900,
-            '150': 3500,
-            '190': 4400,
-            '210': 4800,
-            '230': 5200,
-            '260': 5800,
-            '310': 7000,
-            '400': 8800,
-        }
-    }
-};
+// const ukuranData = {
+//     plano1: {
+//         width: 30.5,
+//         height: 46,
+//         hp: 3200,
+//         plano: [61, 92],
+//         prices: {
+//             '120': 2000,
+//             '150': 2300,
+//             '190': 2950,
+//             '210': 3200,
+//             '230': 3500,
+//         }
+//     },
+//     plano2: {
+//         width: 32.5,
+//         height: 45,
+//         hp: 3400,
+//         plano: [65, 90],
+//         prices: {
+//             '120': 2100,
+//             '150': 2450,
+//             '190': 3050,
+//             '210': 3400,
+//             '230': 3600,
+//             '260': 4050,
+//             '310': 4800,
+//         }
+//     },
+//     plano3: {
+//         width: 32.5,
+//         height: 50,
+//         hp: 3700,
+//         plano: [65, 100],
+//         prices: {
+//             '120': 2250,
+//             '150': 2700,
+//             '190': 3400,
+//             '210': 3700,
+//             '230': 4000,
+//             '260': 4500,
+//             '310': 5200,
+//         }
+//     },
+//     plano4: {
+//         width: 39.5,
+//         height: 54.5,
+//         hp: 4800,
+//         plano: [79, 109],
+//         prices: {
+//             '120': 2900,
+//             '150': 3500,
+//             '190': 4400,
+//             '210': 4800,
+//             '230': 5200,
+//             '260': 5800,
+//             '310': 7000,
+//             '400': 8800,
+//         }
+//     },
+//     plano5: {
+//         width: 36,
+//         height: 39,
+//         hp: 4800,
+//         plano: [79, 109],
+//         prices: {
+//             '120': 2900,
+//             '150': 3500,
+//             '190': 4400,
+//             '210': 4800,
+//             '230': 5200,
+//             '260': 5800,
+//             '310': 7000,
+//             '400': 8800,
+//         }
+//     },
+//     plano6: {
+//         width: 35,
+//         height: 44,
+//         hp: 4800,
+//         plano: [79, 109],
+//         prices: {
+//             '120': 2900,
+//             '150': 3500,
+//             '190': 4400,
+//             '210': 4800,
+//             '230': 5200,
+//             '260': 5800,
+//             '310': 7000,
+//             '400': 8800,
+//         }
+//     }
+// };
+
+const ukuranDataElement = document.getElementById('ukuranData');
+const ukuranData = JSON.parse(ukuranDataElement.getAttribute('data-ukuran'));
+
+console.log(ukuranData);
 
 const kertasData = [{
         value: '120',
@@ -193,15 +198,32 @@ function handleUkuranChange() {
     updateUkuranInputs(); // Update the input fields
 }
 
+// function updateUkuranInputs() {
+//     const selectedOption = document.getElementById('ukuran').value;
+//     const ukAsli = ukuranData[selectedOption].plano;
+//     const ukWidth = ukuranData[selectedOption].width;
+//     const ukHeight = ukuranData[selectedOption].height;
+
+//     document.getElementById('uk_asli').value = `${ukAsli[0]} x ${ukAsli[1]}`;
+//     document.getElementById('uk_width').value = ukWidth;
+//     document.getElementById('uk_height').value = ukHeight;
+// }
 function updateUkuranInputs() {
     const selectedOption = document.getElementById('ukuran').value;
-    const ukAsli = ukuranData[selectedOption].plano;
-    const ukWidth = ukuranData[selectedOption].width;
-    const ukHeight = ukuranData[selectedOption].height;
+    
+    if (selectedOption && ukuranData[selectedOption]) {
+        const ukAsli = ukuranData[selectedOption].plano || [];
+        const ukWidth = ukuranData[selectedOption].width;
+        const ukHeight = ukuranData[selectedOption].height;
 
-    document.getElementById('uk_asli').value = `${ukAsli[0]} x ${ukAsli[1]}`;
-    document.getElementById('uk_width').value = ukWidth;
-    document.getElementById('uk_height').value = ukHeight;
+        // Pastikan ukAsli memiliki setidaknya 2 elemen sebelum diakses
+        document.getElementById('uk_asli').value = ukAsli.length >= 2 ? `${ukAsli[0]} x ${ukAsli[1]}` : 'Ukuran tidak tersedia';
+        document.getElementById('uk_width').value = ukWidth;
+        document.getElementById('uk_height').value = ukHeight;
+    } else {
+        // Handle kasus di mana selectedOption tidak valid
+        console.error('Ukuran tidak valid atau tidak ditemukan.');
+    }
 }
 
 function updateHargaPerBuah() {
