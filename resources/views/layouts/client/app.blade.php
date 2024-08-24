@@ -13,13 +13,13 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @yield('style')
 </head>
-<body>
+<body class="">
 
-    <main class="">
+    <div class="min-vh-100 d-flex flex-column">
         @include('layouts.client.navbar')
         @yield('content')
         @include('layouts.client.footer')
-    </main>
+    </div>
 
     {{-- ini script --}}
     

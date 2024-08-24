@@ -3,7 +3,7 @@
 @section('title', 'Keranjang')
 
 @section('content')
-    <div class="container mb-5">
+    <div class="container mb-5 flex-grow-1 d-flex flex-column">
         <h2 class="my-5">
             <a href="javascript:history.back()" class="btn btn-success bg-utama">
                 <i class="fa fa-arrow-left pe-2"></i>
@@ -11,7 +11,7 @@
             Keranjang Saya
         </h2>
         <form action="">
-            <div class="row content">
+            <div class="row">
                 @foreach ($transaksis as $transaksi)
                     {{-- {{ $transaksi->status }} --}}
                     <div class="border rounded my-2 p-3 me-5 shadow">

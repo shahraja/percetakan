@@ -5,7 +5,7 @@
 {{-- @dd($bukus) --}}
 
 @section('content')
-    <div class="container mb-5">
+    <div class="container flex-grow-1 d-flex flex-column">
         <h2 class="my-5">
             <a href="javascript:history.back()" class="btn btn-success bg-utama">
                 <i class="fa fa-arrow-left pe-2"></i>
