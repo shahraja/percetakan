@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
                 'provinsi' => 'lampung',
                 'kota' => 'bandar lampung',
                 'kecamatan' => 'campang jaya',
+                'email_verified_at' => now(),
                 'password' => Hash::make('password')
                 ],
                 [
@@ -38,6 +39,7 @@ class UserSeeder extends Seeder
                 'provinsi' => 'lampung',
                 'kota' => 'bandar lampung',
                 'kecamatan' => 'campang jaya',
+                'email_verified_at' => now(),
                 'password' => Hash::make('password')
                 ],
         ];
