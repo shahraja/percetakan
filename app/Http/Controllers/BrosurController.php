@@ -285,9 +285,9 @@ class BrosurController extends Controller
             $token = $snapToken->getSnapToken();
 
             return view('client.checkout', compact('transaksi', 'brosur', 'products', 'token'));
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } 
     }
 
     // private function getUkuranData()

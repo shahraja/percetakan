@@ -180,12 +180,12 @@ class BukuController extends Controller
             
             return view('client.checkout', compact('transaksi', 'buku', 'products', 'token'));
         } 
-        // catch (\Illuminate\Validation\ValidationException $e) {
-        //     return redirect()->back()->withErrors($e->validator)->withInput();
-        // } 
-        catch (\Exception $e) {
-            dd($e);
-        }
+        catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } 
+        // catch (\Exception $e) {
+        //     dd($e);
+        // }
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)

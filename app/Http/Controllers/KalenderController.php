@@ -303,9 +303,9 @@ class KalenderController extends Controller
                 // dd($totalHarga, $params);
             }
             return view('client.checkout', compact('transaksi', 'kalender', 'products', 'token'));
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()->withErrors($e->validator)->withInput();
+        } 
     }
 
     private function calculateJSC($width, $height, $jc)
