@@ -43,7 +43,7 @@ class CartController extends Controller
         ]);
 
         if (auth()->user()->role == 'admin') {
-            return back()->with('alert', 'Berhasil Edit User!');
+            return back()->with('alert', 'Berhasil Edit!');
         }
     }
 
@@ -53,7 +53,7 @@ class CartController extends Controller
         $cart->delete();
 
         if (auth()->user()->role == 'admin') {
-            return back()->with('alert', 'Berhasil Hapus User!');
+            return back()->with('alert', 'Berhasil Hapus!');
         }
     }
 }

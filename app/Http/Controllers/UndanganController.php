@@ -23,7 +23,7 @@ class UndanganController extends Controller
             $request->validate([
                 'uk_asli' => 'required',
                 'uk_width' => 'required',
-                'uk_height' => 'required'
+                'uk_height' => 'required',
             ]);
 
             // $ukuranData = [
@@ -160,21 +160,21 @@ class UndanganController extends Controller
             if ($metodePengambilan == 0) {
                 $provinceName = auth()->user()->provinsi;
                 $city = auth()->user()->kota;
-    
+
                 // Fetch province ID
                 $api_key = env('RAJA_ONGKIR_KEY');
                 $apiURL = 'https://api.rajaongkir.com/starter/province';
-    
+
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-    
+
                 if ($response->successful()) {
                     $provinceResponse = $response->body();
                 } else {
                     return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
                 }
-    
+
                 $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
                 try {
                     $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
@@ -186,11 +186,11 @@ class UndanganController extends Controller
                 }
                 // Fetch city ID
                 $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
-    
+
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-    
+
                 if (!$response->successful()) {
                     return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
                 }
@@ -200,7 +200,7 @@ class UndanganController extends Controller
                     return $cityItem['city_name'] === $city;
                 });
                 $cityId = reset($cityId)['city_id'];
-    
+
                 // Fetch shipping cost
                 $weight = 2000;
                 $origin = 21;
@@ -223,13 +223,25 @@ class UndanganController extends Controller
                 $shippingCost = array_filter($costData['rajaongkir']['results'][0]['costs'], function ($cost) {
                     return $cost['service'] === 'REG';
                 });
-    
-                $shippingCost = reset($shippingCost)['cost'][0]['value'];
-    
-                // Add shipping cost to total price
-                $totalHarga += $shippingCost;
-            }
 
+                $firstShippingCost = reset($shippingCost);
+
+                if (is_array($firstShippingCost)) {
+                    $shippingCost = $firstShippingCost['cost'][0]['value'];
+                } else {
+                    // Tangani kasus di mana $shippingCost kosong atau tidak valid
+                }
+
+                // Add shipping cost to total price
+                // $totalHarga += $shippingCost;
+                if (is_array($shippingCost) && isset($shippingCost[0])) {
+                    $totalHarga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
+                } elseif (is_numeric($shippingCost)) {
+                    $totalHarga += $shippingCost;
+                } else {
+                    // Tangani kasus di mana $shippingCost tidak valid
+                }
+            }
 
             $transaksi = Transaksi::create([
                 'user_id' => auth()->user()->id,
@@ -284,8 +296,11 @@ class UndanganController extends Controller
 
             return view('client.checkout', compact('transaksi', 'undangan', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->validator)->withInput();
-        } 
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
     }
 
     private function getUkuranData()

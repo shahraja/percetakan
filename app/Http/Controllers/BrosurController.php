@@ -23,9 +23,9 @@ class BrosurController extends Controller
             $request->validate([
                 'uk_asli' => 'required',
                 'uk_width' => 'required',
-                'uk_height' => 'required'
+                'uk_height' => 'required',
             ]);
-          
+
             // $ukuranData = [
             //     'plano1' => [
             //         'width' => 30.5,
@@ -227,10 +227,23 @@ class BrosurController extends Controller
                     return $cost['service'] === 'REG';
                 });
 
-                $shippingCost = reset($shippingCost)['cost'][0]['value'];
+                $firstShippingCost = reset($shippingCost);
+
+                if (is_array($firstShippingCost)) {
+                    $shippingCost = $firstShippingCost['cost'][0]['value'];
+                } else {
+                    // Tangani kasus di mana $shippingCost kosong atau tidak valid
+                }
 
                 // Add shipping cost to total price
-                $totalHarga += $shippingCost;
+                // $totalHarga += $shippingCost;
+                if (is_array($shippingCost) && isset($shippingCost[0])) {
+                    $totalHarga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
+                } elseif (is_numeric($shippingCost)) {
+                    $totalHarga += $shippingCost;
+                } else {
+                    // Tangani kasus di mana $shippingCost tidak valid
+                }
             }
 
             $transaksi = Transaksi::create([
@@ -286,8 +299,11 @@ class BrosurController extends Controller
 
             return view('client.checkout', compact('transaksi', 'brosur', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->validator)->withInput();
-        } 
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
     }
 
     // private function getUkuranData()

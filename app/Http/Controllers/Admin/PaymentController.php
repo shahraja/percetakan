@@ -27,7 +27,7 @@ class PaymentController extends Controller
         ]);
 
         if (auth()->user()->role == 'admin') {
-            return back()->with('alert', 'Berhasil Edit User!');
+            return back()->with('alert', 'Berhasil Edit!');
         }
     }
 }

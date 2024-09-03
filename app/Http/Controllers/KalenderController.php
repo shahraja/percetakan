@@ -56,7 +56,7 @@ class KalenderController extends Controller
             // ];
 
             $produk = Product::where('judul', 'Kalender')->first();
-            $ukuranList  = Ukuran::where('product_id', $produk->id)->get();
+            $ukuranList = Ukuran::where('product_id', $produk->id)->get();
             $ukuranData = [];
 
             // foreach ($ukuran as $key => $value) {
@@ -91,10 +91,10 @@ class KalenderController extends Controller
             foreach ($ukuranList as $key => $value) {
                 $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
                 $detailUkuranArray = [];
-            
+
                 foreach ($detail_ukurans as $detail_ukuran) {
                     $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-            
+
                     if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
                         $planoValues = [];
                         foreach ($detail_values as $detail_value) {
@@ -111,7 +111,7 @@ class KalenderController extends Controller
                         $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
                     }
                 }
-            
+
                 $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
             }
 
@@ -121,26 +121,26 @@ class KalenderController extends Controller
             $jc = $request->jumlah;
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
-            
+
             if (isset($ukuranData[$selectedUkuran])) {
                 $ukuran = $ukuranData[$selectedUkuran];
                 $ukAsli = $ukuran['plano'] ?? null;
                 $ukWidth = $ukuran['width'] ?? 0;
                 $ukHeight = $ukuran['height'] ?? 0;
                 $hp = $ukuran['prices'][$selectedKertas] ?? 0;
-            
+
                 if ($ukAsli === null || !is_array($ukAsli) || count($ukAsli) < 2 || $ukWidth <= 0 || $ukHeight <= 0 || $hp <= 0) {
                     return redirect()->back()->with('alert', 'Ukuran atau Plano tidak valid');
                 }
-            
+
                 $jumlahPagePerPlano = ceil($jc / 4);
                 $jumlahPlano = $jumlahPagePerPlano * $request->lembar;
-            
-                $jsc = $this->calculateJSC($ukWidth, $ukHeight, $jc);
-                $harga = ($jumlahPlano * $hp) + $jsc;
-                $hargaLaminasi = $this->calculateLaminasiCost($ukWidth, $ukHeight, $jc, $request->laminasi);            
 
-                // dd($request->all());
+                $jsc = $this->calculateJSC($ukWidth, $ukHeight, $jc);
+                $harga = $jumlahPlano * $hp + $jsc;
+                $hargaLaminasi = $this->calculateLaminasiCost($ukWidth, $ukHeight, $jc, $request->laminasi);
+
+                // dd($jumlahPlano);
 
                 // Calculate harga jilid
                 $hargaJilid = 0;
@@ -149,7 +149,7 @@ class KalenderController extends Controller
                 } elseif ($request->jilid === 'spiral') {
                     $hargaJilid = 3500 * $jc;
                 }
-    
+
                 $totalHarga = $harga + $hargaLaminasi + $hargaJilid;
                 // dd($ukuran, $ukAsli, $ukWidth, $ukHeight, $jumlahPagePerPlano .'jumlah page per plano', $jumlahPlano, $jc,  $hp, $jsc, $harga, $hargaLaminasi, $totalHarga);
 
@@ -231,10 +231,25 @@ class KalenderController extends Controller
                         return $cost['service'] === 'REG';
                     });
 
-                    $shippingCost = reset($shippingCost)['cost'][0]['value'];
+                    // $shippingCost = reset($shippingCost)['cost'][0]['value'];
+                    $firstShippingCost = reset($shippingCost);
+
+                    if (is_array($firstShippingCost)) {
+                        $shippingCost = $firstShippingCost['cost'][0]['value'];
+                    } else {
+                        // Tangani kasus di mana $shippingCost kosong atau tidak valid
+                    }
 
                     // Add shipping cost to total price
-                    $totalHarga += $shippingCost;
+                    // $totalHarga += $shippingCost;
+                    if (is_array($shippingCost) && isset($shippingCost[0])) {
+                        $totalHarga += $shippingCost[0];  // Pastikan $shippingCost[0] adalah numerik
+                    } elseif (is_numeric($shippingCost)) {
+                        $totalHarga += $shippingCost;
+                    } else {
+                        // Tangani kasus di mana $shippingCost tidak valid
+                    }
+                    
                 }
 
                 $transaksi = Transaksi::create([
@@ -304,8 +319,11 @@ class KalenderController extends Controller
             }
             return view('client.checkout', compact('transaksi', 'kalender', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->validator)->withInput();
-        } 
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
     }
 
     private function calculateJSC($width, $height, $jc)

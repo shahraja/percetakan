@@ -116,10 +116,23 @@ class BukuController extends Controller
                     return $cost['service'] === 'REG';
                 });
 
-                $shippingCost = reset($shippingCost)['cost'][0]['value'];
+                $firstShippingCost = reset($shippingCost);
+
+                if (is_array($firstShippingCost)) {
+                    $shippingCost = $firstShippingCost['cost'][0]['value'];
+                } else {
+                    // Tangani kasus di mana $shippingCost kosong atau tidak valid
+                }
 
                 // Add shipping cost to total price
-                $total_harga += $shippingCost;
+                // $totalHarga += $shippingCost;
+                if (is_array($shippingCost) && isset($shippingCost[0])) {
+                    $total_harga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
+                } elseif (is_numeric($shippingCost)) {
+                    $total_harga += $shippingCost;
+                } else {
+                    // Tangani kasus di mana $shippingCost tidak valid
+                }
             }
 
             if ($request_desain == '0') {
@@ -138,9 +151,9 @@ class BukuController extends Controller
                 'metode_pengambilan' => $metode_pengambilan,
                 'request_desain' => $request_desain,
             ]);
-            
+
             $products = Product::all();
-            
+
             $buku = Buku::create([
                 'transaksi_id' => $transaksi->id,
                 'halaman' => $halaman,
@@ -149,7 +162,7 @@ class BukuController extends Controller
                 'uk_height' => $uk_height,
                 'finishing' => $finishing,
             ]);
-            
+
             $transaction_details = [
                 'order_id' => $transaksi->nomor_pesanan,
                 'gross_amount' => intval($total_harga),
@@ -162,14 +175,14 @@ class BukuController extends Controller
                     'name' => 'Kalender',
                 ],
             ];
-            
+
             $customer_details = [
                 'first_name' => $transaksi->user->name,
                 'email' => $transaksi->user->email,
                 'phone' => $transaksi->user->no_telp,
                 'address' => $transaksi->user->alamat,
             ];
-            
+
             $params = [
                 'transaction_details' => $transaction_details,
                 'item_details' => $items,
@@ -177,12 +190,14 @@ class BukuController extends Controller
             ];
             $snapToken = new CreateSnapToken($params);
             $token = $snapToken->getSnapToken();
-            
+
             return view('client.checkout', compact('transaksi', 'buku', 'products', 'token'));
-        } 
-        catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->validator)->withInput();
-        } 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
         // catch (\Exception $e) {
         //     dd($e);
         // }

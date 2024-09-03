@@ -113,10 +113,23 @@ class MajalahController extends Controller
                     return $cost['service'] === 'REG';
                 });
 
-                $shippingCost = reset($shippingCost)['cost'][0]['value'];
+                $firstShippingCost = reset($shippingCost);
+
+                if (is_array($firstShippingCost)) {
+                    $shippingCost = $firstShippingCost['cost'][0]['value'];
+                } else {
+                    // Tangani kasus di mana $shippingCost kosong atau tidak valid
+                }
 
                 // Add shipping cost to total price
-                $hargaTotal += $shippingCost;
+                // $totalHarga += $shippingCost;
+                if (is_array($shippingCost) && isset($shippingCost[0])) {
+                    $hargaTotal += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
+                } elseif (is_numeric($shippingCost)) {
+                    $hargaTotal += $shippingCost;
+                } else {
+                    // Tangani kasus di mana $shippingCost tidak valid
+                }
             }
 
             if ($request_desain == '0') {
@@ -178,8 +191,11 @@ class MajalahController extends Controller
 
             return view('client.checkout', compact('transaksi', 'majalah', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->back()->withErrors($e->validator)->withInput();
-        } 
+            return redirect()
+                ->back()
+                ->withErrors($e->validator)
+                ->withInput();
+        }
     }
 
     private function calculateUkuranData($ukuran, $param, $kertas)
@@ -214,7 +230,7 @@ class MajalahController extends Controller
 
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
-        // dd($ukuranData);    
+        // dd($ukuranData);
 
         // Directly access the numeric value for width and height
         if ($param === 'width' || $param === 'height') {
