@@ -199,124 +199,126 @@
         @endif
         @csrf
         <h4 class="py-2">Hitung Harga Cetak Online</h4>
-        <div class="col border rounded shadow p-4 mx-2">
-            <div class="form-group row pe-2">
-                <label class="form-label col-md-3" for="jc">Jumlah</label>
-                <input class="form-control col-md-9" name="jumlah" id="jc" type="number" required>
-            </div>
-            <div class="form-group row pe-2">
-                <label class="form-label col-md-3" for="ukuran">Ukuran</label>
-                <select name="ukuran" id="ukuran" class="form-select col-md-9">
-                    <option value=""></option>
-                </select>
-            </div>
-            <div class="form-group row pe-2">
-                <label class="form-label col-md-3" for="kertas">Kertas</label>
-                <select name="gramasi" id="kertas" class="form-select col-md-9">
-                </select>
-            </div>
-
-            @if ($product->judul == 'Kalender')
+        <div class="row d-flex">
+            <div class="col-md-5 border rounded shadow p-4 mx-2">
                 <div class="form-group row pe-2">
-                    <label class="form-label col-md-3" for="lembar">Jumlah Lembar</label>
-                    <input class="form-control col-md-9" name="lembar" id="lembar" type="number" required>
+                    <label class="form-label col-md-3" for="jc">Jumlah</label>
+                    <input class="form-control col-md-9" name="jumlah" id="jc" type="number" required>
                 </div>
                 <div class="form-group row pe-2">
-                    <label class="form-label col-md-3" for="jilid">Jilid</label>
-                    <select name="jilid" id="jilid" class="form-select col-md-9">
+                    <label class="form-label col-md-3" for="ukuran">Ukuran</label>
+                    <select name="ukuran" id="ukuran" class="form-select col-md-9">
                         <option value=""></option>
-                        <option value="kaleng">Kaleng</option>
-                        <option value="spiral">Spiral</option>
                     </select>
                 </div>
-            @endif
-
-            @if ($product->judul == 'Buku' || $product->judul == 'Majalah')
                 <div class="form-group row pe-2">
-                    <label class="form-label col-md-3" for="halaman">Jumlah Lembar</label>
-                    <input class="form-control col-md-9" name="halaman" id="halaman" type="number" required>
-                </div>
-                <div class="form-group row pe-2">
-                    <label class="form-label col-md-3" for="finishing">Finishing</label>
-                    <select name="finishing" id="finishing" class="form-select col-md-9">
-                        <option value=""></option>
-                        <option value="staples">Staples</option>
-                        <option value="binding">Binding</option>
+                    <label class="form-label col-md-3" for="kertas">Kertas</label>
+                    <select name="gramasi" id="kertas" class="form-select col-md-9">
                     </select>
                 </div>
-            @endif
-
-            <div class="form-group row pe-2">
-                <label class="form-label col-md-3" for="laminasi">Laminasi</label>
-                <select name="laminasi" id="laminasi" class="form-select col-md-9">
-                    <option value=""></option>
-                    <option value="glossy1">Glossy</option>
-                    <option value="glossy2">Glossy Bolak-Balik</option>
-                    <option value="doff1">Doff</option>
-                    <option value="doff2">Doff Bolak-Balik</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="radio" name="metode_pengambilan" value="0" id="metode_pengambilan"> Delivery
-                </label>
-                <label class="ms-5">
-                    <input type="radio" name="metode_pengambilan" value="1" id="metode_pengambilan"> Pick Up
-                </label>
-            </div>
-
-            <div class="form-group">
-                <label>
-                    <input type="radio" name="request_desain" value="0" id="request_desain"> Request
-                    Desain
-                </label>
-                <label class="ms-5">
-                    <input type="radio" name="request_desain" value="1" id="request_desain"> Tidak Request
-                </label>
-            </div>
-
-            <div class="text-center my-3">
-                <button class="btn btn-primary bg-utama col-md-6" type="button" onclick="calculatePrice()">Cek
-                    Harga</button>
-            </div>
-        </div>
-        <div class="col border rounded shadow p-4 mx-2">
-            <table class="table">
-                <tbody>
-                    <tr>
-                        <td><strong>Harga Pelano</strong></td>
-                        <td>: </td>
-                        <td align="right" id="hp"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Jumlah Pesan</strong></td>
-                        <td>: </td>
-                        <td align="right" id="jc-hasil"></td>
-                    </tr>
-                    <tr>
-                        <td><strong>Harga Total</strong></td>
-                        <td>: </td>
-                        <td align="right" id="result"></td>
-                    </tr>
-                    <input type="hidden" name="uk_asli" id="uk_asli">
-                    <input type="hidden" name="uk_width" id="uk_width">
-                    <input type="hidden" name="uk_height" id="uk_height">
-                    <input type="hidden" name="produk_id" id="produk_id" value="{{ $product->judul }}">
-                    <tr>
-                    </tr>
-                </tbody>
-            </table>
-            @auth
-                {{-- <input type="file" class="form-control col-md-9" name="gambar" id="gambar" required> --}}
-                <button class="btn btn-primary bg-utama col-md-8 offset-md-2" type="submit">Check Out</button>
-            @endauth
-            @guest
-                <div class="alert alert-primary" role="alert">
-                    Jika ingin melakukan pemesanan, <a href="{{ route('login') }}" class="alert-link">Login</a> atau <a
-                        href="{{ route('register') }}" class="alert-link">Registrasi</a> terlebih dahulu
+    
+                @if ($product->judul == 'Kalender')
+                    <div class="form-group row pe-2">
+                        <label class="form-label col-md-3" for="lembar">Jumlah Lembar</label>
+                        <input class="form-control col-md-9" name="lembar" id="lembar" type="number" required>
+                    </div>
+                    <div class="form-group row pe-2">
+                        <label class="form-label col-md-3" for="jilid">Jilid</label>
+                        <select name="jilid" id="jilid" class="form-select col-md-9">
+                            <option value=""></option>
+                            <option value="kaleng">Kaleng</option>
+                            <option value="spiral">Spiral</option>
+                        </select>
+                    </div>
+                @endif
+    
+                @if ($product->judul == 'Buku' || $product->judul == 'Majalah')
+                    <div class="form-group row pe-2">
+                        <label class="form-label col-md-3" for="halaman">Jumlah Lembar</label>
+                        <input class="form-control col-md-9" name="halaman" id="halaman" type="number" required>
+                    </div>
+                    <div class="form-group row pe-2">
+                        <label class="form-label col-md-3" for="finishing">Finishing</label>
+                        <select name="finishing" id="finishing" class="form-select col-md-9">
+                            <option value=""></option>
+                            <option value="staples">Staples</option>
+                            <option value="binding">Binding</option>
+                        </select>
+                    </div>
+                @endif
+    
+                <div class="form-group row pe-2">
+                    <label class="form-label col-md-3" for="laminasi">Laminasi</label>
+                    <select name="laminasi" id="laminasi" class="form-select col-md-9">
+                        <option value=""></option>
+                        <option value="glossy1">Glossy</option>
+                        <option value="glossy2">Glossy Bolak-Balik</option>
+                        <option value="doff1">Doff</option>
+                        <option value="doff2">Doff Bolak-Balik</option>
+                    </select>
                 </div>
-            @endguest
+    
+                <div class="form-group">
+                    <label>
+                        <input type="radio" name="metode_pengambilan" value="0" id="metode_pengambilan"> Delivery
+                    </label>
+                    <label class="ms-5">
+                        <input type="radio" name="metode_pengambilan" value="1" id="metode_pengambilan"> Pick Up
+                    </label>
+                </div>
+    
+                <div class="form-group">
+                    <label>
+                        <input type="radio" name="request_desain" value="0" id="request_desain"> Request
+                        Desain
+                    </label>
+                    <label class="ms-5">
+                        <input type="radio" name="request_desain" value="1" id="request_desain"> Tidak Request
+                    </label>
+                </div>
+    
+                <div class="text-center my-3">
+                    <button class="btn btn-primary bg-utama col-md-6" type="button" onclick="calculatePrice()">Cek
+                        Harga</button>
+                </div>
+            </div>
+            <div class="col-md-5 border rounded shadow p-4 mx-2">
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><strong>Harga Pelano</strong></td>
+                            <td>: </td>
+                            <td align="right" id="hp"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Jumlah Pesan</strong></td>
+                            <td>: </td>
+                            <td align="right" id="jc-hasil"></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Harga Total</strong></td>
+                            <td>: </td>
+                            <td align="right" id="result"></td>
+                        </tr>
+                        <input type="hidden" name="uk_asli" id="uk_asli">
+                        <input type="hidden" name="uk_width" id="uk_width">
+                        <input type="hidden" name="uk_height" id="uk_height">
+                        <input type="hidden" name="produk_id" id="produk_id" value="{{ $product->judul }}">
+                        <tr>
+                        </tr>
+                    </tbody>
+                </table>
+                @auth
+                    {{-- <input type="file" class="form-control col-md-9" name="gambar" id="gambar" required> --}}
+                    <button class="btn btn-primary bg-utama col-md-8 offset-md-2" type="submit">Check Out</button>
+                @endauth
+                @guest
+                    <div class="alert alert-primary" role="alert">
+                        Jika ingin melakukan pemesanan, <a href="{{ route('login') }}" class="alert-link">Login</a> atau <a
+                            href="{{ route('register') }}" class="alert-link">Registrasi</a> terlebih dahulu
+                    </div>
+                @endguest
+            </div>
         </div>
         </form>
     </div>
