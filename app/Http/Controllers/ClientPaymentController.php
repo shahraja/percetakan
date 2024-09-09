@@ -95,10 +95,6 @@ class ClientPaymentController extends Controller
     public function callback(Request $request)
     {
 
-        // $request->validate([
-        //     'nomor_pesanan' => 'required|string',
-        //     'transaction_status' => 'required|string',
-        // ]);
         DB::beginTransaction();
         try {
             $nomor_pesanan = $request->order_id;

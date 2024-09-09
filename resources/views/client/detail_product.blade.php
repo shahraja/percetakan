@@ -178,12 +178,51 @@
                     @endforeach
                 @endif --}}
                 <h5 class="py-2"><i class="fa-solid fa-thumbtack"></i> Deskripsi</h5>
-                <div class="desk">
+                {{-- <div class="desk">
                     <p><i class="fa-solid fa-info"></i> Untuk melakukan pemesanan harap <B>MELENGKAPI DATA</B> diri Anda untuk kebutuhan pemesanan</p>
                     <p class=""><i class="fa-solid fa-info"></i> Untuk perhitungan produk <b>HANYA</b> kalkulasi produk dengan spesifikasi yang diinginkan oleh Anda</p>
                     <p><i class="fa-solid fa-info"></i> Untuk metode pengiriman akan dikalkulasikan ulang sesuai dengan daerah tempat tinggal Anda, ketika Anda telah melakukan Checkout</p>
                     <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
+                </div> --}}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="desk">
+                            <p><i class="fa-solid fa-info"></i> Untuk melakukan pemesanan harap <b>MELENGKAPI DATA</b> diri Anda untuk kebutuhan pemesanan</p>
+                            <p class=""><i class="fa-solid fa-info"></i> Untuk perhitungan produk <b>HANYA</b> kalkulasi produk dengan spesifikasi yang diinginkan oleh Anda</p>
+                            <p><i class="fa-solid fa-info"></i> Untuk metode pengiriman akan dikalkulasikan ulang sesuai dengan daerah tempat tinggal Anda, ketika Anda telah melakukan Checkout</p>
+                            <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="desk">
+                            <h5>Ukuran:</h5>
+                            <ul>
+                                <li>Merupakan ketebalaan pada kertas</li>
+                            </ul>
+                
+                            <h5>Jilid:</h5>
+                            <ul>
+                                <li>Kaleng : Penjepit dengan menggunakan bahan kaleng</li>
+                                <li>Spiral : Penjepit dengan spiral melingkar</li>
+                            </ul>
+                
+                            <h5>Finishing:</h5>
+                            <ul>
+                                <li>Staples : Merupakan finishing dengan steples, direkomendasikan untuk jumlah halaman yang sedikit</li>
+                                <li>Binding : Merupakan finishing dengan lem, direkomendasikan untuk halaman yang banyak</li>
+                            </ul>
+                
+                            <h5>Laminasi:</h5>
+                            <ul>
+                                <li>Glossy : Finishing Kertas Mengkilap 1 Muka</li>
+                                <li>Glossy Bolak-Balik : Finishing Kertas Mengkilap 2 Muka</li>
+                                <li>Doff : Finishing Kertas Doff 1 Muka</li>
+                                <li>Doff Bolak-Balik : Finishing Kertas Mengkilap 2 Muka</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
+                
             </div>
         </div>
         @if ($product->judul == 'Undangan')
