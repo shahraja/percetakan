@@ -11,7 +11,8 @@ class PaymentController extends Controller
 {
     public function index()
     {
-        $transaksis = Transaksi::all();
+        $transaksis = Transaksi::latest()->get();
+        // dd($transaksis);
         return view('admin.payment.index', compact('transaksis'));
     }
 

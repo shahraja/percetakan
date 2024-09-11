@@ -22,6 +22,7 @@
                                         <th>Status</th>
                                         <th>Tanggal Transaksi</th>
                                         <th>Total Harga</th>
+                                        <th>Request Desain</th>
                                         <th>User</th>
                                         <th>Nama Produk</th>
                                         <th>Alamat</th>
@@ -37,12 +38,20 @@
                                 <tbody>
                                     @foreach ($transaksi as $item)
                                         <tr>
-                                            <td>{{ $loop->iteration + $transaksi->perpage() * ($transaksi->currentpage() - 1) }}
+                                            <td>{{ $loop->iteration }}
                                             </td>
                                             <td>{{ $item->nomor_pesanan }}</td>
                                             <td>{{ $item->status }}</td>
                                             <td>{{$item->created_at->format('d-m-Y')}}</td>
                                             <td>{{ $item->total_harga }}</td>
+                                            <td>
+                                                @if ($item->request_desain)
+                                                    <span class="badge bg-warning">No Request</span>
+                                                @else
+                                                    <span class="badge bg-success"> Request
+                                                    </span>
+                                                @endif
+                                            </td>
                                             <td>{{ $item->user->name }}</td>
                                             <td>{{ $item->produk->judul }}</td>
                                             <td>{{ $item->alamat }}</td>
@@ -74,6 +83,7 @@
                                         <th>Status</th>
                                         <th>Tanggal Transaksi</th>
                                         <th>Total Harga</th>
+                                        <th>Request Desain</th>
                                         <th>User</th>
                                         <th>Nama Produk</th>
                                         <th>Alamat</th>

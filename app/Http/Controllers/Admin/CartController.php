@@ -16,7 +16,9 @@ class CartController extends Controller
 {
     public function index()
     {
-        $transaksi = Transaksi::with('brosur', 'buku', 'kalender', 'majalah', 'undangan')->paginate();
+        $transaksi = Transaksi::with('brosur', 'buku', 'kalender', 'majalah', 'undangan')
+                    ->latest()
+                    ->get();
         // dd($transaksi);
         return view('admin.cart.index', compact('transaksi'));
     }

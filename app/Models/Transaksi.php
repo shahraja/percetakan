@@ -24,6 +24,7 @@ class Transaksi extends Model
         'gramasi', 
         'laminasi',
         'gambar',
+        'request_desain',
         'metode_pengambilan',
         'status',
         'snap_token',

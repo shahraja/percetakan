@@ -185,7 +185,7 @@
                     <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
                 </div> --}}
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-6 col-md-12">
                         <div class="desk">
                             <p><i class="fa-solid fa-info"></i> Untuk melakukan pemesanan harap <b>MELENGKAPI DATA</b> diri Anda untuk kebutuhan pemesanan</p>
                             <p class=""><i class="fa-solid fa-info"></i> Untuk perhitungan produk <b>HANYA</b> kalkulasi produk dengan spesifikasi yang diinginkan oleh Anda</p>
@@ -193,7 +193,7 @@
                             <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-6 col-md-12">
                         <div class="desk">
                             <h5>Ukuran:</h5>
                             <ul>

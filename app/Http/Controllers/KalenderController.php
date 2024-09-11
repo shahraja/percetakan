@@ -133,8 +133,11 @@ class KalenderController extends Controller
                     return redirect()->back()->with('alert', 'Ukuran atau Plano tidak valid');
                 }
 
-                $jumlahPagePerPlano = ceil($jc / 4);
-                $jumlahPlano = $jumlahPagePerPlano * $request->lembar;
+                $jumlahPagePerPlano = floor($ukAsli[0] / $ukWidth) * floor($ukAsli[1] / $ukHeight);
+                $jumlahPlano = ceil($jc / $jumlahPagePerPlano);
+
+                // Penyesuaian jumlah plano berdasarkan jumlah lembar
+                $jumlahPlano *= $request->lembar;
 
                 $jsc = $this->calculateJSC($ukWidth, $ukHeight, $jc);
                 $harga = $jumlahPlano * $hp + $jsc;
@@ -243,13 +246,12 @@ class KalenderController extends Controller
                     // Add shipping cost to total price
                     // $totalHarga += $shippingCost;
                     if (is_array($shippingCost) && isset($shippingCost[0])) {
-                        $totalHarga += $shippingCost[0];  // Pastikan $shippingCost[0] adalah numerik
+                        $totalHarga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
                     } elseif (is_numeric($shippingCost)) {
                         $totalHarga += $shippingCost;
                     } else {
                         // Tangani kasus di mana $shippingCost tidak valid
                     }
-                    
                 }
 
                 $transaksi = Transaksi::create([

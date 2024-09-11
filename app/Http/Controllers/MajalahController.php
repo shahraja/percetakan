@@ -147,6 +147,7 @@ class MajalahController extends Controller
                 'gramasi' => $gramasi,
                 'laminasi' => $laminasi,
                 'metode_pengambilan' => $metode_pengambilan,
+                'request_desain' => $request_desain,
             ]);
 
             $products = Product::all();

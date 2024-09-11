@@ -150,6 +150,7 @@
                     <p class="summary-item">Subtotal: <span class="float-end">Rp <span
                                 id="subtotal">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span>
                     </p>
+                    <p>Transaksi Maksimal 1x24 Jam</p>
                     {{-- <p class="summary-item" id="shippingCost" style="display: none;">Ongkos Kirim: <span
                             class="float-end">Rp<span id="shipping">50.000</span></span></p> --}}
                     <hr>
