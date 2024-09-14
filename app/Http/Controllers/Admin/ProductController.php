@@ -36,12 +36,14 @@ class ProductController extends Controller
             'deskripsi' => $request->deskripsi,
         ]);
 
+        
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar');
             $file_name = time() . '.' . $gambar->getClientOriginalExtension();
             $data->gambar = $file_name;
             $data->update();
-            $gambar->move('../public/assets/img/', $file_name);
+            $gambar->storeAs('public/assets/img/', $gambar->hashName());
+            // $gambar->move('../public/assets/img/', $file_name);
         }
 
         if ($request->has('prices')) {
