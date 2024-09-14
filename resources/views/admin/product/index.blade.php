@@ -30,7 +30,7 @@
                           <td>{{$loop->iteration}}</td>
                           <td>{{$product->judul}}</td>
                           {{-- <td><img class="img img-fluid" width="100" src="{{asset('assets/img/'. $product->gambar)}}" alt=""></td> --}}
-                          <td><img class="img img-fluid" width="100" src="{{asset('storage/img/'. $product->gambar)}}" alt=""></td>
+                          <td><img class="img img-fluid" width="100" src="{{asset('storage/app/public/img/'. $product->gambar)}}" alt=""></td>
                           <td>RP.{{$product->harga}}</td>
                           <td>
                             @include('admin.product.edit')

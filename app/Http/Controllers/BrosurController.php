@@ -171,13 +171,13 @@ class BrosurController extends Controller
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-
+                
+                dd($response);
                 if ($response->successful()) {
                     $provinceResponse = $response->body();
                 } else {
                     return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
                 }
-
                 $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
                 try {
                     $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {

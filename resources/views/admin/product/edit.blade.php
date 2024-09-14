@@ -33,7 +33,7 @@
                     <div class="form-group">
                         <label for="gambar">gambar</label><br>
                         {{-- <img class="img img-fluid" width="100" src="{{ asset('assets/img/' . $product->gambar) }}" alt=""> --}}
-                        <img class="img img-fluid" width="100" src="{{asset('storage/img/'. $product->gambar)}}" alt="">
+                        <img class="img img-fluid" width="100" src="{{asset('storage/app/public/img/'. $product->gambar)}}" alt="">
                         <input type="file" class="form-control" name="gambar" id="gambar"
                             placeholder="Enter item name" enabled value="{{ $product->gambar }}">
                     </div>

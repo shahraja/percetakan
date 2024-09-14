@@ -145,13 +145,13 @@
                     thumbs-swiper=".mySwiper2" loop="true" space-between="10" navigation="true">
                     <swiper-slide>
                         {{-- <img src="{{ asset('assets/img/' . $product->gambar) }}" /> --}}
-                        <img src="{{asset('storage/img/'. $product->gambar)}}" />
+                        <img src="{{asset('storage/app/public/img/'. $product->gambar)}}" />
                     </swiper-slide>
                     @if (isset($images[$product->judul]))
                         @foreach ($images[$product->judul] as $image)
                             <swiper-slide>
                                 {{-- <img src="{{ asset('assets/img/' . $image) }}" /> --}}
-                                <img src="{{asset('storage/img/'. $image)}}" />
+                                <img src="{{asset('storage/app/public/img/'. $image)}}" />
                             </swiper-slide>
                         @endforeach
                     @endif
@@ -161,13 +161,13 @@
                     watch-slides-progress="true">
                     <swiper-slide>
                         {{-- <img src="{{ asset('assets/img/' . $product->gambar) }}" /> --}}
-                        <img src="{{asset('storage/img/'. $product->gambar)}}" />
+                        <img src="{{asset('storage/app/public/img/'. $product->gambar)}}" />
                     </swiper-slide>
                     @if (isset($images[$product->judul]))
                         @foreach ($images[$product->judul] as $image)
                             <swiper-slide>
                                 {{-- <img src="{{ asset('assets/img/' . $image) }}" /> --}}
-                                <img src="{{asset('storage/img/'. $image)}}" />
+                                <img src="{{asset('storage/app/public/img/'. $image)}}" />
                             </swiper-slide>
                         @endforeach
                     @endif
