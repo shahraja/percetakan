@@ -13,7 +13,7 @@
                 @endif
                 <div class="col-3 p-3 text-center">
                     <a href="{{ route('detail_product', $product->id) }}">
-                        <img src="{{ asset('assets/img/' . $product->gambar) }}" class="img img-fluid rounded" style="object-fit: cover" width="200" alt="">
+                        <img src="{{ asset('storage/app/public/img/' . $product->gambar) }}" class="img img-fluid rounded" style="object-fit: cover" width="200" alt="">
                         <p class="text-center text-black">{{ $product->judul }}</p>
                     </a>
                 </div>
