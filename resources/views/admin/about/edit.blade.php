@@ -14,7 +14,8 @@
         <div class="form-group">
             <label for="image">Image</label>
             <div class="col" style="max-width: 200px;">
-                <img class="img img-fluid" src="{{ asset('assets/about') }}/{{ $aboutPage->image }}" alt="">
+                {{-- <img class="img img-fluid" src="{{ asset('assets/about') }}/{{ $aboutPage->image }}" alt=""> --}}
+                <img class="img img-fluid" src="{{asset('storage/about/')}}/{{ $aboutPage->image }}" alt="">
             </div>
             <input type="file" name="image" class="form-control">
         </div>

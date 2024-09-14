@@ -144,12 +144,14 @@
                 <swiper-container style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="mySwiper"
                     thumbs-swiper=".mySwiper2" loop="true" space-between="10" navigation="true">
                     <swiper-slide>
-                        <img src="{{ asset('assets/img/' . $product->gambar) }}" />
+                        {{-- <img src="{{ asset('assets/img/' . $product->gambar) }}" /> --}}
+                        <img src="{{asset('storage/img/'. $product->gambar)}}" />
                     </swiper-slide>
                     @if (isset($images[$product->judul]))
                         @foreach ($images[$product->judul] as $image)
                             <swiper-slide>
-                                <img src="{{ asset('assets/img/' . $image) }}" />
+                                {{-- <img src="{{ asset('assets/img/' . $image) }}" /> --}}
+                                <img src="{{asset('storage/img/'. $image)}}" />
                             </swiper-slide>
                         @endforeach
                     @endif
@@ -158,12 +160,14 @@
                 <swiper-container class="mySwiper2" loop="true" space-between="10" slides-per-view="4" free-mode="true"
                     watch-slides-progress="true">
                     <swiper-slide>
-                        <img src="{{ asset('assets/img/' . $product->gambar) }}" />
+                        {{-- <img src="{{ asset('assets/img/' . $product->gambar) }}" /> --}}
+                        <img src="{{asset('storage/img/'. $product->gambar)}}" />
                     </swiper-slide>
                     @if (isset($images[$product->judul]))
                         @foreach ($images[$product->judul] as $image)
                             <swiper-slide>
-                                <img src="{{ asset('assets/img/' . $image) }}" />
+                                {{-- <img src="{{ asset('assets/img/' . $image) }}" /> --}}
+                                <img src="{{asset('storage/img/'. $image)}}" />
                             </swiper-slide>
                         @endforeach
                     @endif

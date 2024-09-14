@@ -28,7 +28,7 @@ class AboutPageController extends Controller
             $file_name = time() . '.' . $image->getClientOriginalExtension();
             $aboutPage->image = $file_name;
             $aboutPage->update();
-            $image->storeAs('public/assets/img/', $image->hashName());
+            $image->storeAs('public/about/',  $file_name);
             // $image->move('../public/assets/about/', $file_name);
         }
 

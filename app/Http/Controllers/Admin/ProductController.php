@@ -42,7 +42,7 @@ class ProductController extends Controller
             $file_name = time() . '.' . $gambar->getClientOriginalExtension();
             $data->gambar = $file_name;
             $data->update();
-            $gambar->storeAs('public/assets/img/', $gambar->hashName());
+            $gambar->storeAs('public/img/',  $file_name);
             // $gambar->move('../public/assets/img/', $file_name);
         }
 

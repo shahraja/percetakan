@@ -11,7 +11,8 @@
             <div class="row">
                 <div class="col-md-6 mb-5">
                     <div class="container" style="max-width: 600px; max-height:500px;">
-                        <img src="{{ asset('assets/about/' . $aboutPage->image) }}" class="img img-fluid rounded" style="object-fit: cover" width="500" alt="">
+                        {{-- <img src="{{ asset('assets/about/' . $aboutPage->image) }}" class="img img-fluid rounded" style="object-fit: cover" width="500" alt=""> --}}
+                        <img src="{{asset('storage/about/'. $aboutPage->image)}}" class="img img-fluid rounded" style="object-fit: cover" width="500" alt="">
                     </div>
                 </div>
                 <div class="col-md-6 desk">
