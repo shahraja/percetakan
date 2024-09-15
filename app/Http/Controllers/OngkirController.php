@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Transaksi;
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use Spatie\FlareClient\Api;
 
 class OngkirController extends Controller
 {
@@ -15,7 +17,7 @@ class OngkirController extends Controller
 
     public function province()
     {
-        $api_key = env('RAJA_ONGKIR_KEY');
+        $api_key = Config::get('app.rajaongkir');
         $apiURL = 'https://api.rajaongkir.com/starter/province';
 
         try {
@@ -34,6 +36,7 @@ class OngkirController extends Controller
 
         return response()->json([
             'data' => $data,
+            // 'api' => $api_key,
         ]);
     }
 
