@@ -46,26 +46,6 @@ class OngkirController extends Controller
     public function city($province_id)
     {
         // $api_key = env('RAJA_ONGKIR_KEY');
-
-        // $client = new Client();
-
-        // $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $province_id;
-
-        // try {
-        //     $response = $client->request('GET', $apiURL, [
-        //         'headers' => [
-        //             'key' => $api_key,
-        //         ],
-        //     ]);
-        //     $data = json_decode($response->getBody()->getContents(), true);
-        // } catch (\Exception $e) {
-        //     $data = [];
-        // }
-        // return response()->json([
-        //     'data' => $data,
-        // ]);
-
-        // $api_key = env('RAJA_ONGKIR_KEY');
         $api_key = Config::get('app.rajaongkir');
         $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $province_id;
         
@@ -99,7 +79,7 @@ class OngkirController extends Controller
         $client = new Client();
 
         $apiURL = 'https://api.rajaongkir.com/starter/cost' . '?origin=' . $request->origin . '&destination=' . $request->destination . '&weight=2000' . '&courier=jne';
-        dd($apiURL);
+        // dd($apiURL);
         try {
             $response = $client->request('GET', $apiURL, [
                 'headers' => [
