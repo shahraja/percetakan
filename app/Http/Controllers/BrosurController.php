@@ -172,7 +172,7 @@ class BrosurController extends Controller
                     'key' => $api_key,
                 ])->get($apiURL);
                 
-                dd($response);
+                // dd($response);
                 if ($response->successful()) {
                     $provinceResponse = $response->body();
                 } else {
