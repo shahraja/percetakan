@@ -26,10 +26,10 @@ class OngkirController extends Controller
             if ($response->successful()) {
                 $data = $response->json();
             } else {
-                $data = [];
+                $data = $response->json();
             }
         } catch (\Exception $e) {
-            $data = [];
+            $data = $response->json();
         }
 
         return response()->json([
