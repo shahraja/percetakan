@@ -10,6 +10,7 @@ use App\Models\DetailValueUkuran;
 use App\Models\Product;
 use App\Models\Ukuran;
 use App\Services\CreateSnapToken;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 
 class BukuController extends Controller
@@ -54,7 +55,8 @@ class BukuController extends Controller
                 $city = auth()->user()->kota;
 
                 // Fetch province ID
-                $api_key = env('RAJA_ONGKIR_KEY');
+                // $api_key = env('RAJA_ONGKIR_KEY');
+                $api_key = Config::get('app.rajaongkir');
                 $apiURL = 'https://api.rajaongkir.com/starter/province';
 
                 $response = Http::withHeaders([

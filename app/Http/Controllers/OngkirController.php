@@ -65,7 +65,8 @@ class OngkirController extends Controller
         //     'data' => $data,
         // ]);
 
-        $api_key = env('RAJA_ONGKIR_KEY');
+        // $api_key = env('RAJA_ONGKIR_KEY');
+        $api_key = Config::get('app.rajaongkir');
         $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $province_id;
         
         try {
@@ -92,7 +93,8 @@ class OngkirController extends Controller
      */
     public function cost(Request $request)
     {
-        $api_key = env('RAJA_ONGKIR_KEY');
+        // $api_key = env('RAJA_ONGKIR_KEY');
+        $api_key = Config::get('app.rajaongkir');
 
         $client = new Client();
 
