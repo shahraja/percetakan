@@ -108,12 +108,12 @@ class ClientPaymentController extends Controller
             if ($status == 'capture') {
                 if ($fraud == 'accept') {
                     $data = [
-                        'status' => 'Diproses',
+                        'status' => 'Pembayaran Dikonfirmasi',
                     ];
                 };
             } elseif ($status == 'settlement') {
                 $data = [
-                    'status' => 'Diproses',
+                    'status' => 'Pembayaran Dikonfirmasi',
                 ];
             } elseif ($status == 'deny' || $status == 'cancel') {
                 $data = [
