@@ -26,7 +26,7 @@ class BrosurSeeder extends Seeder
             'gramasi' => '120gr',
             'laminasi' => 'Glossy ',
             'gambar' => 'undangan.jpg',
-            'status' => 'Diproses',
+            'status' => 'Pesanan Diproses',
         ]);
 
         $transaksi->brosur()->create([

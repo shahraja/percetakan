@@ -10,17 +10,35 @@ use App\Models\Kalender;
 use App\Models\Majalah;
 use App\Models\Transaksi;
 use App\Models\Undangan;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class CartController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $transaksi = Transaksi::with('brosur', 'buku', 'kalender', 'majalah', 'undangan')
-                    ->latest()
-                    ->get();
+        $transaksi = Transaksi::with('brosur', 'buku', 'kalender', 'majalah', 'undangan')->latest()->get();
         // dd($transaksi);
         return view('admin.cart.index', compact('transaksi'));
+    }
+
+    public function filter(Request $request, $tanggalAwal, $tanggalAkhir)
+    {
+
+        $tanggalAwal = Carbon::createFromFormat('Y-m-d', $tanggalAwal);
+        $tanggalAkhir = Carbon::createFromFormat('Y-m-d', $tanggalAkhir);
+
+        $transaksi = Transaksi::query()
+            ->with('brosur', 'buku', 'kalender', 'majalah', 'undangan', 'user', 'produk')
+            ->whereDate('created_at', '>=', $tanggalAwal)
+            ->whereDate('created_at', '<=', $tanggalAkhir)
+            ->get();
+
+        if ($transaksi->isEmpty()) {
+            return response()->json(['message' => 'Data tidak ditemukan'], 404);
+        }
+
+        return response()->json(['data' => $transaksi], 200);
     }
 
     public function edit()

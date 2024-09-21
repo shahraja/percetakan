@@ -32,9 +32,13 @@ return new class extends Migration
                 'Ditolak',
                 'Expire',
                 'Pending',
-                'Diproses',
+                // 'Diproses',
+                'Pesanan Diproses',
+                'Pesanan Dikirimkan',
+                'Pesanan Dibuat',
                 'Menunggu Pembayaran', 
-                'Telah Dikonfirmasi', 
+                // 'Telah Dikonfirmasi', 
+                'Pembayaran Dikonfirmasi', 
                 'Selesai',])
                 ->default('Menunggu Pembayaran');
             $table->string('snap_token')->nullable();

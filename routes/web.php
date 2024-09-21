@@ -77,6 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
                 //KELOLA PESANAN
                 Route::get('/pesanan', [CartController::class, 'index'])->name('cart.index');
+                Route::get('/pesanan/filter/{tanggalAwal}/{tanggalAkhir}', [CartController::class, 'filter'])->name('cart.filter');
                 Route::put('/pesanan/{id}', [CartController::class, 'update'])->name('cart.update');
                 Route::delete('/pesanan/{id}/destroy', [CartController::class, 'destroy'])->name('cart.destroy');
 

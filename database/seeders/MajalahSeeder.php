@@ -26,7 +26,7 @@ class MajalahSeeder extends Seeder
             'gramasi' => '120gr',
             'laminasi' => 'Glossy Bolak-Balik',
             'gambar' => 'undangan.jpg',
-            'status' => 'Diproses',
+            'status' => 'Pesanan Diproses',
         ]);
 
         $transaksi->majalah()->create([

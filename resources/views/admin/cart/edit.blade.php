@@ -31,7 +31,7 @@
                                     placeholder="Enter item name" disabled value=""> --}}
                                 <select class="form-control" name="status" id="status">
                                     <?php
-                                    $enum_status = ['Ditolak', 'Diproses', 'Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai'];
+                                    $enum_status = ['Ditolak', 'Pesanan Diproses', 'Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai', 'Pesanan Dikirimkan', 'Pembayaran Dikonfirmasi'];
                                     ?>
                                     @foreach ($enum_status as $status)
                                         <option value="{{ $status }}"

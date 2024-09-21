@@ -10,11 +10,11 @@
             <h3>Address</h3>
             <p>Jl. Teuku Umar No.2, Pasir Gintung, Kec. Tj. Karang Pusat, Kota Bandar Lampung, Lampung 35121</p>
         </div>
-        <div class="col-md-10">
+        {{-- <div class="col-md-10">
             <i class="fa-xl fa-solid fa-envelope text-warning"></i>
             <h6>Mail Me</h6>
             <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Soluta, rem dolorem? Fugiat corrupti alias eum quas debitis suscipit nostrum in labore ut impedit assumenda quis, molestiae tenetur cupiditate harum nihil.</p>
-        </div>
+        </div> --}}
         <div class="col-md-10">
             <i class="fa-xl fa-brands fa-whatsapp text-warning"></i>
             <h5>WhatsApp</h5>

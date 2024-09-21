@@ -7,6 +7,7 @@
     <div class="container px-0 mb-4" >
         <h2 class="text-center p-4">Produk Kami</h2>
         <div class="row justify-content-center text-center">
+            {{-- @dump($products) --}}
             @foreach ($products as $index => $product)
                 @if ($index % 3 == 0 && $index != 0)
                     </div><div class="row justify-content-center text-center">
