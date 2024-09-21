@@ -3,7 +3,59 @@
 @section('title', 'Keranjang Saya')
 
 {{-- @dd($bukus) --}}
+<style>
+    .progressbar {
+        counter-reset: step;
+        display: flex;
+        justify-content: space-between;
+        list-style-type: none;
+        padding: 0;
+        margin: 30px 0;
+    }
 
+    .progressbar li {
+        position: relative;
+        text-align: center;
+        flex-basis: 20%;
+    }
+
+    .progressbar li::before {
+        content: counter(step);
+        counter-increment: step;
+        width: 30px;
+        height: 30px;
+        border: 2px solid #4caf50;
+        display: block;
+        text-align: center;
+        margin: 0 auto 10px auto;
+        border-radius: 50%;
+        background-color: white;
+    }
+
+    .progressbar li.active::before {
+        background-color: #4caf50;
+        color: white;
+    }
+
+    .progressbar li::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 2px;
+        background-color: #4caf50;
+        top: 15px;
+        left: -50%;
+        z-index: -1;
+    }
+
+    .progressbar li:first-child::after {
+        content: none;
+    }
+
+    .progressbar li.active::after {
+        background-color: #4caf50;
+    }
+</style>
 @section('content')
     <div class="container flex-grow-1 d-flex flex-column">
         <h2 class="my-5">
@@ -61,8 +113,7 @@
                                     Pesanan Dikirimkan
                                 </li>
                                 <li @class([
-                                    'active' =>
-                                        $transaksi->status == 'Selesai',
+                                    'active' => $transaksi->status == 'Selesai',
                                 ])>
                                     Selesai
                                 </li>
