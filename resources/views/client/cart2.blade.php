@@ -6,18 +6,19 @@
 <style>
     .progressbar {
         counter-reset: step;
-    display: flex;
-    justify-content: space-between;
-    list-style-type: none;
-    padding: 0;
-    margin: 30px 0;
-    position: relative;
+        display: flex;
+        justify-content: space-between;
+        list-style-type: none;
+        padding: 0;
+        margin: 30px 0;
+        position: relative;
     }
 
     .progressbar li {
         position: relative;
-    text-align: center;
-    flex-grow: 1;
+        text-align: center;
+        flex-basis: 20%;
+        flex-grow: 1;
     }
 
     .progressbar li::before {
@@ -116,7 +117,7 @@
                                     ])>
                                         Pesanan Diproses
                                     </li>
-    
+
                                     {{-- Conditional rendering for Pesanan Dikirimkan --}}
                                     @if ($transaksi->metode_pengambilan == 0)
                                         <li @class([
@@ -127,7 +128,7 @@
                                             Pesanan Dikirimkan
                                         </li>
                                     @endif
-    
+
                                     <li @class([
                                         'active' => $transaksi->status == 'Selesai',
                                     ])>
