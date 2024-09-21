@@ -6,17 +6,18 @@
 <style>
     .progressbar {
         counter-reset: step;
-        display: flex;
-        justify-content: space-between;
-        list-style-type: none;
-        padding: 0;
-        margin: 30px 0;
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    padding: 0;
+    margin: 30px 0;
+    position: relative;
     }
 
     .progressbar li {
         position: relative;
-        text-align: center;
-        flex-basis: 20%;
+    text-align: center;
+    flex-grow: 1;
     }
 
     .progressbar li::before {
@@ -48,6 +49,15 @@
         z-index: -1;
     }
 
+    .progressbar li::after {
+        background-color: #ddd;
+    }
+
+    .progressbar li.active::after {
+        background-color: #4caf50;
+        /* Warna untuk garis status yang sudah tercapai */
+    }
+
     .progressbar li:first-child::after {
         content: none;
     }
@@ -68,103 +78,63 @@
             @foreach ($transaksis as $transaksi)
                 <div class="row my-3">
                     <div class="border rounded p-3 me-5 shadow">
-                        {{-- <div class="row">
-                            <div class="col-md-12">
+                        <div class="row">
+                            {{-- <div class="col-md-12">
                                 <div class="col text-end">
                                     <p><b>{{ $transaksi->status }}</b></p>
                                 </div>
+                            </div> --}}
+                            <div class="progress-bar-wrapper">
+                                <ul class="progressbar">
+                                    <li @class([
+                                        'active' =>
+                                            $transaksi->status == 'Pesanan Dibuat' ||
+                                            $transaksi->status == 'Pembayaran Dikonfirmasi' ||
+                                            $transaksi->status == 'Pesanan Diproses' ||
+                                            ($transaksi->status == 'Pesanan Dikirimkan' &&
+                                                $transaksi->metode_pengambilan == 0) ||
+                                            $transaksi->status == 'Selesai',
+                                    ])>
+                                        Pesanan Dibuat
+                                    </li>
+                                    <li @class([
+                                        'active' =>
+                                            $transaksi->status == 'Pembayaran Dikonfirmasi' ||
+                                            $transaksi->status == 'Pesanan Diproses' ||
+                                            ($transaksi->status == 'Pesanan Dikirimkan' &&
+                                                $transaksi->metode_pengambilan == 0) ||
+                                            $transaksi->status == 'Selesai',
+                                    ])>
+                                        Pembayaran Dikonfirmasi
+                                    </li>
+                                    <li @class([
+                                        'active' =>
+                                            $transaksi->status == 'Pesanan Diproses' ||
+                                            ($transaksi->status == 'Pesanan Dikirimkan' &&
+                                                $transaksi->metode_pengambilan == 0) ||
+                                            $transaksi->status == 'Selesai',
+                                    ])>
+                                        Pesanan Diproses
+                                    </li>
+    
+                                    {{-- Conditional rendering for Pesanan Dikirimkan --}}
+                                    @if ($transaksi->metode_pengambilan == 0)
+                                        <li @class([
+                                            'active' =>
+                                                $transaksi->status == 'Pesanan Dikirimkan' ||
+                                                $transaksi->status == 'Selesai',
+                                        ])>
+                                            Pesanan Dikirimkan
+                                        </li>
+                                    @endif
+    
+                                    <li @class([
+                                        'active' => $transaksi->status == 'Selesai',
+                                    ])>
+                                        Selesai
+                                    </li>
+                                </ul>
                             </div>
-                            <hr>
-                        </div> --}}
-                        <div class="progress-bar-wrapper">
-                            <ul class="progressbar">
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status == 'Pesanan Dibuat' ||
-                                        $transaksi->status == 'Pembayaran Dikonfirmasi' ||
-                                        $transaksi->status == 'Pesanan Diproses' ||
-                                        $transaksi->status == 'Pesanan Dikirimkan' ||
-                                        $transaksi->status == 'Selesai',
-                                ])>
-                                    Pesanan Dibuat
-                                </li>
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status == 'Pembayaran Dikonfirmasi' ||
-                                        $transaksi->status == 'Pesanan Diproses' ||
-                                        $transaksi->status == 'Pesanan Dikirimkan' ||
-                                        $transaksi->status == 'Selesai',
-                                ])>
-                                    Pembayaran Dikonfirmasi
-                                </li>
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status == 'Pesanan Diproses' ||
-                                        $transaksi->status == 'Pesanan Dikirimkan' ||
-                                        $transaksi->status == 'Selesai',
-                                ])>
-                                    Pesanan Diproses
-                                </li>
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status == 'Pesanan Dikirimkan' ||
-                                        $transaksi->status == 'Selesai',
-                                ])>
-                                    Pesanan Dikirimkan
-                                </li>
-                                <li @class([
-                                    'active' => $transaksi->status == 'Selesai',
-                                ])>
-                                    Selesai
-                                </li>
-                                {{-- <li @class([
-                                    'active' =>
-                                        $transaksi->status ==
-                                        ('Pesanan Dibuat' ||
-                                            'Pembayaran Dikonfirmasi' ||
-                                            'Pesanan Diproses' ||
-                                            'Pesanan Dikirimkan' ||
-                                            'Pesanan Selesai'),
-                                ])>
-                                    Pesanan Dibuat
-                                </li>
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status ==
-                                        ('Pembayaran Dikonfirmasi' ||
-                                            'Pesanan Diproses' ||
-                                            'Pesanan Dikirimkan' ||
-                                            'Pesanan Selesai'),
-                                ])>
-                                    Pesanan Dikonfirmasi
-                                </li>
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status ==
-                                        ('Pesanan Diproses' || 'Pesanan Dikirimkan' || 'Pesanan Selesai'),
-                                ])>
-                                    Pesanan Diproses
-                                </li>
-                                <li @class([
-                                    'active' =>
-                                        $transaksi->status == ('Pesanan Dikirimkan' || 'Pesanan Selesai'),
-                                ])>
-                                    Pesanan Dikirimkan
-                                </li>
-                                <li @class(['active' => $transaksi->status == 'Pesanan Selesai'])>
-                                    Pesanan Selesai
-                                </li> --}}
-                                {{-- <li class="{{ $transaksi->status == 'Pesanan Dibuat' ? 'active' : '' }}">Pesanan Dibuat</li>
-                                <li class="{{ $transaksi->status == 'Pembayaran Dikonfirmasi' || $transaksi->status == 'Pesanan Selesai' || $transaksi->status == 'Pesanan Dikirimkan' ? 'active' : '' }}">Pembayaran Dikonfirmasi</li>
-                                <li class="{{ $transaksi->status == 'Pesanan Diproses' || $transaksi->status == 'Pesanan Selesai' || $transaksi->status == 'Pesanan Dikirimkan' ? 'active' : '' }}">Pesanan Diproses</li>
-                                <li class="{{ $transaksi->status == 'Pesanan Dikirimkan' || $transaksi->status == 'Pesanan Selesai' ? 'active' : '' }}">Pesanan Dikirimkan</li>
-                                <li class="{{ $transaksi->status == 'Pesanan Selesai' ? 'active' : '' }}">Pesanan Selesai</li> --}}
-                                {{-- <li class="{{ $transaksi->status == 'Pesanan Dibuat' || $transaksi->status != null ? 'active' : '' }}">Pesanan Dibuat <br> {{ $transaksi->created_at }}</li>
-                                <li class="{{ $transaksi->status == 'Pembayaran Dikonfirmasi' ? 'active' : '' }}">Pembayaran Dikonfirmasi <br> {{ $transaksi->updated_at }}</li>
-                                <li class="{{ $transaksi->status == 'Pesanan Dibuat' ? 'active' : '' }}">Pesanan Dibuat <br> {{ $transaksi->updated_at }}</li>
-                                <li class="{{ $transaksi->status == 'Pesanan Dikirimkan' ? 'active' : '' }}">Pesanan Dikirimkan <br> {{ $transaksi->updated_at }}</li>
-                                <li class="{{ $transaksi->status == 'Pesanan Selesai' ? 'active' : '' }}">Pesanan Selesai <br> {{ $transaksi->updated_at }}</li> --}}
-                            </ul>
                         </div>
                         <div class="row">
                             <div class="col-md-8">
