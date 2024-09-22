@@ -198,7 +198,7 @@ class HomeController extends Controller
     public function cart2()
     {
         $userId = auth()->user()->id;
-        $statuses = ['Ditolak', 'Pesanan Diproses', 'Menunggu Pembayaran', 'Telah Dikonfirmasi', 'Selesai', 'Pesanan Dikirimkan', 'Pembayaran Dikonfirmasi'];
+        $statuses = ['Ditolak', 'Pesanan Diproses', 'Telah Dikonfirmasi', 'Selesai', 'Pesanan Dikirimkan', 'Pembayaran Dikonfirmasi'];
         $transaksis = Transaksi::where('user_id', $userId)->whereIn('status', $statuses)->get();
 
         $products = Product::all();
