@@ -15,6 +15,7 @@ use App\Models\Transaksi;
 use App\Models\Ukuran;
 use App\Models\Undangan;
 use App\Services\CreateSnapToken;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class HomeController extends Controller
@@ -94,14 +95,14 @@ class HomeController extends Controller
 
         //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         // }
-                
+
         // foreach ($ukuran as $key => $value) {
         //     $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
-        
+
         //     $detailUkuranArray = [];
         //     foreach ($detail_ukurans as $detail_ukuran) {
         //         $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-                
+
         //         if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
         //             // Jika "plano", simpan semua value dalam array
         //             $planoValues = [];
@@ -121,10 +122,10 @@ class HomeController extends Controller
         //             $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
         //         }
         //     }
-        
+
         //     $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         // }
-        
+
         // $tes = $ukuranData;
         // dd($ukuranOriginal, $tes);
 
@@ -153,11 +154,11 @@ class HomeController extends Controller
 
         foreach ($ukuran as $key => $value) {
             $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get(); // Mengambil semua detail ukuran
-        
+
             $detailUkuranArray = [];
             foreach ($detail_ukurans as $detail_ukuran) {
                 $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-                
+
                 if (strtolower($detail_ukuran->nama_detail_ukuran) === 'plano') {
                     // Jika "plano", simpan semua value dalam array
                     $planoValues = [];
@@ -177,7 +178,7 @@ class HomeController extends Controller
                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $prices;
                 }
             }
-        
+
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
         // dd($ukuranData);
@@ -278,8 +279,11 @@ class HomeController extends Controller
 
     public function clear($transaksiId)
     {
-        $transaksi = Transaksi::where('id', $transaksiId)->where('user_id', auth()->id())->first();
-
+        $transaksi = Transaksi::where('id', $transaksiId)
+            ->where('user_id', auth()->id())
+            ->where('status', 'Menunggu Pembayaran')
+            ->first();
+    
         if ($transaksi) {
             $transaksi->delete();
             return redirect()->route('cart')->with('success', 'Produk berhasil dihapus dari keranjang.');
