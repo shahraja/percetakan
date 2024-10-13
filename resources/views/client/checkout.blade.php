@@ -8,10 +8,8 @@
 
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <!-- @TODO: replace SET_YOUR_CLIENT_KEY_HERE with your client key -->
         <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js"
             data-client-key="SB-Mid-client-V359WuDbL3tWVysH"></script>
-        <!-- Note: replace with src="https://app.midtrans.com/snap/snap.js" for Production environment -->
     </head>
 
     <div class="container mb-5">
@@ -21,13 +19,7 @@
             </a>
             Keranjang Saya
         </h2>
-        {{-- <form action=""> --}}
-        {{-- <label>
-            <input type="radio" name="metode_pengambilan" value="0" checked onclick="toggleCard()"> Delivery
-        </label>
-        <label class="ms-5">
-            <input type="radio" name="metode_pengambilan" value="1" onclick="toggleCard()"> Pick Up
-        </label> --}}
+
         <div class="row my-2">
             <div id="deliveryCard" class="border rounded p-3 me-5 shadow card">
                 <div class="row">
@@ -48,6 +40,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row my-2">
             <div class="border rounded p-3 me-5 shadow">
                 <div class="row">
@@ -69,72 +62,27 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="col-md-2 mb-1">
                                 <p>Variasi</p>
                                 <p>
+                                    {{-- Variasi Produk --}}
                                     @if ($transaksi->laminasi)
                                         {{ $transaksi->laminasi }},
                                     @endif
-                                    @if ($transaksi->harga_plano)
-                                        {{ $transaksi->harga_plano }},
-                                    @endif
-                                    @if ($transaksi->gramasi)
-                                        {{ $transaksi->gramasi }},
-                                    @endif
-
-                                    {{-- Kalender --}}
-                                    @if (isset($kalender))
-                                        @if ($kalender->lembar)
-                                            {{ $kalender->lembar }},
-                                        @endif
-                                        @if ($kalender->jilid)
-                                            {{ $kalender->jilid }},
-                                        @endif
-                                    @endif
-
-                                    {{-- Undangan --}}
-                                    @if (isset($undangan))
-                                        @if ($undangan->uk_asli)
-                                            {{ $undangan->uk_asli }},
-                                        @endif
-                                    @endif
-
-                                    {{-- Brosur --}}
-                                    @if (isset($brosur))
-                                        @if ($brosur->uk_asli)
-                                            {{ $brosur->uk_asli }},
-                                        @endif
-                                    @endif
-
-                                    {{-- Buku --}}
-                                    @if (isset($buku))
-                                        @if ($buku->halaman)
-                                            {{ $buku->halaman }},
-                                        @endif
-                                        @if ($buku->finishing)
-                                            {{ $buku->finishing }},
-                                        @endif
-                                    @endif
-
-                                    {{-- Majalah --}}
-                                    @if (isset($majalah))
-                                        @if ($majalah->halaman)
-                                            {{ $majalah->halaman }},
-                                        @endif
-                                        @if ($majalah->finishing)
-                                            {{ $majalah->finishing }},
-                                        @endif
-                                    @endif
                                 </p>
                             </div>
+
                             <div class="col-md-2 mb-1">
                                 <p>Harga Satuan</p>
                                 <p>{{ $transaksi->harga_plano }}</p>
                             </div>
+
                             <div class="col-md-2 mb-1">
                                 <p>Jumlah</p>
                                 <p>{{ $transaksi->jml_total }}</p>
                             </div>
+
                             <div class="col-md-2 mb-1">
                                 <p>Subtotal Produk</p>
                                 <p>Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</p>
@@ -144,6 +92,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row d-flex justify-content-end mt-5">
             <div class="col-md-4 p-0">
                 <div class="border rounded p-3 mt-2 shadow w-100 justify-content-end">
@@ -153,44 +102,33 @@
                     <p style="font-size: 0.875rem; font-style: italic; color: rgba(0, 0, 0, 0.5);">
                         Transaksi Maksimal 1x24 Jam
                     </p>
-                    {{-- <p class="summary-item" id="shippingCost" style="display: none;">Ongkos Kirim: <span
-                            class="float-end">Rp<span id="shipping">50.000</span></span></p> --}}
+
+                    {{-- Kondisi tampilkan shipping cost jika delivery dipilih --}}
+                    @if ($transaksi->metode_pengambilan == 0)
+                    <p style="font-size: 0.875rem; font-style: italic; color: rgba(0, 0, 0, 0.5);">
+                        Subtotal sudah termasuk Ongkir: Rp {{ number_format($transaksi->shipping_cost, 0, ',', '.') }}
+                    </p>
+                    @endif
+
+                    {{-- Kondisi tampilkan design jika request_desain dipilih --}}
+                    @if ($transaksi->request_desain == 0)
+                    <p id="design-notification"
+                        style="font-size: 0.875rem; font-style: italic; color: rgba(0, 0, 0, 0.5);">
+                        Subtotal sudah termasuk Desain: Rp 85.000
+                    </p>
+                    @endif
+
                     <hr>
                     <p id="paymentLink" class="summary-total">Total Pembayaran: <span class="float-end">Rp<span
-                                id="total-payment">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span></p>
+                                id="total-payment">{{ number_format($transaksi->total_harga, 0, ',', '.') }}</span></span>
+                    </p>
                     <div class="text-center my-3">
                         <button class="btn btn-success bg-utama col-md-8" id="pay-button">Pay!</button>
-                        {{-- <a id="paymentLink" href="{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, '0']) }}"
-                                class="btn btn-success bg-utama col-md-8">Bayar</a> --}}
                     </div>
                 </div>
             </div>
         </div>
-        {{-- </form> --}}
     </div>
-
-    <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="successModalLabel">Transaction Successful</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    Your transaction was successful!
-                </div>
-                <div class="modal-footer">
-                    <a href="{{ route('home') }}" type="button" class="btn btn-secondary" data-dismiss="modal">Close</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    @php
-        // dd($transaksi->id);
-    @endphp
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -212,60 +150,27 @@
             document.getElementById('total-payment').innerText = totalPayment.toLocaleString('id-ID');
         }
 
-        function toggleCard() {
-            const deliveryCard = document.getElementById('deliveryCard');
-            const deliveryOption = document.querySelector('input[name="metode_pengambilan"]:checked').value;
-            const shippingCost = document.getElementById('shippingCost');
-            const paymentLink = document.getElementById('paymentLink');
-
-            if (deliveryOption == 0) {
-                deliveryCard.style.display = 'block';
-                shippingCost.style.display = 'block';
-            } else {
-                deliveryCard.style.display = 'none';
-                shippingCost.style.display = 'none';
-            }
-
-            // Update the payment link href
-            paymentLink.href = `{{ route('payment', [$transaksi->produk_id, $transaksi->nomor_pesanan, 'ids']) }}`.replace(
-                'ids', deliveryOption);
-
-            calculateTotal();
-        }
-
-        window.onload = function() {
-            toggleCard();
-        };
-
-
-        // midtrans
-        // For example trigger on button clicked, or any time you need
+        // midtrans script
         var payButton = document.getElementById('pay-button');
         payButton.addEventListener('click', function() {
-            // Trigger snap popup. @TODO: Replace TRANSACTION_TOKEN_HERE with your transaction token
             window.snap.pay('{{ $token }}', {
                 onSuccess: function(result) {
-                    // Trigger the modal to show on success
                     $('#successModal').modal('show');
                     console.log(result);
                 },
                 onPending: function(result) {
-                    /* You may add your own implementation here */
-
-                    alert("wating your payment!");
+                    alert("waiting for your payment!");
                     console.log(result);
                 },
                 onError: function(result) {
-                    /* You may add your own implementation here */
                     alert("payment failed!");
                     console.log(result);
                 },
                 onClose: function() {
-                    /* You may add your own implementation here */
-                    alert('you closed the popup without finishing the payment');
+                    alert('You closed the popup without finishing the payment');
                 }
-            })
-            // customer will be redirected after completing payment pop-up
+            });
         });
     </script>
+
 @endsection
