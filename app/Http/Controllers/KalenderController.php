@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifMail;
 use App\Models\DetailUkuran;
 use App\Models\DetailValueUkuran;
 use App\Models\Transaksi;
@@ -14,6 +15,7 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class KalenderController extends Controller
 {
@@ -31,30 +33,6 @@ class KalenderController extends Controller
                 'uk_width' => 'required|numeric',
                 'uk_height' => 'required|numeric',
             ]);
-
-            // $ukuranData = [
-            //     'plano4' => [
-            //         'width' => 39.5,
-            //         'height' => 54.5,
-            //         'hp' => 4800,
-            //         'plano' => [79, 109],
-            //         'prices' => [
-            //             '120' => 2900,
-            //             '150' => 3500,
-            //         ]
-            //     ],
-            //     'plano7' => [
-            //         'width' => 36,
-            //         'height' => 52,
-            //         'hp' => 3500,
-            //         'plano' => [72, 104],
-            //         'prices' => [
-            //             '120' => 2500,
-            //             '150' => 3000,
-            //         ]
-            //     ],
-            //     // Add more sizes as necessary
-            // ];
 
             $produk = Product::where('judul', 'Kalender')->first();
             $ukuranList = Ukuran::where('product_id', $produk->id)->get();
@@ -122,6 +100,7 @@ class KalenderController extends Controller
             $jc = $request->jumlah;
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
+            $shippingCost = $request->input('shipping_cost');
 
             if (isset($ukuranData[$selectedUkuran])) {
                 $ukuran = $ukuranData[$selectedUkuran];
@@ -155,13 +134,6 @@ class KalenderController extends Controller
                 }
 
                 $totalHarga = $harga + $hargaLaminasi + $hargaJilid;
-                // dd($ukuran, $ukAsli, $ukWidth, $ukHeight, $jumlahPagePerPlano .'jumlah page per plano', $jumlahPlano, $jc,  $hp, $jsc, $harga, $hargaLaminasi, $totalHarga);
-
-                // $gambar = $request->input('gambar');
-                // if (!empty($gambar)) {
-                //     $gambar = uniqid() . '_' . $request->file('gambar')->getClientOriginalName();
-                //     $request->file('gambar')->move('payment', $gambar);
-                // }
 
                 if ($requestDesain == 0) {
                     // Jika pengguna memilih Request Desain
@@ -248,7 +220,7 @@ class KalenderController extends Controller
                     // Add shipping cost to total price
                     // $totalHarga += $shippingCost;
                     if (is_array($shippingCost) && isset($shippingCost[0])) {
-                        $totalHarga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
+                        $totalHarga += $shippingCost[0]; 
                     } elseif (is_numeric($shippingCost)) {
                         $totalHarga += $shippingCost;
                     } else {
@@ -269,6 +241,8 @@ class KalenderController extends Controller
                     'metode_pengambilan' => $request->metode_pengambilan,
                     'request_desain' => $requestDesain,
                     'gambar' => $request->gambar,
+                    'status' => 'Menunggu Pembayaran',
+                    'shipping_cost' => is_numeric($shippingCost) ? $shippingCost : (is_array($shippingCost) && isset($shippingCost[0]) ? $shippingCost[0] : 0),
                 ]);
 
                 $products = Product::all();
@@ -280,15 +254,6 @@ class KalenderController extends Controller
                     'uk_asli' => $request->uk_asli,
                     'uk_width' => $ukWidth,
                     'uk_height' => $ukHeight,
-                    // 'produk_id' => $request->produk_id,
-                    // 'user_id' => $request->user_id,
-                    // 'alamat' => $request->alamat,
-                    // 'total_harga' => $totalHarga,
-                    // 'harga_plano' => $hp,
-                    // 'jumlah' => $request->jumlah,
-                    // 'gramasi' => $request->gramasi,
-                    // 'status' => "Menunggu Konfirmasi",
-                    // 'laminasi' => $request->laminasi,
                 ]);
 
                 $transaction_details = [
@@ -319,7 +284,7 @@ class KalenderController extends Controller
                 $snapToken = new CreateSnapToken($params);
                 $token = $snapToken->getSnapToken();
 
-                // dd($totalHarga, $params);
+                Mail::to(auth()->user()->email)->send(new NotifMail($transaksi));
             }
             return view('client.checkout', compact('transaksi', 'kalender', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {

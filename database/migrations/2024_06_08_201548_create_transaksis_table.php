@@ -28,6 +28,7 @@ return new class extends Migration
             $table->string('laminasi')->nullable();
             $table->string('gambar')->nullable();
             $table->boolean('metode_pengambilan')->default(false);
+            $table->string('shipping_cost')->nullable();
             $table->enum('status',[
                 'Ditolak',
                 'Expire',

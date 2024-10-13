@@ -42,6 +42,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/pembelian', [HomeController::class, 'checkout'])->name('checkout');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/kota/{province_id}', [ProfileController::class, 'city'])->name('profile.kota');
+
+
     Route::get('/pembayaran-{nomor_pesanan}', [HomeController::class, 'payment'])->name('payment');
     // Route::get('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'create'])->name('payment');
     // Route::put('/pembayaran/{produk_id}-{nomor_pesanan}-{metode_pengambilan}', [ClientPaymentController::class, 'update'])->name('payment.update');

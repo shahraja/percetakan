@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifMail;
 use App\Models\DetailUkuran;
 use App\Models\DetailValueUkuran;
 use App\Models\Transaksi;
@@ -12,6 +13,7 @@ use App\Models\Ukuran;
 use App\Services\CreateSnapToken;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class MajalahController extends Controller
 {
@@ -46,6 +48,7 @@ class MajalahController extends Controller
             $uk_height = $request->uk_height;
             $metode_pengambilan = $request->metode_pengambilan;
             $request_desain = $request->request_desain;
+            $shippingCost = $request->input('shipping_cost');
 
             if ($metode_pengambilan == '0') {
                 $provinceName = auth()->user()->provinsi;
@@ -150,6 +153,8 @@ class MajalahController extends Controller
                 'laminasi' => $laminasi,
                 'metode_pengambilan' => $metode_pengambilan,
                 'request_desain' => $request_desain,
+                'status' => 'Menunggu Pembayaran',
+                'shipping_cost' => is_numeric($shippingCost) ? $shippingCost : (is_array($shippingCost) && isset($shippingCost[0]) ? $shippingCost[0] : 0),
             ]);
 
             $products = Product::all();
@@ -191,6 +196,7 @@ class MajalahController extends Controller
             ];
             $snapToken = new CreateSnapToken($params);
             $token = $snapToken->getSnapToken();
+            Mail::to(auth()->user()->email)->send(new NotifMail($transaksi));
 
             return view('client.checkout', compact('transaksi', 'majalah', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -259,8 +265,6 @@ class MajalahController extends Controller
 
         // Hitung harga kertas berdasarkan pilihan
         $hargaKertas = $this->calculateUkuranData($ukuran, 'prices', $kertas);
-        // Hitung harga total berdasarkan logika perhitungan yang ada
-        // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
         $hargaTotal = $this->calculatePriceLogic($halaman, $jumlah, $this->calculateUkuranData($ukuran, 'width', null), $this->calculateUkuranData($ukuran, 'height', null), $ukuran, $hargaKertas, $laminasi, $finishing);
 
         return $hargaTotal;

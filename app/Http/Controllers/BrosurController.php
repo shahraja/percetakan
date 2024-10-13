@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifMail;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Brosur;
@@ -12,6 +13,7 @@ use App\Models\Ukuran;
 use App\Services\CreateSnapToken;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class BrosurController extends Controller
 {
@@ -27,100 +29,6 @@ class BrosurController extends Controller
                 'uk_height' => 'required',
             ]);
 
-            // $ukuranData = [
-            //     'plano1' => [
-            //         'width' => 30.5,
-            //         'height' => 46,
-            //         'hp' => 3200,
-            //         'plano' => [61, 92],
-            //         'prices' => [
-            //             '120' => 2000,
-            //             '150' => 2300,
-            //             '190' => 2950,
-            //             '210' => 3200,
-            //             '230' => 3500,
-            //         ],
-            //     ],
-            //     'plano2' => [
-            //         'width' => 32.5,
-            //         'height' => 45,
-            //         'hp' => 3400,
-            //         'plano' => [65, 90],
-            //         'prices' => [
-            //             '120' => 2100,
-            //             '150' => 2450,
-            //             '190' => 3050,
-            //             '210' => 3400,
-            //             '230' => 3600,
-            //             '260' => 4050,
-            //             '310' => 4800,
-            //         ],
-            //     ],
-            //     'plano3' => [
-            //         'width' => 32.5,
-            //         'height' => 50,
-            //         'hp' => 3700,
-            //         'plano' => [65, 100],
-            //         'prices' => [
-            //             '120' => 2250,
-            //             '150' => 2700,
-            //             '190' => 3400,
-            //             '210' => 3700,
-            //             '230' => 4000,
-            //             '260' => 4500,
-            //             '310' => 5200,
-            //         ],
-            //     ],
-            //     'plano4' => [
-            //         'width' => 39.5,
-            //         'height' => 54.5,
-            //         'hp' => 4800,
-            //         'plano' => [79, 109],
-            //         'prices' => [
-            //             '120' => 2900,
-            //             '150' => 3500,
-            //             '190' => 4400,
-            //             '210' => 4800,
-            //             '230' => 5200,
-            //             '260' => 5800,
-            //             '310' => 7000,
-            //             '400' => 8800,
-            //         ],
-            //     ],
-            //     'plano5' => [
-            //         'width' => 36,
-            //         'height' => 39,
-            //         'hp' => 4800,
-            //         'plano' => [79, 109],
-            //         'prices' => [
-            //             '120' => 2900,
-            //             '150' => 3500,
-            //             '190' => 4400,
-            //             '210' => 4800,
-            //             '230' => 5200,
-            //             '260' => 5800,
-            //             '310' => 7000,
-            //             '400' => 8800,
-            //         ],
-            //     ],
-            //     'plano6' => [
-            //         'width' => 35,
-            //         'height' => 44,
-            //         'hp' => 4800,
-            //         'plano' => [79, 109],
-            //         'prices' => [
-            //             '120' => 2900,
-            //             '150' => 3500,
-            //             '190' => 4400,
-            //             '210' => 4800,
-            //             '230' => 5200,
-            //             '260' => 5800,
-            //             '310' => 7000,
-            //             '400' => 8800,
-            //         ],
-            //     ],
-            // ];
-
             $ukuranData = $this->getUkuranData();
 
             // Ambil input dari form
@@ -130,6 +38,7 @@ class BrosurController extends Controller
             $laminasi = $request->laminasi;
             $requestDesain = $request->request_desain;
             $metodePengambilan = $request->metode_pengambilan;
+            $shippingCost = $request->input('shipping_cost');
 
             $ukuranData = $this->getUkuranData();
             $selectedUkuran = $ukuranData[$ukuran];
@@ -165,31 +74,31 @@ class BrosurController extends Controller
                 $provinceName = auth()->user()->provinsi;
                 $city = auth()->user()->kota;
 
-                // Fetch province ID
-                // $api_key = env('RAJA_ONGKIR_KEY');
                 $api_key = Config::get('app.rajaongkir');
                 $apiURL = 'https://api.rajaongkir.com/starter/province';
 
                 $response = Http::withHeaders([
                     'key' => $api_key,
                 ])->get($apiURL);
-                
-                // dd($response);
+
                 if ($response->successful()) {
                     $provinceResponse = $response->body();
                 } else {
                     return redirect()->back()->with('alert', 'Data Gagal Fetch API Provinsi');
                 }
+
                 $provinces = json_decode($provinceResponse, true)['rajaongkir']['results'];
+
                 try {
                     $provinceId = array_filter($provinces, function ($prov) use ($provinceName) {
-                        return $prov['province'] === $provinceName;
+                        return $prov['province'] == $provinceName;
                     });
+
                     $provinceId = reset($provinceId)['province_id'];
                 } catch (\Exception $e) {
                     return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
                 }
-                // Fetch city ID
+
                 $apiURL = 'https://api.rajaongkir.com/starter/city?province=' . $provinceId;
 
                 $response = Http::withHeaders([
@@ -199,6 +108,7 @@ class BrosurController extends Controller
                 if (!$response->successful()) {
                     return redirect()->back()->with('alert', 'Alamat Provinsi Tidak Terdaftar');
                 }
+
                 $cityResponse = $response->body();
                 $cities = json_decode($cityResponse, true)['rajaongkir']['results'];
                 $cityId = array_filter($cities, function ($cityItem) use ($city) {
@@ -206,7 +116,6 @@ class BrosurController extends Controller
                 });
                 $cityId = reset($cityId)['city_id'];
 
-                // Fetch shipping cost
                 $weight = 2000;
                 $origin = 21;
                 $apiURL = 'https://api.rajaongkir.com/starter/cost';
@@ -233,18 +142,10 @@ class BrosurController extends Controller
 
                 if (is_array($firstShippingCost)) {
                     $shippingCost = $firstShippingCost['cost'][0]['value'];
-                } else {
-                    // Tangani kasus di mana $shippingCost kosong atau tidak valid
                 }
 
-                // Add shipping cost to total price
-                // $totalHarga += $shippingCost;
-                if (is_array($shippingCost) && isset($shippingCost[0])) {
-                    $totalHarga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
-                } elseif (is_numeric($shippingCost)) {
+                if (is_numeric($shippingCost)) {
                     $totalHarga += $shippingCost;
-                } else {
-                    // Tangani kasus di mana $shippingCost tidak valid
                 }
             }
 
@@ -260,6 +161,8 @@ class BrosurController extends Controller
                 'laminasi' => $laminasi,
                 'request_desain' => $requestDesain,
                 'metode_pengambilan' => $metodePengambilan,
+                'status' => "Menunggu Pembayaran",
+                'shipping_cost' => is_numeric($shippingCost) ? $shippingCost : (is_array($shippingCost) && isset($shippingCost[0]) ? $shippingCost[0] : 0),
             ]);
 
             $products = Product::all();
@@ -298,8 +201,9 @@ class BrosurController extends Controller
             ];
             $snapToken = new CreateSnapToken($params);
             $token = $snapToken->getSnapToken();
+            Mail::to(auth()->user()->email)->send(new NotifMail($transaksi));
 
-            return view('client.checkout', compact('transaksi', 'brosur', 'products', 'token'));
+            return view('client.checkout', compact('transaksi', 'brosur', 'products', 'token', 'shippingCost'));
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()
                 ->back()
@@ -308,47 +212,6 @@ class BrosurController extends Controller
         }
     }
 
-    // private function getUkuranData()
-    // {
-    //     $produk = Product::where('judul', 'Brosur')->first();
-    //     $ukuran = Ukuran::where('product_id', $produk->id)->get();
-    //     $ukuranData = [];
-
-    //     foreach ($ukuran as $key => $value) {
-    //         $detail_ukurans = DetailUkuran::where('ukuran_id', $value->id)->get();
-
-    //         $detailUkuranArray = [];
-    //         foreach ($detail_ukurans as $detail_ukuran) {
-    //             $detail_values = DetailValueUkuran::where('detail_ukuran_id', $detail_ukuran->id)->get();
-
-    //             if ($detail_ukuran->is_parent) {
-    //                 $childArray = [];
-    //                 foreach ($detail_values as $childDetail) {
-    //                     $childArray[$childDetail->nama_value_ukuran] = $childDetail->value;
-    //                 }
-    //                 $detailUkuranArray[$detail_ukuran->nama_detail_ukuran] = $childArray;
-    //             } else {
-    //                 $planoArray = [];
-    //                 foreach ($detail_values as $detail_value) {
-    //                     if ($detail_value->nama_value_ukuran == 'plano') {
-    //                         $planoArray[] = $detail_value->value;
-    //                     } else {
-    //                         $detailUkuranArray[$detail_ukuran->nama_detail_ukuran][$detail_value->nama_value_ukuran] = $detail_value->value;
-    //                     }
-    //                 }
-
-    //                 if (!empty($planoArray)) {
-    //                     $detailUkuranArray[$detail_ukuran->nama_detail_ukuran]['plano'] = $planoArray;
-    //                 }
-    //             }
-    //         }
-
-    //         $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
-    //     }
-    //     // dd($ukuranData);
-
-    //     return $ukuranData;
-    // }
     private function getUkuranData()
     {
         $produk = Product::where('judul', 'Brosur')->first();

@@ -22,6 +22,7 @@ class Transaksi extends Model
         'payment_code',
         'pdf_url',
         'gramasi', 
+        'shipping_cost',
         'laminasi',
         'gambar',
         'request_desain',

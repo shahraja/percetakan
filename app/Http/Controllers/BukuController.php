@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifMail;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 use App\Models\Buku;
@@ -12,6 +13,7 @@ use App\Models\Ukuran;
 use App\Services\CreateSnapToken;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Mail;
 
 class BukuController extends Controller
 {
@@ -28,10 +30,8 @@ class BukuController extends Controller
                 'uk_height' => 'required',
                 'finishing' => 'required',
                 'request_desain' => 'required',
-                // 'metode_pengambilan' => 'required',
             ]);
 
-            // dd($request->all());
             // Ambil data dari request
             $produk_id = $request->produk_id;
             $user_id = $request->user_id;
@@ -49,6 +49,7 @@ class BukuController extends Controller
             $uk_height = $request->uk_height;
             $metode_pengambilan = $request->metode_pengambilan;
             $request_desain = $request->request_desain;
+            $shippingCost = $request->input('shipping_cost');
 
             if ($metode_pengambilan == '0') {
                 $provinceName = auth()->user()->provinsi;
@@ -127,7 +128,6 @@ class BukuController extends Controller
                 }
 
                 // Add shipping cost to total price
-                // $totalHarga += $shippingCost;
                 if (is_array($shippingCost) && isset($shippingCost[0])) {
                     $total_harga += $shippingCost[0]; // Pastikan $shippingCost[0] adalah numerik
                 } elseif (is_numeric($shippingCost)) {
@@ -152,6 +152,8 @@ class BukuController extends Controller
                 'laminasi' => $laminasi,
                 'metode_pengambilan' => $metode_pengambilan,
                 'request_desain' => $request_desain,
+                'status' => "Menunggu Pembayaran",
+                'shipping_cost' => is_numeric($shippingCost) ? $shippingCost : (is_array($shippingCost) && isset($shippingCost[0]) ? $shippingCost[0] : 0),
             ]);
 
             $products = Product::all();
@@ -192,6 +194,7 @@ class BukuController extends Controller
             ];
             $snapToken = new CreateSnapToken($params);
             $token = $snapToken->getSnapToken();
+            Mail::to(auth()->user()->email)->send(new NotifMail($transaksi));
 
             return view('client.checkout', compact('transaksi', 'buku', 'products', 'token'));
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -238,7 +241,6 @@ class BukuController extends Controller
 
             $ukuranData[$value->nama_ukuran] = $detailUkuranArray;
         }
-        // dd($ukuranData);
         // Menyediakan data berdasarkan parameter
         if ($param === 'width' || $param === 'height') {
             return isset($ukuranData[$ukuran][$param]) ? $ukuranData[$ukuran][$param] : null;
@@ -250,33 +252,6 @@ class BukuController extends Controller
 
         return isset($ukuranData[$ukuran][$param][$kertas]) ? intval($ukuranData[$ukuran][$param][$kertas]) : null;
     }
-
-    // private function calculateUkuranData($ukuran, $param, $kertas)
-    // {
-    //     $ukuranData = [
-    //         'A4' => [
-    //             'width' => 21,
-    //             'height' => 28,
-    //             'prices' => [
-    //                 '120' => 2000,
-    //                 '150' => 2300,
-    //             ],
-    //         ],
-    //         'A5' => [
-    //             'width' => 14.8,
-    //             'height' => 21,
-    //             'prices' => [
-    //                 '120' => 2100,
-    //                 '150' => 2450,
-    //             ],
-    //         ],
-    //     ];
-
-    //     if ($kertas == null) {
-    //         return $ukuranData[$ukuran][$param];
-    //     }
-    //     return intval($ukuranData[$ukuran][$param][$kertas]);
-    // }
 
     private function calculateTotalPrice(Request $request)
     {
@@ -290,8 +265,6 @@ class BukuController extends Controller
 
         // Hitung harga kertas berdasarkan pilihan
         $hargaKertas = $this->calculateUkuranData($ukuran, 'prices', $kertas);
-        // Hitung harga total berdasarkan logika perhitungan yang ada
-        // Anda perlu menyesuaikan ini dengan rumus yang sudah Anda buat di frontend
         $hargaTotal = $this->calculatePriceLogic($halaman, $jumlah, $this->calculateUkuranData($ukuran, 'width', null), $this->calculateUkuranData($ukuran, 'height', null), $ukuran, $hargaKertas, $laminasi, $finishing);
 
         return $hargaTotal;
@@ -319,8 +292,6 @@ class BukuController extends Controller
 
     private function calculateJSC($width, $height, $jc)
     {
-        // Fungsi perhitungan JSC
-        // Sesuaikan dengan logika dari frontend
         if ($width <= 21 && $height <= 28) {
             return 440000;
         } elseif ($width <= 14.8 && $height <= 21) {
@@ -332,8 +303,6 @@ class BukuController extends Controller
 
     private function calculateLaminasiCost($width, $height, $jc, $laminasi)
     {
-        // Fungsi perhitungan biaya laminasi
-        // Sesuaikan dengan logika dari frontend
         if (is_array($width) || is_array($height)) {
             throw new \Exception('Width or height is an array. Width: ' . print_r($width, true) . ' Height: ' . print_r($height, true));
         }
