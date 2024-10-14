@@ -14,13 +14,13 @@ return new class extends Migration
         Schema::create('product', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
-            $table->string('kertas');
+            $table->string('kertas')->nullable();
             $table->string('gambar');
             $table->text('deskripsi');
             $table->integer('harga');
-            $table->string('sisi');
+            $table->string('sisi')->nullable();
             $table->json('spesifikasi')->nullable();
-            $table->string('ukuran');
+            $table->string('ukuran')->nullable();
             $table->timestamps();
         });
     }

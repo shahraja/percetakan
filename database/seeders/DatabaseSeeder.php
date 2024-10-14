@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         $this->call(DetailValueUkuranSeeder::class);
         $this->call(AboutPageSeeder::class);
         // $this->call(PaymentSeeder::class);
+        $this->call(FeedbackSeeder::class);
     }
 }

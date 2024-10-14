@@ -14,6 +14,9 @@
               <!-- /.card-header -->
               <div class="card-body">
                 <div class="table-responsive">
+                  <div class="float-right">
+                    @include('admin.product.create')
+                </div>
                     <table id="example1" class="table table-bordered table-hover">
                       <thead>
                       <tr>
@@ -30,7 +33,7 @@
                           <td>{{$loop->iteration}}</td>
                           <td>{{$product->judul}}</td>
                           {{-- <td><img class="img img-fluid" width="100" src="{{asset('assets/img/'. $product->gambar)}}" alt=""></td> --}}
-                          <td><img class="img img-fluid" width="100" src="{{asset('storage/app/public/img/'. $product->gambar)}}" alt=""></td>
+                          <td><img class="img img-fluid" width="100" src="{{asset('storage/img/'. $product->gambar)}}" alt=""></td>
                           <td>RP.{{$product->harga}}</td>
                           <td>
                             @include('admin.product.edit')

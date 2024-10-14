@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NotifMail;
 use App\Models\Product;
 use App\Models\Transaksi;
+use App\Models\User;
 use Exception;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class ClientPaymentController extends Controller
 {
@@ -103,31 +106,39 @@ class ClientPaymentController extends Controller
             $payment_type = $request->payment_type;
             $transaksi = Transaksi::where('nomor_pesanan', $nomor_pesanan)->firstOrFail();
 
+            $listStatus = [
+                "capture" => "Pembayaran Dikonfirmasi",
+                "settlement" => "Pembayaran Dikonfirmasi",
+                "deny" => "Ditolak",
+                "cancel" => "Ditolak",
+                "expire" => "Expire",
+                "pending" => "Pending",
+            ];
             $data = [];
 
             if ($status == 'capture') {
                 if ($fraud == 'accept') {
                     $data = [
-                        'status' => 'Pembayaran Dikonfirmasi',
+                        'status' => $listStatus[$status],
                     ];
                 };
             } elseif ($status == 'settlement') {
                 $data = [
-                    'status' => 'Pembayaran Dikonfirmasi',
+                    'status' => $listStatus[$status],
                 ];
             } elseif ($status == 'deny' || $status == 'cancel') {
                 $data = [
-                    'status' => 'Ditolak',
+                    'status' => $listStatus[$status],
                     // 'reason' => $request->status_message,
                 ];
             } elseif ($status == 'expire') {
                 $data = [
-                    'status' => 'Expire',
+                    'status' => $listStatus[$status],
                     // 'reason' => $request->status_message,
                 ];
             } elseif ($status == 'pending') {
                 $data = [
-                    'status' => 'Pending',
+                    'status' => $listStatus[$status],
                 ];
             }
 
@@ -144,6 +155,8 @@ class ClientPaymentController extends Controller
             }
 
             DB::commit();
+            $user = User::where('id', $transaksi->user_id)->firstOrFail();
+            Mail::to($user->email)->send(new NotifMail($transaksi));
         } catch (Exception $e) {
             // DB::rollBack();
             $transaksi = Transaksi::where('nomor_pesanan', $nomor_pesanan)->firstOrFail();

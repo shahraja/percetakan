@@ -7,6 +7,7 @@ use App\Models\Brosur;
 use App\Models\Buku;
 use App\Models\DetailUkuran;
 use App\Models\DetailValueUkuran;
+use App\Models\Feedback;
 use App\Models\Kalender;
 use App\Models\Majalah;
 use Illuminate\Http\Request;
@@ -23,7 +24,8 @@ class HomeController extends Controller
     public function index()
     {
         $products = Product::all();
-        return view('client.index', compact('products'));
+        $testimonials = Feedback::all();
+        return view('client.index', compact('products', 'testimonials'));
     }
 
     public function about()

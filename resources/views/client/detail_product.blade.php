@@ -92,66 +92,17 @@
         <h1 class="my-4">{{ $product->judul }}</h1>
         <div class="row">
             <div class="col-md-6">
-                <div>
-                </div>
-                @php
-                    $images = [
-                        'Undangan' => ['undangan-1.jpg', 'undangan-2.jpg', 'undangan-3.jpg'],
-                        'Majalah' => ['majalah-1.jpg', 'majalah-2.jpg'],
-                        'Brosur' => ['brosur-1.jpg', 'brosur-2.jpg', 'brosur-3.jpg'],
-                        'Buku' => ['buku-1.jpg', 'buku-2.jpg'],
-                        'Kalender' => ['kalender-1.jpg', 'kalender-2.jpg', 'kalender-3.jpg'],
-                    ];
-                    $deskripsis = [
-                        'Undangan' => [
-                            'Undangan ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
-                            'Jumlah cetak yang sesuai kebutuhan Anda.',
-                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
-                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
-                            'Dengan desain yang menarik dan kreatif, Undangan ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
-                        ],
-                        'Majalah' => [
-                            'Majalah ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
-                            'Jumlah cetak yang sesuai kebutuhan Anda.',
-                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
-                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
-                            'Dengan desain yang menarik dan kreatif, majalah ini memudahkan Anda dalam mengirimkan majalah ke teman atau keluarga.',
-                        ],
-                        'Brosur' => [
-                            'Brosur ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
-                            'Jumlah cetak yang sesuai kebutuhan Anda.',
-                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
-                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
-                            'Dengan desain yang menarik dan kreatif, brosur ini memudahkan Anda dalam mengirimkan brosur ke teman atau keluarga.',
-                        ],
-                        'Buku' => [
-                            'Buku ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
-                            'Jumlah cetak yang sesuai kebutuhan Anda.',
-                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
-                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
-                            'Dengan desain yang menarik dan kreatif, Buku ini memudahkan Anda dalam mengirimkan buku ke teman atau keluarga.',
-                        ],
-                        'Kalender' => [
-                            'Kalender ini memudahkan Anda dalam mengirimkan undangan ke teman atau keluarga.',
-                            'Jumlah cetak yang sesuai kebutuhan Anda.',
-                            'Untuk ukuran sesuaikan dengan kebutuhan Anda. Kami menyediakan beberapa ukuran untuk kebutuhan Anda.',
-                            'Untuk jumlah lembar, berapa lembar yang Anda inginkan dalam 1 Kalender yang ingin Anda buat.',
-                            'Dengan desain yang menarik dan kreatif, Kalender ini memudahkan Anda dalam mengirimkan kalender ke teman atau keluarga.',
-                        ],
-                    ];
-                @endphp
-
                 <swiper-container style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff" class="mySwiper"
                     thumbs-swiper=".mySwiper2" loop="true" space-between="10" navigation="true">
                     <swiper-slide>
                         {{-- <img src="{{asset('storage/app/public/img/'. $product->gambar)}}" /> --}}
-                        <img src="{{asset('storage/img/'. $product->gambar)}}" />
+                        <img src="{{ asset('storage/img/' . $product->gambar) }}" />
                     </swiper-slide>
                     @if (isset($images[$product->judul]))
                         @foreach ($images[$product->judul] as $image)
                             <swiper-slide>
                                 {{-- <img src="{{asset('storage/app/public/img/'. $image)}}" /> --}}
-                                <img src="{{asset('storage/img/'. $image)}}" />
+                                <img src="{{ asset('storage/img/' . $image) }}" />
                             </swiper-slide>
                         @endforeach
                     @endif
@@ -161,18 +112,21 @@
                     watch-slides-progress="true">
                     <swiper-slide>
                         {{-- <img src="{{asset('storage/app/public/img/'. $product->gambar)}}" /> --}}
-                        <img src="{{asset('storage/img/'. $product->gambar)}}" />
+                        <img src="{{ asset('storage/img/' . $product->gambar) }}" />
                     </swiper-slide>
                     @if (isset($images[$product->judul]))
                         @foreach ($images[$product->judul] as $image)
                             <swiper-slide>
                                 {{-- <img src="{{asset('storage/app/public/img/'. $image)}}" /> --}}
-                                <img src="{{asset('storage/img/'. $image)}}" />
+                                <img src="{{ asset('storage/img/' . $image) }}" />
                             </swiper-slide>
                         @endforeach
                     @endif
                 </swiper-container>
             </div>
+
+            {{-- if untuk produk yang tidak dinamis --}}
+            @if ($product->judul == 'Undangan' || $product->judul == 'Majalah' || $product->judul == 'Kalender' || $product->judul == 'Brosur' || $product->judul == 'Buku')
             <div class="col-md-6">
                 <p class="desk">{{ $product->deskripsi }}</p>
                 {{-- <h5 class="py-2">Spesifikasi Produk</h5> --}}
@@ -191,10 +145,14 @@
                 <div class="row">
                     <div class="col-6 col-md-12">
                         <div class="desk">
-                            <p><i class="fa-solid fa-info"></i> Untuk melakukan pemesanan harap <b>MELENGKAPI DATA</b> diri Anda untuk kebutuhan pemesanan</p>
-                            <p class=""><i class="fa-solid fa-info"></i> Untuk perhitungan produk <b>HANYA</b> kalkulasi produk dengan spesifikasi yang diinginkan oleh Anda</p>
-                            <p><i class="fa-solid fa-info"></i> Untuk metode pengiriman akan dikalkulasikan ulang sesuai dengan daerah tempat tinggal Anda, ketika Anda telah melakukan Checkout</p>
-                            <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
+                            <p><i class="fa-solid fa-info"></i> Untuk melakukan pemesanan harap <b>MELENGKAPI DATA</b> diri
+                                Anda untuk kebutuhan pemesanan</p>
+                            <p class=""><i class="fa-solid fa-info"></i> Untuk perhitungan produk <b>HANYA</b>
+                                kalkulasi produk dengan spesifikasi yang diinginkan oleh Anda</p>
+                            <p><i class="fa-solid fa-info"></i> Untuk metode pengiriman akan dikalkulasikan ulang sesuai
+                                dengan daerah tempat tinggal Anda, ketika Anda telah melakukan Checkout</p>
+                            <p><i class="fa-solid fa-info"></i> Requst Desain bisa dilakukan dan akan dikalkulasikan kembali
+                                ketika Anda melakukan Checkout, untuk jasa desain yaitu 85.000</p>
                         </div>
                     </div>
                     <div class="col-6 col-md-12">
@@ -203,19 +161,21 @@
                             <ul>
                                 <li>Merupakan ketebalaan pada kertas</li>
                             </ul>
-                
+
                             <h5>Jilid:</h5>
                             <ul>
                                 <li>Kaleng : Penjepit dengan menggunakan bahan kaleng</li>
                                 <li>Spiral : Penjepit dengan spiral melingkar</li>
                             </ul>
-                
+
                             <h5>Finishing:</h5>
                             <ul>
-                                <li>Staples : Merupakan finishing dengan steples, direkomendasikan untuk jumlah halaman yang sedikit</li>
-                                <li>Binding : Merupakan finishing dengan lem, direkomendasikan untuk halaman yang banyak</li>
+                                <li>Staples : Merupakan finishing dengan steples, direkomendasikan untuk jumlah halaman yang
+                                    sedikit</li>
+                                <li>Binding : Merupakan finishing dengan lem, direkomendasikan untuk halaman yang banyak
+                                </li>
                             </ul>
-                
+
                             <h5>Laminasi:</h5>
                             <ul>
                                 <li>Glossy : Finishing Kertas Mengkilap 1 Muka</li>
@@ -226,9 +186,15 @@
                         </div>
                     </div>
                 </div>
-                
             </div>
+            @else
+            <div class="col-md-6">
+                <p class="desk">{{ $product->deskripsi }}</p>
+            </div>
+            @endif
         </div>
+
+        @if ($product->judul == 'Undangan' || $product->judul == 'Majalah' || $product->judul == 'Kalender' || $product->judul == 'Brosur' || $product->judul == 'Buku')
         @if ($product->judul == 'Undangan')
             <form class="row pb-3" action="{{ route('user.undangan.store') }}" method="POST">
             @elseif($product->judul == 'Majalah')
@@ -241,6 +207,7 @@
                             <form class="row pb-3" action="{{ route('user.brosur.store') }}" method="POST">
         @endif
         @csrf
+        
         <h4 class="py-2">Hitung Harga Cetak Online</h4>
         <div class="row d-flex">
             <div class="col-md-5 border rounded shadow p-4 mx-2">
@@ -259,7 +226,7 @@
                     <select name="gramasi" id="kertas" class="form-select col-md-9">
                     </select>
                 </div>
-    
+
                 @if ($product->judul == 'Kalender')
                     <div class="form-group row pe-2">
                         <label class="form-label col-md-3" for="lembar">Jumlah Lembar</label>
@@ -274,7 +241,7 @@
                         </select>
                     </div>
                 @endif
-    
+
                 @if ($product->judul == 'Buku' || $product->judul == 'Majalah')
                     <div class="form-group row pe-2">
                         <label class="form-label col-md-3" for="halaman">Jumlah Lembar</label>
@@ -289,7 +256,7 @@
                         </select>
                     </div>
                 @endif
-    
+
                 <div class="form-group row pe-2">
                     <label class="form-label col-md-3" for="laminasi">Laminasi</label>
                     <select name="laminasi" id="laminasi" class="form-select col-md-9">
@@ -300,7 +267,7 @@
                         <option value="doff2">Doff Bolak-Balik</option>
                     </select>
                 </div>
-    
+
                 <div class="form-group">
                     <label>
                         <input type="radio" name="metode_pengambilan" value="0" id="metode_pengambilan"> Delivery
@@ -309,7 +276,7 @@
                         <input type="radio" name="metode_pengambilan" value="1" id="metode_pengambilan"> Pick Up
                     </label>
                 </div>
-    
+
                 <div class="form-group">
                     <label>
                         <input type="radio" name="request_desain" value="0" id="request_desain"> Request
@@ -319,7 +286,7 @@
                         <input type="radio" name="request_desain" value="1" id="request_desain"> Tidak Request
                     </label>
                 </div>
-    
+
                 <div class="text-center my-3">
                     <button class="btn btn-primary bg-utama col-md-6" type="button" onclick="calculatePrice()">Cek
                         Harga</button>
@@ -363,8 +330,10 @@
                 @endguest
             </div>
         </div>
+        @endif
         </form>
     </div>
+
 
     <div id="ukuranData" data-ukuran='@json($ukuranData)'></div>
     @if ($product->judul == 'Undangan')

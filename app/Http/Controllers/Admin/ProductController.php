@@ -20,6 +20,43 @@ class ProductController extends Controller
         return view('admin.product.index', compact('products'));
     }
 
+    public function store(Request $request)
+    {
+        // Validate the incoming request
+        $request->validate([
+            'judul' => 'required',
+            'gambar' => 'required|mimes:jpg,jpeg,png|max:2048',
+            'deskripsi' => 'required',
+            'harga' => 'required',
+        ]);
+
+        // Handle the file upload
+        if ($request->hasFile('gambar')) {
+            $gambar = $request->file('gambar');
+            $file_name = time() . '.' . $gambar->getClientOriginalExtension();
+            $gambar->storeAs('public/img/', $file_name);
+        }
+
+        // Create a new product entry
+        $product = Product::create([
+            'judul' => $request->judul,
+            'deskripsi' => $request->deskripsi,
+            'gambar' => isset($file_name) ? $file_name : null,
+            'harga' => $request->harga,
+        ]);
+
+        // Handle prices if provided
+        if ($request->has('prices')) {
+            foreach ($request->prices as $detail_ukuran_id => $value) {
+                DB::table('detail_value_ukuran')
+                    ->where('detail_ukuran_id', $detail_ukuran_id)
+                    ->update(['value' => $value]);
+            }
+        }
+
+        return back()->with('alert', 'Berhasil Tambah Data!');
+    }
+
     public function update(Request $request, $id)
     {
         $data = Product::findOrFail($id);
@@ -36,13 +73,12 @@ class ProductController extends Controller
             'deskripsi' => $request->deskripsi,
         ]);
 
-        
         if ($request->hasFile('gambar')) {
             $gambar = $request->file('gambar');
             $file_name = time() . '.' . $gambar->getClientOriginalExtension();
             $data->gambar = $file_name;
             $data->update();
-            $gambar->storeAs('public/img/',  $file_name);
+            $gambar->storeAs('public/img/', $file_name);
             // $gambar->move('../public/assets/img/', $file_name);
         }
 
